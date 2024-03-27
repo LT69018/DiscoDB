@@ -1,4 +1,5 @@
 # Frontend for DiscoDB
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -69,3 +70,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# References
+Bootstrap (to assist in layout and styling.)
+https://create-react-app.dev/docs/adding-bootstrap/
+- Lessons learned: ... (tbd)
+- To look into more: "As of react-scripts@2.0.0 you can import .scss files. This makes it possible to use a package's built-in Sass variables for global style preferences."

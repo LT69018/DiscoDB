@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import 'bootstrap/dist/css/bootstrap.css'; 
+/* <- according to https://create-react-app.dev/docs/adding-bootstrap/
+      we can use `sass` to globally use bootstrap styles. */
+// import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

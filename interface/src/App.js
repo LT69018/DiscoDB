@@ -3,9 +3,11 @@ import logo from "./logo.svg";
 import "./premade_theme/css/styles.css";
 
 import React from "react";
-import { Button, Navbar, Container, 
+import { Button, 
+         Navbar, Container,
          Row, Col } 
         from "react-bootstrap";
+import { AppBar, Toolbar } from "@mui/material";
 
 import CustomSearchBar from "./Custom/CustomSearchBar.js";
 
@@ -13,11 +15,16 @@ function App() {
 	return (
 		<div className="App">
 			{/*  Navigation */}
-			<Navbar>
+			<Navbar style={{height: "100px"}}>
 				<Container>
-					<a className="navbar-brand" href="#!">
-						Start Bootstrap
-					</a>
+          <Navbar.Brand href="#home">
+            <img
+              src="/DiscoDB_logo.jpg"
+              height="100px"
+              className="d-inline-block align-top"
+              alt="DiscoDB logo"
+            />
+          </Navbar.Brand>
 					<a className="btn btn-primary" href="#signup">
 						Sign Up
 					</a>

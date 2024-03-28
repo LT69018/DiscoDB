@@ -2,19 +2,17 @@ import React, { Component } from "react";
 // will use this once I'm able to install it.
 // import SearchBar from "material-ui-search-bar";
 
+/* 
+TODO: replace this with our search bar for DiscoDB
+- [X] Change placeholder and button names
+- [ ] Change backend/result of pressing search button
+- Consider using MUI search bar and asking team about what function 
+in the backend I should call once the user enters something.
+*/
 function CustomSearchBar() {
-  return (
-    templateSearchForm()
-  );
-  
-}
-
-// as reference
-function templateSearchForm() {
   return (
     <div>
       {/*  Signup form */}
-      {/* TODO: replace this with our search bar for DiscoDB */}
       {/*  * * * * * * * * * * * * * * * */}
       {/* * * SB Forms Contact Form * * */}
       {/* * * * * * * * * * * * * * * * */}
@@ -34,29 +32,18 @@ function templateSearchForm() {
               className="form-control form-control-lg"
               id="emailAddress"
               type="email"
-              placeholder="Email Address"
+              placeholder="Enter an album or artist name."
               data-sb-validations="required,email"
             />
-            <div
-              className="invalid-feedback text-white"
-              data-sb-feedback="emailAddress:required"
-            >
-              Email Address is required.
-            </div>
-            <div
-              className="invalid-feedback text-white"
-              data-sb-feedback="emailAddress:email"
-            >
-              Email Address Email is not valid.
-            </div>
+            
           </div>
           <div className="col-auto">
             <button
-              className="btn btn-primary btn-lg disabled"
+              className="btn btn-primary btn-lg"
               id="submitButton"
               type="submit"
             >
-              Submit
+              Search
             </button>
           </div>
         </div>

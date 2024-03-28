@@ -76,3 +76,6 @@ Bootstrap (to assist in layout and styling.)
 https://create-react-app.dev/docs/adding-bootstrap/
 - Lessons learned: ... (tbd)
 - To look into more: "As of react-scripts@2.0.0 you can import .scss files. This makes it possible to use a package's built-in Sass variables for global style preferences."
+
+Theme / Frontend Template:
+https://startbootstrap.com/previews/landing-page

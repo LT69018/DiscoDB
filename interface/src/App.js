@@ -11,25 +11,27 @@ import { AppBar, Toolbar } from "@mui/material";
 
 import CustomSearchBar from "./Custom/CustomSearchBar.js";
 
+
+
 function App() {
 	return (
 		<div className="App">
 			{/*  Navigation */}
-			<Navbar style={{height: "100px"}}>
-				<Container>
+			<AppBar position="fixed" sx={{bgcolor:"white"}}>
+        <Toolbar style={{justifyContent:"spaceBetween"}}>
           <Navbar.Brand href="#home">
             <img
-              src="/DiscoDB_logo.jpg"
+              src="/DiscoDB_logo-clearbg.png"
               height="100px"
               className="d-inline-block align-top"
               alt="DiscoDB logo"
             />
           </Navbar.Brand>
-					<a className="btn btn-primary" href="#signup">
+					<Button style={{marginLeft:"auto"}} href="#signup">
 						Sign Up
-					</a>
-				</Container>
-			</Navbar>
+					</Button>
+			  </Toolbar>
+      </AppBar>
 			{/* Masthead */}
 			<header className="masthead">
 				<Container style={{ position: "relative" }}>
@@ -38,8 +40,9 @@ function App() {
 							<div className="text-center text-white">
 								{/* Page heading */}
 								<h1 className="mb-5">
-									Generate more leads with a professional landing page!
+									Welcome to DiscoDB!
 								</h1>
+                <p>Use the search bar below to get started saving albums to your listening lists!</p>
 								{/* TODO: insert our custom search bar. */}
                 <CustomSearchBar/>
 							</div>

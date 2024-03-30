@@ -1,15 +1,57 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 // will use this once I'm able to install it.
 // import SearchBar from "material-ui-search-bar";
-
 /* 
 TODO: replace this with our search bar for DiscoDB
 - [X] Change placeholder and button names
+- [ ] Create another page to take the user to when they do search somethig!
+- [ ] Navigate to a
 - [ ] Change backend/result of pressing search button
 - Consider using MUI search bar and asking team about what function 
 in the backend I should call once the user enters something.
 */
+// example of how  I want the backend to show me their data.
+
+// i.e. it gives me three table results
+// artist_results
+// album_results
+// collaborator_results
+
+// i.e. GET /search?'stevie wonder'
+// todo: how will backend return relevant related artists?
+const test_api_result = {
+  'artist_results': {artist: 'Stevie Wonder'},
+  'album_results': {artist: 'Stevie Wonder', 'albums': [
+    'Songs in the key of life',
+    'Innervisions'
+  ]}
+};
+
 function CustomSearchBar() {
+  const [userInput, setUserInput] = useState('');
+
+  let searchResults = '';
+
+  const handleInputTyping = (event) => {
+    const value = event.target.value;
+    setUserInput(value);
+    console.log("I see you typing! Current saved value: ", userInput);
+  };
+
+  const navigateToResultsPage = () => {
+    if (userInput === "") {
+      console.log("Please enter something in the text field before pressing `Search`!!");
+      
+    } else {
+      // currently use the test_api_results to display something!
+      console.log("From search bar, about to switch to results page");
+      console.log("They entered: ", userInput);
+
+      // todo: replace with page switching! (i.e. react-router-dom)
+      console.log("TODO: implement a page to navigate them to!")
+    }
+  }
+
   return (
     <div>
       {/*  Signup form */}
@@ -21,19 +63,19 @@ function CustomSearchBar() {
       {/* https://startbootstrap.com/solution/contact-forms */}
       {/* to get an API token! */}
       <form
-        className="form-subscribe"
-        id="contactForm"
-        data-sb-form-api-token="API_TOKEN"
+        id="searchForm"
+        // data-sb-form-api-token="API_TOKEN"
       >
         {/* Email address input */}
         <div className="row">
           <div className="col">
             <input
               className="form-control form-control-lg"
-              id="emailAddress"
-              type="email"
+              id="userSearchInput"
+              type="text"
               placeholder="Enter an album or artist name."
-              data-sb-validations="required,email"
+              onChange={handleInputTyping}
+              required
             />
             
           </div>
@@ -42,11 +84,13 @@ function CustomSearchBar() {
               className="btn btn-primary btn-lg"
               id="submitButton"
               type="submit"
+              onClick={navigateToResultsPage}
             >
               Search
             </button>
           </div>
         </div>
+        {/* todo: figure out if I'll need to use these. */}
         {/* Submit success message */}
         {/* */}
         {/* This is what your users will see when the form */}

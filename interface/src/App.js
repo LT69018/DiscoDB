@@ -34,18 +34,16 @@ function App() {
       </AppBar>
 			{/* Masthead */}
 			<header className="masthead">
-				<Container style={{ position: "relative" }}>
-          <Row style={{ justifyContent: "center" }}>
-            <Col xl={6}>
-							<div className="text-center text-white">
-								{/* Page heading */}
-								<h1 className="mb-5">
-									Welcome to DiscoDB!
-								</h1>
-                <p>Use the search bar below to get started saving albums to your listening lists!</p>
-								{/* TODO: insert our custom search bar. */}
-                <CustomSearchBar/>
-							</div>
+				<Container fluid style={{ position: "relative" }}>
+        {/* Note to self, the row height, doesn't change how the inner elements fit. */}
+          <Row style={{ justifyContent: "center"}}>
+            <Col xl={6} style={{ justifyContent: "center"}}>
+              <h1 className="mb-5">
+                Welcome to DiscoDB!
+              </h1>
+              <p>Use the search bar below to get started saving albums to your listening lists!</p>
+              {/* TODO: insert our custom search bar. */}
+              <CustomSearchBar/>
             </Col>
           </Row>
 				</Container>

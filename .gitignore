@@ -1,3 +1,5 @@
+# terminal preferences
 .vscode/
-.DS_Store
+.idea/ 
+# metadata from machine I believe.
 .DS_Store

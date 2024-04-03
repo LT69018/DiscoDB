@@ -4,8 +4,9 @@ import React, { useState } from "react";
 /* 
 TODO: replace this with our search bar for DiscoDB
 - [X] Change placeholder and button names
-- [ ] IMPORTANT: dropdown for what they want to search by
+- [X] IMPORTANT: dropdown for what they want to search by
 -- i.e. Artist, Album
+-- [ ] Add state to save the value they select for the dropdown (what they want to search by)
 - [ ] Create another page to take the user to when they do search something!
 - [ ] Navigate to a
 - [ ] Change backend/result of pressing search button
@@ -90,6 +91,11 @@ function CustomSearchBar() {
               Search
             </button>
           </div>
+          <select>
+            <option value="search_by_artist">Artist</option>
+            <option value="search_by_album">Album Name</option>
+            <option value="search_by_song">Song Name</option> 
+          </select>
         </div>
         {/* todo: figure out if I'll need to use these. */}
         {/* Submit success message */}

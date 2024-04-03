@@ -4,6 +4,8 @@ import React, { useState } from "react";
 /* 
 TODO: replace this with our search bar for DiscoDB
 - [X] Change placeholder and button names
+- [ ] IMPORTANT: dropdown for what they want to search by
+-- i.e. Artist, Album, Song
 - [ ] Create another page to take the user to when they do search somethig!
 - [ ] Navigate to a
 - [ ] Change backend/result of pressing search button

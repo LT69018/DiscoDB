@@ -5,12 +5,14 @@ import React, { useState } from "react";
 TODO: replace this with our search bar for DiscoDB
 - [X] Change placeholder and button names
 - [ ] IMPORTANT: dropdown for what they want to search by
--- i.e. Artist, Album, Song
-- [ ] Create another page to take the user to when they do search somethig!
+-- i.e. Artist, Album
+- [ ] Create another page to take the user to when they do search something!
 - [ ] Navigate to a
 - [ ] Change backend/result of pressing search button
 - Consider using MUI search bar and asking team about what function 
 in the backend I should call once the user enters something.
+
+Note - we will ALWAYS display album results. don't bother displaying artists with clickable links.
 */
 // example of how  I want the backend to show me their data.
 
@@ -21,13 +23,10 @@ in the backend I should call once the user enters something.
 
 // i.e. GET /search?'stevie wonder'
 // todo: how will backend return relevant related artists?
-const test_api_result = {
-  'artist_results': {artist: 'Stevie Wonder'},
-  'album_results': {artist: 'Stevie Wonder', 'albums': [
-    'Songs in the key of life',
-    'Innervisions'
-  ]}
-};
+const test_api_result = [
+  {'artist': 'Stevie Wonder', 'album': 'Innervision', 'year': 1970},
+  {'artist': '', 'album': '', 'year': 2000}
+];
 
 function CustomSearchBar() {
   const [userInput, setUserInput] = useState('');

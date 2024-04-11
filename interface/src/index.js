@@ -7,9 +7,29 @@ import 'bootstrap/dist/css/bootstrap.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { AppBar, Toolbar } from "@mui/material";
+import { Button, Navbar} from "react-bootstrap";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    {/* Show the app bar across all the pages! */}
+    {/* Use "sticky" instead of fixed so the items aren't covered up */}
+    <AppBar position="sticky" sx={{bgcolor:"white"}}>
+      <Toolbar style={{justifyContent:"spaceBetween"}}>
+        <Navbar.Brand href="/">
+          <img
+            src="/DiscoDB_logo-clearbg.png"
+            height="100px"
+            className="d-inline-block align-top"
+            alt="DiscoDB logo"
+          />
+        </Navbar.Brand>
+        <Button style={{marginLeft:"auto"}} href="#signup">
+          Sign Up
+        </Button>
+      </Toolbar>
+    </AppBar>
     <App />
   </React.StrictMode>
 );

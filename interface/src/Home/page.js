@@ -1,10 +1,6 @@
 import React from "react";
 
-import { Button, 
-  Navbar, Container,
-  Row, Col } 
- from "react-bootstrap";
-import { AppBar, Toolbar } from "@mui/material";
+import { Container, Row, Col } from "react-bootstrap";
 
 import CustomSearchBar from "./CustomSearchBar.js";
 // import "./premade_theme/css/styles.css";
@@ -13,21 +9,7 @@ function Home() {
   return (
     <div>
     {/*  Navigation */}
-      <AppBar position="fixed" sx={{bgcolor:"white"}}>
-      <Toolbar style={{justifyContent:"spaceBetween"}}>
-        <Navbar.Brand href="#home">
-          <img
-            src="/DiscoDB_logo-clearbg.png"
-            height="100px"
-            className="d-inline-block align-top"
-            alt="DiscoDB logo"
-          />
-        </Navbar.Brand>
-        <Button style={{marginLeft:"auto"}} href="#signup">
-          Sign Up
-        </Button>
-      </Toolbar>
-      </AppBar>
+      
       <header className="masthead">
       <Container fluid style={{ position: "relative" }}>
       {/* Note to self, the row height, doesn't change how the inner elements fit. */}

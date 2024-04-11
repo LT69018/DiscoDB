@@ -24,15 +24,10 @@ Note - we will ALWAYS display album results. don't bother displaying artists wit
 
 // i.e. GET /search?'stevie wonder'
 // todo: how will backend return relevant related artists?
-const test_api_result = [
-  {'artist': 'Stevie Wonder', 'album': 'Innervision', 'year': 1970},
-  {'artist': '', 'album': '', 'year': 2000}
-];
+
 
 function CustomSearchBar() {
   const [userInput, setUserInput] = useState('');
-
-  let searchResults = '';
 
   const handleInputTyping = (event) => {
     const value = event.target.value;

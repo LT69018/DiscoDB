@@ -1,4 +1,6 @@
 # Frontend for DiscoDB
+Theme Reference (we did not write a lot of the css):
+https://startbootstrap.com/previews/landing-page
 
 # Getting Started with Create React App
 

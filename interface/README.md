@@ -2,6 +2,11 @@
 Theme Reference (we did not write a lot of the css):
 https://startbootstrap.com/previews/landing-page
 
+# Pages
+## Home (`./Home/page.js`)
+## SearchResults (`./SearchResults/page.js`)
+## UserProfile (`./UserProfile/page.js`)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -30,7 +30,7 @@ Columns:
     border-radius: 5px;
     border-color: black;
     background-color: rgb(216, 245, 245);
-    height: 100px;
+    height: 20vh;
     margin-bottom: 10px;
     display: flex; /* Goal: align items in the middle vertically :p */
 }

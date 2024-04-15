@@ -10,9 +10,9 @@ const FRONTEND_COVER_IMAGE_KEY = "coverImage";
 
 function populateImagesAndEmptyKeys(searchResult) {
     if (! (BACKEND_COVER_URL_KEY in searchResult)) {
-        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="No cover available. Result is missing link key."/>;
+        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="Result is missing link key."/>;
     } else if (searchResult[BACKEND_COVER_URL_KEY] == null) {
-        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="No cover available. Result URL key is empty (null)."/>;
+        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="Result URL key is empty (null)."/>;
     } else {
         console.log("[DEBUG] Attempting to render this image href: ", searchResult[BACKEND_COVER_URL_KEY]);
         searchResult[FRONTEND_COVER_IMAGE_KEY] = <img href={searchResult[BACKEND_COVER_URL_KEY]} alt="Invalid coverURL"/>;
@@ -38,17 +38,17 @@ function renderResultRow(index, resultRow) {
     
     return (
         <div class="row resultRow rounded" id={index}>
-            <div class="col-lg-1 indexCol colVerticalCenter">
+            <div class="col-1 indexCol colVerticalCenter">
                 {index}
             </div>
-            <div class="col-lg-2 imageCol">
+            <div class="col-2 imageCol">
                 {htmlRow[FRONTEND_COVER_IMAGE_KEY]}
             </div>
             <div class="col" style={{textAlign: "left"}}> 
                 <p class="albumTitle">{htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})</p>
                 <p>{htmlRow[BACKEND_ARTIST_NAME_KEY]}</p>
             </div>
-            <div class="col-lg-2 saveCol colVerticalCenter">
+            <div class="col-2 saveCol colVerticalCenter">
                 <button>Save</button>
             </div>
         </div>

@@ -57,7 +57,7 @@ function renderResultRow(index, resultRow) {
 
 
 // not sure why it won't let me use tab size of 2
-function SearchResults() {
+export default function SearchResults() {
     // using `[constKey]: value` in brackets so that JS uses the string instead of the variable name as the key.
     const test_api_result = [
         {[BACKEND_ARTIST_NAME_KEY]: 'Stevie Wonder', [BACKEND_ALBUM_NAME_KEY]: 'Innervision', [BACKEND_YEAR_KEY]: 1970, [BACKEND_COVER_URL_KEY]: null},
@@ -80,5 +80,3 @@ function SearchResults() {
         </div>
     );
 }
-
-export default SearchResults;

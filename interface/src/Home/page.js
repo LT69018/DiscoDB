@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import CustomSearchBar from "./CustomSearchBar.js";
 // import "./premade_theme/css/styles.css";
 
-function Home() {
+export default function Home() {
   return (
     <div>
     {/*  Navigation */}
@@ -305,5 +305,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;

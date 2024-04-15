@@ -1,0 +1,63 @@
+/*
+File: SearchResults.css
+Date: 4/15/2024
+Author: Jess Turner (LT69018)
+Description:
+
+This style sheet is my attempt to format the results from searching our database!
+Particularly, I want to format each row nicely.
+
+Inspiration: Spotify song results page :<)
+
+Columns:
+------------------------------------------------------
+# (index) | Title (album name, artist) | Save Button |
+------------------------------------------------------
+*/
+
+
+/* These are for the description row */
+.categoriesRow {
+    height: 20px;
+    text-align: left;
+    justify-content: left;
+}
+
+/* ---------------------------------- */
+
+
+.resultRow {
+    border-radius: 5px;
+    border-color: black;
+    background-color: rgb(216, 245, 245);
+    height: 100px;
+    margin-bottom: 10px;
+    display: flex; /* Goal: align items in the middle vertically :p */
+}
+
+/* Each column has specific style for the info it will hold.
+    But in general, I want it to appear in the middle of the row 
+    So I specify this if I want to make that column vertically centered. */
+.colVerticalCenter {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+p.albumTitle {
+    color: rgb(77, 72, 120);
+    font-size: 25px;
+    font-weight: bold;
+}
+
+
+.indexCol {
+    width: 30px;
+}
+
+.imageCol {
+    background-color: rgb(174, 237, 237);
+}
+
+.saveCol {
+    justify-content: center;
+}

@@ -7,7 +7,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // page imports
 import Home from "./Home/page.js";
-import SearchResults from "./SearchResults/page.js"
+import SearchResults from "./SearchResults/page.js";
+import UserProfile from "./UserProfile/page.js";
 
 function App() {
 	return (
@@ -16,6 +17,7 @@ function App() {
 				<Routes>
 					<Route index path={"/"} element={<Home/>}></Route>
 					<Route path={"/SearchResults"} element={<SearchResults/>}></Route>
+					<Route path={"/UserProfile"} element={<UserProfile/>}></Route>
 				</Routes>
 			</Router>
 			

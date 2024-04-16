@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home/page.js";
 import SearchResults from "./SearchResults/page.js";
 import UserProfile from "./UserProfile/page.js";
+import AlbumPage from "./AlbumInfo/page.js"
 
 function App() {
 	return (
@@ -18,6 +19,7 @@ function App() {
 					<Route index path={"/"} element={<Home/>}></Route>
 					<Route path={"/SearchResults"} element={<SearchResults/>}></Route>
 					<Route path={"/UserProfile"} element={<UserProfile/>}></Route>
+					<Route path={"/AlbumInfo"} element={<AlbumPage/>}></Route>
 				</Routes>
 			</Router>
 			

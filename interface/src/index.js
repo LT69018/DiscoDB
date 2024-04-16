@@ -3,12 +3,22 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.css'; 
 /* <- according to https://create-react-app.dev/docs/adding-bootstrap/
       we can use `sass` to globally use bootstrap styles. */
-// import './index.css';
+import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import { AppBar, Toolbar } from "@mui/material";
-import { Button, Navbar} from "react-bootstrap";
+import { Button, Navbar, Dropdown } from "react-bootstrap";
+
+
+function toggleDropdown() {
+  var dropdownContent = document.getElementById("dropdown-content");
+  if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none";
+  } else {
+      dropdownContent.style.display = "block";
+  }
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -24,10 +34,18 @@ root.render(
             className="d-inline-block align-top"
             alt="DiscoDB logo"
           />
+
         </Navbar.Brand>
-        <Button style={{marginLeft:"auto"}} href="#signup">
-          Sign Up
-        </Button>
+        <Dropdown>
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+            Sign Up
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+                <Dropdown.Item href="#">Profile</Dropdown.Item>
+                <Dropdown.Item href="#">Settings</Dropdown.Item>
+                <Dropdown.Item href="#">Log Out</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </Toolbar>
     </AppBar>
     <App />

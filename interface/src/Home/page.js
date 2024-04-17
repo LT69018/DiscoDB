@@ -67,6 +67,7 @@ export default function Home() {
         </div>
       </section>
       {/* Image Showcases */}
+      {/* These URLs aren't valid anymore since I deleted the premade_theme folder. */}
       <section className="showcase">
         <div className="container-fluid p-0">
           <div className="row g-0">

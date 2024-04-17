@@ -1,4 +1,27 @@
+/*
+File: SearchResults/page.js
+Author: Jess Turner
+Description:
+Use the data from `Home/CustomSearchBar.js`, send it to the backend, display search results to the user.
+
+Expecting this format from the SearchBar:
+    {
+    state: 
+        {
+        searchString: "example search input"
+        searchBy: "artist/album/song"
+        }
+    }
+
+
+Note - we will ALWAYS display album results. 
+don't bother displaying artists with clickable links.
+*/
+
 import React from "react";
+import { useLocation, // get data from previous page
+         // useNavigate // send data to next page
+       } from 'react-router-dom';
 import "./SearchResults.css"
 
 const BACKEND_COVER_URL_KEY = "coverURL";
@@ -37,18 +60,18 @@ function renderResultRow(index, resultRow) {
     populateImagesAndEmptyKeys(htmlRow);
     
     return (
-        <div class="row resultRow rounded" id={index}>
-            <div class="col-1 indexCol colVerticalCenter">
+        <div className="row resultRow rounded" id={index} key={"rowKey" + index}>
+            <div className="col-1 indexCol colVerticalCenter">
                 {index}
             </div>
-            <div class="col-2 imageCol">
+            <div className="col-2 imageCol">
                 {htmlRow[FRONTEND_COVER_IMAGE_KEY]}
             </div>
-            <div class="col" style={{textAlign: "left"}}> 
-                <p class="albumTitle">{htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})</p>
+            <div className="col" style={{textAlign: "left"}}> 
+                <p className="albumTitle">{htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})</p>
                 <p>{htmlRow[BACKEND_ARTIST_NAME_KEY]}</p>
             </div>
-            <div class="col-2 saveCol colVerticalCenter">
+            <div className="col-2 saveCol colVerticalCenter">
                 <button>Save</button>
             </div>
         </div>
@@ -58,6 +81,9 @@ function renderResultRow(index, resultRow) {
 
 // not sure why it won't let me use tab size of 2
 export default function SearchResults() {
+    const location = useLocation();
+    console.log("SearchResults.location=", location);
+
     // using `[constKey]: value` in brackets so that JS uses the string instead of the variable name as the key.
     const test_api_result = [
         {[BACKEND_ARTIST_NAME_KEY]: 'Stevie Wonder', [BACKEND_ALBUM_NAME_KEY]: 'Innervision', [BACKEND_YEAR_KEY]: 1970, [BACKEND_COVER_URL_KEY]: null},
@@ -70,11 +96,17 @@ export default function SearchResults() {
     ));
 
     return (
-        <div class="container">
+        <div className="container">
             <h1>Search Results</h1>
+            <div>
+                Displaying results for <span style={{color: "green"}}>{location.state.searchString} </span> 
+                
+                 Search by <span style={{color: "purple"}}>{location.state.searchBy}</span>
+            </div>
             <p>Under Construction :P</p>
-            <div class="row categoriesRow">
-                <div class="col ">#</div>
+            <div className="row categoriesRow">
+                <div className="col-1 indexCol categoryColumn">#</div> 
+                <div className="col-11 categoryColumn">Album Information</div>
             </div>
             {renderedResults}
         </div>

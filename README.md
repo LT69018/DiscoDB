@@ -10,7 +10,18 @@ similar to how goodreads allows readers to save books they want to read.
 ## Appearance
 <figure>
     <img src="./about_images/HomePage_3-30.png">
-    <figcaption>This is how the app appears as of March 30th. The user can type anything in the text box, and we save it, but pressing `Search` doesn't take them anywhere at this moment.</figcaption>
+    <figcaption>When you open the app you are greeted with a search header that looks like this!</figcaption>
+</figure>
+
+__**New!**__
+
+ Now you can enter something to the text box on the HomePage (We store it in `location.state.searchString`) then it takes you to the SearchResults page and shows you what you entered. I applied a similar procedure to store the result of the user's `searchBy` dropdown selection.
+ 
+ So far, there is no API call to actually query the database based on the input.
+<figure>
+    <img width="300px" src="./about_images/example_search_4-17_successfully-sent-to-SearchResults-and-searchby.png">
+    <img width="300px" src="./about_images/SearchResults_4-17_receives-searchString-AND-searchBy.png">
+    <figcaption>Progress by 4/17: HomePage sends searchString to SearchResults page so it can request the search info from the backend and display it. </figcaption>
 </figure>
 
 ## Pulling the current dataset

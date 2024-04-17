@@ -1,19 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { Button, Form } from "react-bootstrap";
 // will use this once I'm able to install it.
 // import SearchBar from "material-ui-search-bar";
 /* 
-TODO: replace this with our search bar for DiscoDB
+TODO: 
 - [X] Change placeholder and button names
 - [X] IMPORTANT: dropdown for what they want to search by
 -- i.e. Artist, Album
--- [ ] Add state to save the value they select for the dropdown (what they want to search by)
-- [ ] Create another page to take the user to when they do search something!
-- [ ] Navigate to a
+-- [X] Add state to save the value they select for the dropdown (what they want to search by)
+- [X] Create another page to take the user to when they do search something!
+- [X] Navigate to a
 - [ ] Change backend/result of pressing search button
-- Consider using MUI search bar and asking team about what function 
-in the backend I should call once the user enters something.
 
-Note - we will ALWAYS display album results. don't bother displaying artists with clickable links.
+
 */
 // example of how  I want the backend to show me their data.
 
@@ -27,49 +27,55 @@ Note - we will ALWAYS display album results. don't bother displaying artists wit
 
 
 function CustomSearchBar() {
+  const navigate = useNavigate(); // was going to use `useHistory` but that isn't in react-v6.
   const [userInput, setUserInput] = useState('');
+  const [dropdownInput, setDropdownInput] = useState('');
 
   const handleInputTyping = (event) => {
     const value = event.target.value;
     setUserInput(value);
-    console.log("I see you typing! Current saved value: ", userInput);
+    console.log("I see you typing! Current saved value: ", event.target.value);
   };
 
-  const navigateToResultsPage = () => {
+  const handleSelection = (event) => {
+    const value = event.target.value;
+    setDropdownInput(value);
+    console.log("Recording selection value =", event.target.value);
+  }
+
+  // When they press [Search]
+  const handleSubmit = () => {
+    let dropdownValue = dropdownInput;
+    if (dropdownValue === "") {
+      console.log("Auto filling in dropdownInput to be default = 'album'");
+      dropdownValue = "album"; // use default value!
+    }
+
+
     if (userInput === "") {
       console.log("Please enter something in the text field before pressing `Search`!!");
       
     } else {
       // currently use the test_api_results to display something!
       console.log("From search bar, about to switch to results page");
-      console.log("They entered: ", userInput);
+      console.log(`They entered: searchString = ${userInput} | searchBy = ${dropdownValue}`);
 
       // todo: replace with page switching! (i.e. react-router-dom)
-      console.log("TODO: implement a page to navigate them to!")
+      // calling my data variable "state" because of convention.
+      navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue}});
     }
   }
 
   return (
     <div>
-      {/*  Signup form */}
-      {/*  * * * * * * * * * * * * * * * */}
-      {/* * * SB Forms Contact Form * * */}
-      {/* * * * * * * * * * * * * * * * */}
-      {/* This form is pre-integrated with SB Forms. */}
-      {/* To make this form functional, sign up at */}
-      {/* https://startbootstrap.com/solution/contact-forms */}
-      {/* to get an API token! */}
-      <form
-        id="searchForm"
-        // data-sb-form-api-token="API_TOKEN"
-      >
-        {/* Email address input */}
+      <form onSubmit={handleSubmit}>
+        {/* User search input for our database. */}
         <div className="row">
+          <div className="col-1"></div>
           <div className="col">
-            <input
+            <Form.Control type="text"
               className="form-control form-control-lg"
               id="userSearchInput"
-              type="text"
               placeholder="Enter an album or artist name."
               onChange={handleInputTyping}
               required
@@ -77,48 +83,23 @@ function CustomSearchBar() {
             
           </div>
           <div className="col-auto">
-            <button
-              className="btn btn-primary btn-lg"
-              id="submitButton"
-              type="submit"
-              onClick={navigateToResultsPage}
-            >
-              Search
-            </button>
+            {/* Use Form.Select so that it is formatted nicely (I don't have to manually style it, react-bootstrap does it for me.) */}
+            <Form.Select id="search_by" onChange={handleSelection} defaultValue="album"> 
+              <option value="album">Album</option>
+              <option value="artist">Artist</option>
+              <option value="song">Song</option> 
+            </Form.Select>
           </div>
-          <select>
-            <option value="search_by_artist">Artist</option>
-            <option value="search_by_album">Album Name</option>
-            <option value="search_by_song">Song Name</option> 
-          </select>
-        </div>
-        {/* todo: figure out if I'll need to use these. */}
-        {/* Submit success message */}
-        {/* */}
-        {/* This is what your users will see when the form */}
-        {/* has successfully submitted */}
-        <div className="d-none" id="submitSuccessMessage">
-          <div className="text-center mb-3">
-            <div className="fw-bolder">
-              Form submission successful!
-            </div>
-            <p>To activate this form, sign up at</p>
-            <a
-              className="text-white"
-              href="https://startbootstrap.com/solution/contact-forms"
-            >
-              https://startbootstrap.com/solution/contact-forms
-            </a>
+          
+          <div className="col-auto">
+            {/* <Link to="/SearchResults" state={{
+              searchString: userInput, searchBy: dropdownInput
+            }}> */}
+            <Button type="submit">Submit</Button>
+            
+            {/* </Link> */}
           </div>
-        </div>
-        {/* Submit error message */}
-        {/* */}
-        {/* This is what your users will see when there is */}
-        {/* an error submitting the form */}
-        <div className="d-none" id="submitErrorMessage">
-          <div className="text-center text-danger mb-3">
-            Error sending message!
-          </div>
+          <div className="col-1"></div>
         </div>
       </form>
     </div>

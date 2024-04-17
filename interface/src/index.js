@@ -36,7 +36,7 @@ root.render(
           />
 
         </Navbar.Brand>
-        <Dropdown>
+        <Dropdown className="float-right">
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Sign Up
           </Dropdown.Toggle>

@@ -20,7 +20,7 @@ header {
     margin-right: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    /*align-items: center;*/
 }
 
 .logo img {
@@ -43,43 +43,53 @@ header {
     margin-right: 20px;
 }
 
+.column {
+    float: left;
+    width: 50%; /* Adjust as needed */
+}
 
 
 .album-info {
     
-    max-width: 1200px;
-    margin: 20px auto;
+    max-width: 80vw;
+    margin: 10px auto;
     display: flex;
-    background-color: #ffffff;
+    flex-direction: row;
+    /*justify-content: left;
+    */background-color: #c8c4c4;
+    color: #000000;
+
 }
 
-.album-image img {   
+.album-image{   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex: 0 0 50%;
     max-width: 80%;
     margin: 5px;
-    text-align: center; /* Center the image */
+    
 
 }
+
+.album-image img{
+    max-width: 100%;
+}
+
 .album-details {
-    flex: 0 0 calc(50% - 10px);
+    /*flex: 0 0 calc(50% - 10px);
     margin-top: 20px;
+    margin-left: 20px;
+    */
+    display:inline;
+    justify-content: center;
+    
+
+    flex: 0 0 50%;
+    max-width: 80%;
+    margin: 5px;
 }
-
-.album-details h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.album-details h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.album-details p {
-    font-size: 16px;
-    line-height: 1.5;
-}
-
-
 
 
 .tracklist {

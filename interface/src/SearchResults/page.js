@@ -16,6 +16,13 @@ Expecting this format from the SearchBar:
 
 Note - we will ALWAYS display album results. 
 don't bother displaying artists with clickable links.
+
+Can direct the user to AlbumInfo by sending the following info to that page:
+- name
+- album cover
+- artist name
+- description
+- tracklist
 */
 
 import React from "react";
@@ -24,20 +31,37 @@ import { useLocation, // get data from previous page
        } from 'react-router-dom';
 import "./SearchResults.css"
 
+
 const BACKEND_COVER_URL_KEY = "coverURL";
 const BACKEND_ARTIST_NAME_KEY = "artist";
 const BACKEND_ALBUM_NAME_KEY = "album";
 const BACKEND_YEAR_KEY = "year";
+const BACKEND_ALBUM_ID_KEY = "album_id";
+const BACKEND_TRACKS_KEY = "tracks";
+const BACKEND_DESCRIPTION_KEY = "description";
+// For displaying:
+const KEYS_TO_CHECK = [
+        BACKEND_COVER_URL_KEY, BACKEND_ARTIST_NAME_KEY, BACKEND_ALBUM_NAME_KEY, BACKEND_YEAR_KEY, // <- from the backend
+        "coverImage" // <- from my helper function
+];
+const NUM_ITEMS_PER_ROW = KEYS_TO_CHECK.length;
 
 const FRONTEND_COVER_IMAGE_KEY = "coverImage";
 
+const handleSaveClick = () => {
+
+}
+
 function populateImagesAndEmptyKeys(searchResult) {
+    // (if can't load the image reference) use the default album image that we drew on a white board 
+    const defaultImagePath = "default_cover_art.jpg"
     if (! (BACKEND_COVER_URL_KEY in searchResult)) {
-        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="Result is missing link key."/>;
+        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="Result is missing link key." src={defaultImagePath} className="albumCover"/>;
     } else if (searchResult[BACKEND_COVER_URL_KEY] == null) {
-        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="Result URL key is empty (null)."/>;
+        
+        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="Result URL key is empty (null)." src={defaultImagePath} className="albumCover"/>;
     } else {
-        console.log("[DEBUG] Attempting to render this image href: ", searchResult[BACKEND_COVER_URL_KEY]);
+        // console.log("[DEBUG] Attempting to render this image href: ", searchResult[BACKEND_COVER_URL_KEY]);
         searchResult[FRONTEND_COVER_IMAGE_KEY] = 
             <img src={searchResult[BACKEND_COVER_URL_KEY]} 
                  alt="Invalid coverURL"
@@ -46,15 +70,10 @@ function populateImagesAndEmptyKeys(searchResult) {
 }
 
 function renderResultRow(index, resultRow) {
-    const KEYS_TO_CHECK = [
-        BACKEND_COVER_URL_KEY, BACKEND_ARTIST_NAME_KEY, BACKEND_ALBUM_NAME_KEY, BACKEND_YEAR_KEY, // <- from the backend
-        "coverImage" // <- from my helper function
-    ];
-    const NUM_ITEMS_PER_ROW = KEYS_TO_CHECK.length;
 
     const htmlRow = Object.assign({}, resultRow); // fully copy it so we can make changes
     populateImagesAndEmptyKeys(htmlRow);
-    if (Object.keys(htmlRow).length !== NUM_ITEMS_PER_ROW) {
+    if (Object.keys(htmlRow).length < NUM_ITEMS_PER_ROW) {
         console.log("Unable to render this row:", htmlRow,
             "\tExpected number of items: ", NUM_ITEMS_PER_ROW, "Got:", Object.keys(htmlRow).length);
         return (<div>Unabled to display row. Got wrong number of items</div>);
@@ -76,7 +95,7 @@ function renderResultRow(index, resultRow) {
                 <p>{htmlRow[BACKEND_ARTIST_NAME_KEY]}</p>
             </div>
             <div className="col-2 saveCol colVerticalCenter">
-                <button>Save</button>
+                <button id={index} onClick={handleSaveClick}>Save</button>
             </div>
         </div>
     );
@@ -90,9 +109,15 @@ export default function SearchResults() {
 
     // using `[constKey]: value` in brackets so that JS uses the string instead of the variable name as the key.
     const test_api_result = [
-        {[BACKEND_ARTIST_NAME_KEY]: 'Stevie Wonder', [BACKEND_ALBUM_NAME_KEY]: 'Innervision', [BACKEND_YEAR_KEY]: 1970, [BACKEND_COVER_URL_KEY]: null},
-        {[BACKEND_ARTIST_NAME_KEY]: "Artist one", [BACKEND_ALBUM_NAME_KEY]:"Album Name", [BACKEND_YEAR_KEY]: 2024,[BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/237/200/300"},
-        {[BACKEND_ARTIST_NAME_KEY]: "Artist two", [BACKEND_ALBUM_NAME_KEY]:"Album Name", [BACKEND_YEAR_KEY]: 2024, [BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/238/200/300"}
+        {[BACKEND_ARTIST_NAME_KEY]: 'Artist zero', [BACKEND_ALBUM_NAME_KEY]: 'Album Name', 
+            [BACKEND_YEAR_KEY]: 1970, [BACKEND_COVER_URL_KEY]: null,
+            // these last few are just for the /AlbumInfo page, I won't display them
+            [BACKEND_TRACKS_KEY]: ["Song1", "Song2"], [BACKEND_DESCRIPTION_KEY]:"Hey I'm an album"
+            },
+        {[BACKEND_ARTIST_NAME_KEY]: "Artist one", [BACKEND_ALBUM_NAME_KEY]:"Album Name",
+             [BACKEND_YEAR_KEY]: 2024,[BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/237/200/300"},
+        {[BACKEND_ARTIST_NAME_KEY]: "Artist two", [BACKEND_ALBUM_NAME_KEY]:"Album Name", 
+            [BACKEND_YEAR_KEY]: 2024, [BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/238/200/300"}
     ];
 
     let renderedResults = test_api_result.map((row, index) => (

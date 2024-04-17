@@ -38,7 +38,10 @@ function populateImagesAndEmptyKeys(searchResult) {
         searchResult[FRONTEND_COVER_IMAGE_KEY] = <img alt="Result URL key is empty (null)."/>;
     } else {
         console.log("[DEBUG] Attempting to render this image href: ", searchResult[BACKEND_COVER_URL_KEY]);
-        searchResult[FRONTEND_COVER_IMAGE_KEY] = <img href={searchResult[BACKEND_COVER_URL_KEY]} alt="Invalid coverURL"/>;
+        searchResult[FRONTEND_COVER_IMAGE_KEY] = 
+            <img src={searchResult[BACKEND_COVER_URL_KEY]} 
+                 alt="Invalid coverURL"
+                 className="albumCover"/>;
     }
 }
 
@@ -59,6 +62,7 @@ function renderResultRow(index, resultRow) {
 
     populateImagesAndEmptyKeys(htmlRow);
     
+    // THIS IS WHAT DISPLAYS ONE ROW :<)
     return (
         <div className="row resultRow rounded" id={index} key={"rowKey" + index}>
             <div className="col-1 indexCol colVerticalCenter">
@@ -106,7 +110,8 @@ export default function SearchResults() {
             <p>Under Construction :P</p>
             <div className="row categoriesRow">
                 <div className="col-1 indexCol categoryColumn">#</div> 
-                <div className="col-11 categoryColumn">Album Information</div>
+                <div className="col-10 categoryColumn">Album Information</div>
+                <div className="col-1 categoryColumn">Save</div>
             </div>
             {renderedResults}
         </div>

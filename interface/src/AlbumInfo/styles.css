@@ -50,13 +50,13 @@ header {
 
 
 .album-info {
-    
     max-width: 80vw;
+    max-height: 100%;
     margin: 10px auto;
     display: flex;
     flex-direction: row;
     /*justify-content: left;
-    */background-color: #c8c4c4;
+    */background-color: #fffefe;
     color: #000000;
 
 }
@@ -67,14 +67,15 @@ header {
     align-items: center;
 
     flex: 0 0 50%;
-    max-width: 80%;
-    margin: 5px;
+    max-width: 100%;
+    margin: 20px;
     
 
 }
 
 .album-image img{
     max-width: 100%;
+
 }
 
 .album-details {

@@ -37,9 +37,21 @@ Columns:
     border-radius: 5px;
     border-color: black;
     background-color: rgb(216, 245, 245);
-    height: 20vh;
-    margin-bottom: 2vh;
-    display: flex; /* Goal: align items in the middle vertically :p */
+    height: 100px;
+    margin-bottom: 15px;
+    display: flex;
+     /* Goal: align items in the middle vertically :p */
+}
+
+
+.albumCover {
+    height: 100%;
+    max-height: 100px;
+    /* max-width: 100px; */
+    object-fit:contain; /*
+    Note: (the css below WORKS)
+    - height: 100%; max-height: 100px; object-fit:scale-down
+    */
 }
 
 /* Each column has specific style for the info it will hold.
@@ -66,5 +78,6 @@ p.albumTitle {
 }
 
 .saveCol {
+    border-left: 1px ridge black;
     justify-content: center;
 }

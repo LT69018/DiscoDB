@@ -15,10 +15,12 @@ similar to how goodreads allows readers to save books they want to read.
 
 __**New!**__
 
- Now you can enter something to the text box on the HomePage (We store it in `location.state.searchString`) then it takes you to the SearchResults page and shows you what you entered. So far, there is no API call to actually query the database based on the input. Similarly, __I still need to store the result from the dropdown and send that over to SearchResults as well__
+ Now you can enter something to the text box on the HomePage (We store it in `location.state.searchString`) then it takes you to the SearchResults page and shows you what you entered. I applied a similar procedure to store the result of the user's `searchBy` dropdown selection.
+ 
+ So far, there is no API call to actually query the database based on the input.
 <figure>
-    <img width="300px" src="./about_images/example_search_4-17_successfully-sent-to-SearchResults-but-missing-searchby.png">
-    <img width="300px" src="./about_images/SearchResults_4-17_receives-searchString-but-not-searchBy.png">
+    <img width="300px" src="./about_images/example_search_4-17_successfully-sent-to-SearchResults-and-searchby.png">
+    <img width="300px" src="./about_images/SearchResults_4-17_receives-searchString-AND-searchBy.png">
     <figcaption>Progress by 4/17: HomePage sends searchString to SearchResults page so it can request the search info from the backend and display it. </figcaption>
 </figure>
 

@@ -20,7 +20,7 @@ don't bother displaying artists with clickable links.
 
 import React from "react";
 import { useLocation, // get data from previous page
-         useNavigate // send data to next page
+         // useNavigate // send data to next page
        } from 'react-router-dom';
 import "./SearchResults.css"
 
@@ -98,11 +98,15 @@ export default function SearchResults() {
     return (
         <div className="container">
             <h1>Search Results</h1>
-            <p>Displaying results for  
-                <span style={{color: "green"}}> {location.state.searchString}</span></p>
+            <div>
+                Displaying results for <span style={{color: "green"}}>{location.state.searchString} </span> 
+                
+                 Search by <span style={{color: "purple"}}>{location.state.searchBy}</span>
+            </div>
             <p>Under Construction :P</p>
             <div className="row categoriesRow">
-                <div className="col ">#</div>
+                <div className="col-1 indexCol categoryColumn">#</div> 
+                <div className="col-11 categoryColumn">Album Information</div>
             </div>
             {renderedResults}
         </div>

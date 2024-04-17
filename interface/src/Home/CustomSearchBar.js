@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Form } from "react-bootstrap";
 // will use this once I'm able to install it.
 // import SearchBar from "material-ui-search-bar";
 /* 
-TODO: replace this with our search bar for DiscoDB
+TODO: 
 - [X] Change placeholder and button names
 - [X] IMPORTANT: dropdown for what they want to search by
 -- i.e. Artist, Album
--- [ ] Add state to save the value they select for the dropdown (what they want to search by)
+-- [X] Add state to save the value they select for the dropdown (what they want to search by)
 - [X] Create another page to take the user to when they do search something!
 - [X] Navigate to a
 - [ ] Change backend/result of pressing search button
@@ -34,36 +34,48 @@ function CustomSearchBar() {
   const handleInputTyping = (event) => {
     const value = event.target.value;
     setUserInput(value);
-    console.log("I see you typing! Current saved value: ", userInput);
+    console.log("I see you typing! Current saved value: ", event.target.value);
   };
+
+  const handleSelection = (event) => {
+    const value = event.target.value;
+    setDropdownInput(value);
+    console.log("Recording selection value =", event.target.value);
+  }
 
   // When they press [Search]
   const handleSubmit = () => {
+    let dropdownValue = dropdownInput;
+    if (dropdownValue === "") {
+      console.log("Auto filling in dropdownInput to be default = 'album'");
+      dropdownValue = "album"; // use default value!
+    }
+
+
     if (userInput === "") {
       console.log("Please enter something in the text field before pressing `Search`!!");
       
     } else {
       // currently use the test_api_results to display something!
       console.log("From search bar, about to switch to results page");
-      console.log("They entered: ", userInput);
+      console.log(`They entered: searchString = ${userInput} | searchBy = ${dropdownValue}`);
 
       // todo: replace with page switching! (i.e. react-router-dom)
       // calling my data variable "state" because of convention.
-      navigate("/SearchResults", {state:{searchString: userInput}});
+      navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue}});
     }
   }
 
   return (
     <div>
-      <Form>
+      <form onSubmit={handleSubmit}>
         {/* User search input for our database. */}
         <div className="row">
           <div className="col-1"></div>
           <div className="col">
-            <input
+            <Form.Control type="text"
               className="form-control form-control-lg"
               id="userSearchInput"
-              type="text"
               placeholder="Enter an album or artist name."
               onChange={handleInputTyping}
               required
@@ -72,24 +84,24 @@ function CustomSearchBar() {
           </div>
           <div className="col-auto">
             {/* Use Form.Select so that it is formatted nicely (I don't have to manually style it, react-bootstrap does it for me.) */}
-            <Form.Select id="search_by">
+            <Form.Select id="search_by" onChange={handleSelection} defaultValue="album"> 
+              <option value="album">Album</option>
               <option value="artist">Artist</option>
-              <option value="album">Album Name</option>
-              <option value="song">Song Name</option> 
+              <option value="song">Song</option> 
             </Form.Select>
           </div>
           
           <div className="col-auto">
-            <Link to="/SearchResults" state={{
+            {/* <Link to="/SearchResults" state={{
               searchString: userInput, searchBy: dropdownInput
-            }}>
-              <Button>Submit</Button>
+            }}> */}
+            <Button type="submit">Submit</Button>
             
-            </Link>
+            {/* </Link> */}
           </div>
           <div className="col-1"></div>
         </div>
-      </Form>
+      </form>
     </div>
   );
 }

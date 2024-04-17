@@ -38,10 +38,12 @@ root.render(
         </Navbar.Brand>
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Sign Up
+            Menu
           </Dropdown.Toggle>
           <Dropdown.Menu>
-                <Dropdown.Item href="#">Profile</Dropdown.Item>
+                <Dropdown.Item href="#">Sign Up</Dropdown.Item>
+                <Dropdown.Item href="#">Log in</Dropdown.Item>
+                <Dropdown.Item href="/UserProfile">Profile</Dropdown.Item>
                 <Dropdown.Item href="#">Settings</Dropdown.Item>
                 <Dropdown.Item href="#">Log Out</Dropdown.Item>
           </Dropdown.Menu>

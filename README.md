@@ -10,6 +10,8 @@ similar to how goodreads allows readers to save books they want to read.
 The frontend is hosted on port 3000, the backend is hosted on port 80. See the Dockerfiles.
 
 # Directory Structure / Docker
+Note: You may have to have `docker` desktop running in order to start up and run our docker image.
+
 Reference repository: 
 https://github.com/docker/awesome-compose/blob/master/react-express-mysql/
 
@@ -64,7 +66,14 @@ Creating project-discodb_frontend_1 ... done
 
 ## Expected result
 
-Listing containers must show containers running and the port mapping as below:
+Listing containers must show containers running and the port mapping as below.
+
+Command:
+```bash
+docker ps
+```
+
+Output:
 ```bash
 $ docker ps
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS                   PORTS                                                  NAMES
@@ -82,6 +91,12 @@ $ curl localhost:80
 ```
 
 Stop and remove the containers
+
+Command:
+```shell
+docker compose down
+```
+Output:
 ```
 $ docker compose down
 Stopping project-discodb_frontend_1 ... done

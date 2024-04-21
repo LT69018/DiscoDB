@@ -4,8 +4,11 @@ Description: Express code. Contains endpoints for DiscoDB backend.
 
 */
 
+const PORT = process.env.PORT;
 
 const express = require("express");
+
+const app = express();
 /* ======================== (start) REFERENCE:github/docker ==================
 /* - these comments and imports come from the reference. */
 // simple node web server that displays hello world
@@ -25,10 +28,6 @@ const database = require("./database");
 app.use(morgan("common"));
 /* ======================== ( end ) REFERENCE:github/docker ================== */
 
-
-const PORT = process.env.PORT || 3001;
-
-const app = express();
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

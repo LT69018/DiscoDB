@@ -44,6 +44,7 @@ app.get("/", function(req, res, next) {
     .then(([rows, columns]) => rows[0])
     .then((row) => res.json({ message: `Hello from MySQL ${row.version}` }))
     .catch(next);
+  res.send("Successfully pinged GET '/'");
 });
 
 app.get("/healthz", function(req, res) {

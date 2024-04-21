@@ -1,6 +1,6 @@
 # ======================== (start) REFERENCE:github/docker ==================   */
 # Dockerfile for our express backend!
-# Modifications: None yet
+# Modifications: Use port 8080 instead of 80.
 # ----------------------------------------------------------------------------- */
 
 
@@ -16,8 +16,9 @@ ENV NODE_ENV $NODE_ENV
 
 WORKDIR /code
 
-# default to port 80 for node, and 9229 and 9230 (tests) for debug
-ARG PORT=80
+# (reference) default to port 80 for node, and 9229 and 9230 (tests) for debug
+# - JT changed 80 to 8080.
+ARG PORT=8080
 ENV PORT $PORT
 EXPOSE $PORT 9229 9230
 

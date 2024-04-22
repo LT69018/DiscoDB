@@ -1,4 +1,8 @@
-import React from "react";
+import {
+  React, 
+  useState, // in case I want to store an API result in state
+  useEffect // to run fetch request!
+} from "react";
 
 import { Container, Row, Col } from "react-bootstrap";
 
@@ -6,6 +10,20 @@ import CustomSearchBar from "./CustomSearchBar.js";
 // import "./premade_theme/css/styles.css";
 
 export default function Home() {
+
+	const [state, setState] = useState();
+
+  useEffect(() => {
+    fetch("localhost:5000/testFrontendConnection", {
+      method: "GET", 
+      headers: {
+        "Allow-origin": "*",
+        "Content-Type":"application/json"}})
+      .then((response) => response.json)
+      .then((data))
+      .catch(error => console.log("[Frontend:Home/page.js] Got error:", error))
+  });
+
   return (
     <div>
     {/*  Navigation */}

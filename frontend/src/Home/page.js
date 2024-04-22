@@ -20,11 +20,12 @@ export default function Home() {
         "Allow-origin": "*",
         "Content-Type":"application/json"}})
       .then((response) => response.json)
-      .then((data))
+      .then((data) => console.log("[Frontend: Home/page.js] Data =", data))
       .catch(error => console.log("[Frontend:Home/page.js] Got error:", error))
   });
 
   return (
+    // TODO: add user profile (past, present, future) listening tables.
     <div>
     {/*  Navigation */}
       

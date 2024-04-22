@@ -20,12 +20,13 @@ WORKDIR /code
 # - JT changed 80 to 5000 (8080, 8081 didn't work).
 ARG PORT=5000
 ENV PORT $PORT
-# apparently expose is just for documentation, it doesn't actually map ports :p
+# JT note to self: apparently expose is just for documentation, it doesn't actually map ports :p
 EXPOSE $PORT 9229 9230
 
 COPY package.json /code/package.json
 COPY package-lock.json /code/package-lock.json
-RUN npm ci
+# RUN npm ci # <- JT commenting out to attempt getting cors package to install!
+RUN npm install
 
 # check every 30s to ensure this service returns HTTP 200
 HEALTHCHECK --interval=30s \
@@ -42,8 +43,7 @@ CMD [ "node", "src/index.js" ]
 
 FROM development as dev-envs
 RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends git
+apt-get update && apt-get install -y --no-install-recommends git
 EOF
 
 RUN <<EOF

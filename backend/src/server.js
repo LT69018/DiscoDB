@@ -44,14 +44,14 @@ app.get("/", function(req, res, next) {
     .then(([rows, columns]) => rows[0])
     .then((row) => res.json({ message: `Hello from MySQL ${row.version}` }))
     .catch(next);
-  res.send("Successfully pinged GET '/'");
+  res.send("[DiscoDB] Successfully pinged GET '/'");
 });
 
 app.get("/healthz", function(req, res) {
   // do app logic here to determine if app is truly healthy
   // you should return 200 if healthy, and anything else will fail
   // if you want, you should be able to restrict this to localhost (include ipv4 and ipv6)
-  res.send("I am happy and healthy\n");
+  res.send("[DiscoDB] I am happy and healthy\n");
 });
 /* ======================== (end) REFERENCE:github/docker ================== */
 

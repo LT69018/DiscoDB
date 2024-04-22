@@ -18,7 +18,7 @@ WORKDIR /code
 
 # (reference) default to port 80 for node, and 9229 and 9230 (tests) for debug
 # - JT changed 80 to 5000 (8080, 8081 didn't work).
-ARG PORT=5001
+ARG PORT=5000
 ENV PORT $PORT
 # apparently expose is just for documentation, it doesn't actually map ports :p
 EXPOSE $PORT 9229 9230

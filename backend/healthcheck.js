@@ -11,7 +11,7 @@ const http = require("http");
 const options = {
   timeout: 2000,
   host: "localhost",
-  port: process.env.PORT || 8080,
+  port: process.env.PORT, // || 8080,
   path: "/healthz" // must be the same as HEALTHCHECK in Dockerfile
 };
 

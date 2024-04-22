@@ -18,7 +18,7 @@ services:
       - DATABASE_HOST=db
       - NODE_ENV=development
     ports:
-      - 8080:8080 # attempt fix port problem
+      - 5000:5001 # 8080:8080 # attempt fix port problem
       - 9229:9229
       - 9230:9230
     secrets:

@@ -12,6 +12,12 @@ const app = express();
 // reference: https://github.com/expressjs/cors
 const cors = require("cors");
 app.use(cors)
+
+// NOTE: do not have duplicate app.listen(PORT)
+// leads to address already in use.
+// app.listen(PORT, () => {
+//   console.log(`Server listening on ${PORT}`);
+// });
 /* ======================== (start) REFERENCE:github/docker ==================
 /* - these comments and imports come from the reference. */
 // simple node web server that displays hello world

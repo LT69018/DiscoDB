@@ -1,6 +1,5 @@
 This will contain the backend code for DiscoDB.
-<<<<<<< Updated upstream
-=======
+
 
 I will use these emojis to talk about the status of each of these.
 - 🟢 : done
@@ -49,6 +48,7 @@ GET /query_user_search
 - params: 
     - searchString (string) i.e. "Thriller"
     - searchBy (string) i.e. "album name" (other options: "artist", "song")   
+
 - return top 50 results: (list of rows) [{}, {}, ...]
 - Row attributes
     - album_id
@@ -124,11 +124,9 @@ GET /load_user_saves
     "present" : [...],
     "future" : [...]
 }
-```
 
 # Packages / Dependencies
 - mysql
 ```
 npm install mysql
 ```
->>>>>>> Stashed changes

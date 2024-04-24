@@ -42,15 +42,14 @@ COPY . /code
 CMD [ "node", "src/index.js" ]
 
 FROM development as dev-envs
-RUN <<EOF
-apt-get update && apt-get install -y --no-install-recommends git
-EOF
 
-RUN <<EOF
-useradd -s /bin/bash -m vscode
-groupadd docker
-usermod -aG docker vscode
-EOF
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends git
+
+RUN useradd -s /bin/bash -m vscode
+RUN groupadd docker
+RUN usermod -aG docker vscode
+
 # install Docker tools (cli, buildx, compose)
 COPY --from=gloursdocker/docker / /
 

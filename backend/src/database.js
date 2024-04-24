@@ -11,10 +11,13 @@ const {database} = require("./config");
 const mysql = require("mysql"); // could also use mysql2, but mysql apparently doesn't require compiling
 
 // Reference: https://www.npmjs.com/package/mysql
-var pooledConnection = mysql.createPool(database);
+var connection = mysql.createConnection(database);
+/*
+Originally thought to do pooled, but it's too hard T_T If I did, here are my thoughts about that...
+oi.e. mySql.createPool(database);
 // will allow multiple queries to run at the same time, i.e. refreshing two tabs, one with SearchResults and one with the UserProfile
 // call with connection.query(), connection.release
-
+*/
 // reference (how to execute a sql query in express)
 // https://blog.logrocket.com/build-rest-api-node-express-mysql/
 // async function runQuery(sql, params) {
@@ -25,6 +28,6 @@ var pooledConnection = mysql.createPool(database);
 // }
 
 module.exports = {
-  pooledConnection: pooledConnection,
+  connection: connection,
   // runQuery: runQuery
 }

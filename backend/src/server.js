@@ -64,19 +64,18 @@ app.get("/healthz", function(req, res) {
 app.get("/test_db_connection", function(req, res, next){
   const query_string = "SHOW TABLES";
   const result = null;
-  database.pooledConnection.query(query_string, (err, res) => {
+  database.connection.query(query_string, (err, res) => {
     if (err) {
       console.error("[GET /test_db_connection] Error:", err);
       throw ("Database error!");
     }
     result = res;
-    database.pooledConnection.release();
   });
   // this is my backup in case catching an error in the database query function doesn't work
   // Promise.resolve().then(()=>{
   //   res.status(500).json({"message": "Failed to /test_db_connection", "query_result": result});
   // }).catch(next);
-  console.log(`Successfully ran query\n\t'${query_string}\nWith result:\n\t${result}`)
+  console.log(`\tSuccessfully ran query\n\t'${query_string}'\n\tWith result:\n\t\t${result}`)
   res.status(200).json({"message": "Successfully ran /test_db_connection", "query_result": result})
 });
 

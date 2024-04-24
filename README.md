@@ -171,4 +171,10 @@ export default function RecipientComponent() {
 ```
 
 ## Pulling the current dataset
-Go to this [Google Drive link](https://drive.google.com/drive/u/1/folders/1pKdHyqLQyvNPYMsrdXC8M1apf1UDdFR4), download all of the files in the folder (the files are titled as follows: "discogs_20240201_artists_modified", "found_missing_releases_masters", "main_releases_modified", and "recovered_missing_releases_modified"), and download and run the file titled "setup_sql.py". The setup file does not yet exist, but these will be the appropriate steps to follow once it is uploaded.
+1. Go to this [Google Drive link](https://drive.google.com/drive/u/1/folders/1pKdHyqLQyvNPYMsrdXC8M1apf1UDdFR4)
+2. download all of the files in the folder 
+    (the files are titled as follows: "discogs_20240201_artists_modified", "found_missing_releases_masters", "main_releases_modified", and "recovered_missing_releases_modified").
+3. Navigate to and put those downloads in the `db` folder.
+4. Change the `ROOT_PATH` in `process_data.py`
+5. Run `setup_sql.py
+. The setup file does not yet exist, but these will be the appropriate steps to follow once it is uploaded.

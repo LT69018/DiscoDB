@@ -49,7 +49,12 @@ GET /query_user_search
 - params: 
     - searchString (string) i.e. "Thriller"
     - searchBy (string) i.e. "album name" (other options: "artist", "song")   
-- return top 50 results  
+- return top 50 results: (list of rows) [{}, {}, ...]
+- Row attributes
+    - album_id
+    - album_name
+    - artist_name
+    - release_year
 ```
 Usage: Frontedn `SearchResults` page.
 

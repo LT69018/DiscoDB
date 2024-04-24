@@ -66,13 +66,11 @@ def get_artist_info():
 
 
 def get_all_release_info():
-    with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/main_releases_modified.xml", "rb") as file_1, \
-            open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/recovered_missing_releases_modified.xml", "rb") as file_2, \
-            open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/found_missing_releases_masters.xml","rb") as file_3:
+    with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/main_releases_modified.xml", "rb") as file_1:
 
         start = time.time()
 
-        files = [file_1, file_2, file_3]
+        files = [file_1]
 
         total_releases_list = []
 

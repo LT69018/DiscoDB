@@ -334,7 +334,7 @@ if __name__ == "__main__":
                 # Add the artist's info to artist_album_credits_to_insert as a primary artist
                 initial_artist_album_credits_to_insert.append((artist.get("id"), release.release_id, artist.get("role"), 1))
 
-        for artist in release.extra_artists:
+        for artist in release.extraartists:
             if artist.get("id"):
                 # Add the artist's info to artist_album_credits_to_insert as a non-primary artist
                 initial_artist_album_credits_to_insert.append((artist.get("id"), release.release_id, artist.get("role"), 0))
@@ -349,7 +349,7 @@ if __name__ == "__main__":
                     # Add the artist's info to artist_album_credits_to_insert as a primary artist
                     initial_artist_song_credits_to_insert.append((artist.get("id"), song_count, artist.get("role"), 1))
 
-            for artist in song.extra_artists:
+            for artist in song.extraartists:
                 if artist.get("id"):
                     # Add the artist's info to artist_album_credits_to_insert as a non-primary artist
                     initial_artist_song_credits_to_insert.append((artist.get("id"), song_count, artist.get("role"), 0))

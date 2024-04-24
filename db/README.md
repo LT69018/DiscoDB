@@ -1,5 +1,12 @@
 Configuration for our mysql database!
 
+`Miniature database code/*` currently pulls 100 entries from our dataset to construct the database.
+- this is just the first 100 entries from the dataset.
+
+To see most up to date version of this code, check Coby's branch:
+https://github.com/UMBC-CMSC461-SP2024/project-discodb/tree/Coby's_database_code/db
+- he is working on targeting relevant artists (from our group members preferences) 
+
 View it in the docker container by following instructions like these.
 If you do not have docker desktop, start a shell in the container by doing
 ```shell

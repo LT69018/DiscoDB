@@ -60,6 +60,75 @@ app.get("/healthz", function(req, res) {
 });
 /* ======================== (end) REFERENCE:github/docker ================== */
 
+app.post("/add_user", function(req, res, next){
+  /*
+  Add a row in the `users` table. Creates the table if it doesn't already exist.
+  :param: username
+  - Todo: maybe password
+  :return: user_id
+  */
+  const queryParams = Object.keys(req.query); // If we decide to use req.params, then we have to change the endpoint i.e. /add_user/:username
+  if (! ("username") in queryParams) {
+    console.log("[POST /add_user] Missing username (param). Try again.");
+    // Promise syntax reference:
+    // https://expressjs.com/en/guide/error-handling.html
+    Promise.resolve().then(() => {
+      throw new Error('Unable to POST /add_user.');
+    }).catch(next) // Errors will be passed to Express.
+  }
+  const username = req.query.username;
+  console.log(`[POST /add_user] Got username = ${username} from req.query=${queryParams}`);
+  const user_id = null; // tbd
+  const message = "TODO: database insert / create table!";
+  res.status(200).json({"username": username,
+                        "user_id": user_id,
+                        "message": message});
+
+}); 
+
+app.post("/save_album_for_user", function(req, res, next) {
+  /*
+  :param user_id: Which user wants to save this album. 
+    From the `users` table. 
+    i.e. from the result of `POST /add_user`
+  :param plan_type: ("past", "present", "future");
+  :param album_id: from `albums` table. The album they want to save
+  - we'll translate this into an integer
+
+  :return: {"message": ``}
+  */
+});
+
+app.get("/load_user_saves", function(req, res){
+  /*
+  - Parameters
+    - user_id (integer)
+  - Returns the 3 tables to display.
+  - reads all of the info from the one "user_listening" table, but seperates it for ease on the frontend.
+  {
+      "future": [
+          "album_id": ...
+          "album_name": ...
+          (maybe) "album_cover_url": ...
+
+      ], "present" : [...], "past" : [...]
+  }
+  */
+});
+
+// IMPORTANT
+// todo: implement this at least with 1 dummy result with the same format as the database.
+// -> then try selectOne from the database, then try select * (or some set number)
+app.get("/query_user_search", function(req, res, next){
+  /*
+  - params: 
+    - searchString (string) i.e. "Thriller"
+    - searchBy (string) i.e. "album name" (other options: "artist", "song")   
+  - return top 50 results  
+  */
+});
+
+
 
 // Reference: https://expressjs.com/en/guide/error-handling.html
 app.use((err, req, res, next) => {

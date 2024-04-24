@@ -1,6 +1,6 @@
 # ======================== (start) REFERENCE:github/docker ==================   */
 # Dockerfile for our express backend!
-# Modifications: Use port 8080 instead of 80.
+# Modifications: Use port 5000 instead of 80, 8080, or 8081.
 # ----------------------------------------------------------------------------- */
 
 
@@ -17,14 +17,16 @@ ENV NODE_ENV $NODE_ENV
 WORKDIR /code
 
 # (reference) default to port 80 for node, and 9229 and 9230 (tests) for debug
-# - JT changed 80 to 8080.
-ARG PORT=8080
+# - JT changed 80 to 5000 (8080, 8081 didn't work).
+ARG PORT=5000
 ENV PORT $PORT
+# JT note to self: apparently expose is just for documentation, it doesn't actually map ports :p
 EXPOSE $PORT 9229 9230
 
 COPY package.json /code/package.json
 COPY package-lock.json /code/package-lock.json
-RUN npm ci
+# RUN npm ci # <- JT commenting out to attempt getting cors package to install!
+RUN npm install
 
 # check every 30s to ensure this service returns HTTP 200
 HEALTHCHECK --interval=30s \
@@ -40,6 +42,7 @@ COPY . /code
 CMD [ "node", "src/index.js" ]
 
 FROM development as dev-envs
+
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends git
 

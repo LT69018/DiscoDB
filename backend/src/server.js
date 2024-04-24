@@ -7,8 +7,17 @@ Description: Express code. Contains endpoints for DiscoDB backend.
 const PORT = process.env.PORT;
 
 const express = require("express");
-
 const app = express();
+
+// reference: https://github.com/expressjs/cors
+const cors = require("cors");
+app.use(cors)
+
+// NOTE: do not have duplicate app.listen(PORT)
+// leads to address already in use.
+// app.listen(PORT, () => {
+//   console.log(`Server listening on ${PORT}`);
+// });
 /* ======================== (start) REFERENCE:github/docker ==================
 /* - these comments and imports come from the reference. */
 // simple node web server that displays hello world
@@ -28,11 +37,6 @@ const database = require("./database");
 app.use(morgan("common"));
 /* ======================== ( end ) REFERENCE:github/docker ================== */
 
-
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
-});
-
 /* ======================== (start) REFERENCE:github/docker ==================
 - these template endpoints are from the reference:  
   - "/" - selecting a version from MySQL
@@ -49,16 +53,20 @@ app.get("/", function(req, res, next) {
   //   .catch(next);
   json_response["message"] = "Successfully pinged GET '/'";
   res.send(json_response);
-    
 });
 
 app.get("/healthz", function(req, res) {
   // do app logic here to determine if app is truly healthy
   // you should return 200 if healthy, and anything else will fail
   // if you want, you should be able to restrict this to localhost (include ipv4 and ipv6)
-  res.send("I am happy and healthy\n");
+  res.send("[DiscoDB] I am happy and healthy\n");
 });
 /* ======================== (end) REFERENCE:github/docker ================== */
+
+app.get("/testFrontendConnection", function(req, res) {
+  res.send("Successfully ran GET /testFrontendConnection");
+});
+
 
 app.post("/add_user", function(req, res, next){
   /*
@@ -139,4 +147,5 @@ app.use((err, req, res, next) => {
               "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   res.status(500).send('Something broke!')
 })
+
 module.exports = app;

@@ -2,6 +2,13 @@
 Theme Reference (we did not write a lot of the css):
 https://startbootstrap.com/previews/landing-page
 
+# Plan to integrate backend
+- [X] `Home/page.js` will save the searchString and what they want to searchBy.
+- [X] It will send those strings to `SearchResults/page.js`
+- [ ] `SearchResults/page.js` will send backend request
+```
+GET /searchResults?
+```
 # Pages
 ## Home (`./Home/page.js`)
 ## SearchResults (`./SearchResults/page.js`)

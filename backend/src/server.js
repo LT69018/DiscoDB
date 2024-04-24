@@ -40,11 +40,16 @@ app.listen(PORT, () => {
 */
 
 app.get("/", function(req, res, next) {
-  database.raw('select VERSION() version')
-    .then(([rows, columns]) => rows[0])
-    .then((row) => res.json({ message: `Hello from MySQL ${row.version}` }))
-    .catch(next);
-  res.send("Successfully pinged GET '/'");
+  res.set("Content-Type", "application/json");
+  // ^ hopefully resolves `Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client`
+  json_response = {}
+  // database.raw('select VERSION() version')
+  //   .then(([rows, columns]) => rows[0])
+  //   .then((row) => json_response["data"] = `Hello from MySQL ${row.version}`)
+  //   .catch(next);
+  json_response["message"] = "Successfully pinged GET '/'";
+  res.send(json_response);
+    
 });
 
 app.get("/healthz", function(req, res) {
@@ -55,4 +60,14 @@ app.get("/healthz", function(req, res) {
 });
 /* ======================== (end) REFERENCE:github/docker ================== */
 
+
+// Reference: https://expressjs.com/en/guide/error-handling.html
+app.use((err, req, res, next) => {
+  console.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + 
+                "------------ Server.js Caught Error ------------\n" +
+                "------------------------------------------------\n"
+                + err.stack + 
+              "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+  res.status(500).send('Something broke!')
+})
 module.exports = app;

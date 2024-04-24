@@ -7,6 +7,7 @@ Description: Express code. Contains endpoints for DiscoDB backend.
 const PORT = process.env.PORT;
 
 const express = require("express");
+const mysql = require("mysql2");
 
 const app = express();
 /* ======================== (start) REFERENCE:github/docker ==================
@@ -59,6 +60,25 @@ app.get("/healthz", function(req, res) {
   res.send("I am happy and healthy\n");
 });
 /* ======================== (end) REFERENCE:github/docker ================== */
+
+app.get("/test_db_connection", function(req, res, next){
+  const query_string = "SHOW TABLES";
+  const result = null;
+  database.pooledConnection.query(query_string, (err, res) => {
+    if (err) {
+      console.error("[GET /test_db_connection] Error:", err);
+      throw ("Database error!");
+    }
+    result = res;
+    database.pooledConnection.release();
+  });
+  // this is my backup in case catching an error in the database query function doesn't work
+  // Promise.resolve().then(()=>{
+  //   res.status(500).json({"message": "Failed to /test_db_connection", "query_result": result});
+  // }).catch(next);
+  console.log(`Successfully ran query\n\t'${query_string}\nWith result:\n\t${result}`)
+  res.status(200).json({"message": "Successfully ran /test_db_connection", "query_result": result})
+});
 
 app.post("/add_user", function(req, res, next){
   /*

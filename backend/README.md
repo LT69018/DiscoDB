@@ -102,3 +102,9 @@ GET /load_user_saves
     "future" : [...]
 }
 ```
+
+# Packages / Dependencies
+- mysql
+```
+npm install mysql
+```

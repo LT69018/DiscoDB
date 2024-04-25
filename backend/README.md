@@ -1,6 +1,5 @@
 This will contain the backend code for DiscoDB.
 
-
 I will use these emojis to talk about the status of each of these.
 - 🟢 : done
 - 🟡 : in progress
@@ -48,31 +47,9 @@ GET /query_user_search
 - params: 
     - searchString (string) i.e. "Thriller"
     - searchBy (string) i.e. "album name" (other options: "artist", "song")   
-
-- return top 50 results: (list of rows) [{}, {}, ...]
-- Row attributes
-    - album_id
-    - album_name
-    - artist_name
-    - release_year
+- return top 50 results  
 ```
 Usage: Frontedn `SearchResults` page.
-
-## 🔴 Get Album Info
-```
-GET /album_info
-- params
-    - album_id
-- return (at least these attributes)
-    {
-        "album_id": ...,
-        "artist_name": ...,
-        "album_name": ...,
-        "tracklist": [..., ..., ...],
-        "description":
-    }
-```
-Usage: AlbumInfo Page
 
 ## 🔴 Save album [definitely]
 ```
@@ -124,6 +101,7 @@ GET /load_user_saves
     "present" : [...],
     "future" : [...]
 }
+```
 
 # Packages / Dependencies
 - mysql

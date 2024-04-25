@@ -2,15 +2,13 @@ from lxml import etree
 import time
 from artist import Artist
 from releases import Release, Track, Video
-import os
 
 parser = etree.XMLParser(remove_blank_text=True)
 
-DATASET_FOLDER_PATH = "C:\Users\jturn\Documents\GitHub\project-discodb\db"
 
 # Set up the Artists table
 def get_artist_info():
-    with open(os.path.join(DATASET_FOLDER_PATH, "/discogs_20240201_artists_modified.xml"), "rb") as my_file:
+    with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/discogs_20240201_artists_modified.xml", "rb") as my_file:
         start = time.time()
 
         tree = etree.parse(my_file, parser)
@@ -68,7 +66,7 @@ def get_artist_info():
 
 
 def get_all_release_info():
-    with open(os.path.join(DATASET_FOLDER_PATH,"main_releases_modified.xml"), "rb") as file_1:
+    with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/main_releases_modified.xml", "rb") as file_1:
 
         start = time.time()
 
@@ -171,11 +169,6 @@ def get_all_release_info():
                         continue
 
                     if sub_tag.tag == "videos":
-                        # The videos in file_2 are not useful to us
-                        # (they have no source listed)
-                        if my_file == file_2:
-                            continue
-
                         for video in sub_tag.iter("video"):
                             video_dict = {"src": video.get("src"),
                                           "duration": video.get("duration")}

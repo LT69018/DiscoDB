@@ -9,4 +9,4 @@ DISCODB_MYSQL_USERNAME = "root" # <- for docker
 # for local work, can change to yours, i.e. "Coby"
 # todo: in the future, be more secure about the password :0
 DISCODB_MYSQL_PASSWORD = "db-btf5q"
-DISCODB_NAME = "discodb"
+DISCODB_NAME = "discodb-mini-top-100"

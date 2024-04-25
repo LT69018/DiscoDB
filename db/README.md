@@ -17,6 +17,8 @@ Configuration for our mysql database!
 `Miniature database code/*` currently pulls 100 entries from our dataset to construct the database.
 - this is just the first 100 entries from the dataset.
 - **Runtime**: ~5 min
+- In case the branch you are reading this on isn't working, you should be able to find working code with this runtime and context at this branch:
+    - https://github.com/UMBC-CMSC461-SP2024/project-discodb/tree/python-100-dummy-construct-5-minutes-april-24
 - @LT69018 Todo: use mySQL username / password (set global :0)
 
 ## Our tailored small dataset.

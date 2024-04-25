@@ -4,6 +4,10 @@
 # metadata from machine I believe.
 .DS_Store
 
+# jess copied they're dataset to this folder so ignoring it so they can look at my code.
+db/Miniature database code/dataset/*.xml
+
+
 # Logs
 logs
 *.log

@@ -1,5 +1,7 @@
 from lxml import etree
 import time
+
+from os.path import join as os_path_join
 from artist import Artist
 from releases import Release, Track, Video
 
@@ -8,6 +10,7 @@ parser = etree.XMLParser(remove_blank_text=True)
 
 # Set up the Artists table
 def get_artist_info():
+    with open(os_path_join(DATASET_FOLDER_PATH, ARTISTS_DATASET_FILE_NAME), "rb") as my_file:
     with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/discogs_20240201_artists_modified.xml", "rb") as my_file:
         start = time.time()
 
@@ -66,6 +69,7 @@ def get_artist_info():
 
 
 def get_all_release_info():
+    with open(os_path_join(DATASET_FOLDER_PATH, ALL_RELEASES_DATASET_FILE_NAME), "rb") as file_1:
     with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/main_releases_modified.xml", "rb") as file_1:
 
         start = time.time()

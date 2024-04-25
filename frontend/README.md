@@ -7,8 +7,19 @@ https://startbootstrap.com/previews/landing-page
 - [X] It will send those strings to `SearchResults/page.js`
 - [ ] `SearchResults/page.js` will send backend request
 ```
-GET /searchResults?
+GET /query_user_search?searchString=...&searchBy=...
 ```
+- [ ] Save button
+```
+POST /save_album_for_user
+```
+- [ ] Album Name Link to Ayush' Page
+- [ ] -- send the `album_id` in `location`
+- [ ] `AlbumInfo` will send backend request to load
+```
+GET /album_info?album_id=...
+```
+
 # Pages
 ## Home (`./Home/page.js`)
 ## SearchResults (`./SearchResults/page.js`)

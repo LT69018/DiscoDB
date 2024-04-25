@@ -6,6 +6,7 @@ from process_data import get_artist_info, get_all_release_info
 
 NON_ROOT_PASSWORD = ""  # Optional: Fill this constant in with your user's password
 
+
 def connect_to_server(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, pswd=DISCODB_MYSQL_PASSWORD):
     connection = None
 

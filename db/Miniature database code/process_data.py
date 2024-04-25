@@ -7,6 +7,7 @@ import time
 
 parser = etree.XMLParser(remove_blank_text=True)
 
+
 def get_artist_info():
     with open(os_path_join(DATASET_FOLDER_PATH, ARTISTS_DATASET_FILE_NAME), "rb") as my_file:
         start = time.time()

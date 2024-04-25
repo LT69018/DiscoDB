@@ -5,12 +5,19 @@ from getpass import getpass
 from string import punctuation
 from process_data import get_artist_info, get_all_release_info
 
+from config import DISCODB_MYSQL_URL, DISCODB_MYSQL_USERNAME, DISCODB_MYSQL_PASSWORD
 
-def connect_to_server(host_name, username):
+# Jess change:
+# - :param host_name, username: by default use the docker mysql configuration
+# - added new parameter :password: to also use the docker mysql password
+
+# - if you want to specify your local host instead, 
+# - just change the call in if __name__ == "__main__", and use `password=getpass()`
+def connect_to_server(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, password=DISCODB_MYSQL_PASSWORD):
     connection = None
 
     try:
-        connection = mysql.connector.connect(host=host_name, user=username, password=getpass())
+        connection = mysql.connector.connect(host=host_name, user=username, password=password)
         print("Server connection successful!")
     except Error as error:
         print("Error connecting to the SQL server:", error)
@@ -289,7 +296,7 @@ if __name__ == "__main__":
     create_database(cursor)
 
     # Connect to the MySQL database
-    connection = connect_to_db("127.0.0.1", "Cobyz1", "discodb")
+    connection = connect_to_db() # connect_to_db("127.0.0.1", "Cobyz1", "discodb")
 
     # --------- Artist data ---------
 

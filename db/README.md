@@ -3,6 +3,16 @@ Configuration for our mysql database!
 # Code to construct the database
 **Note:** Try to shut off miscellaneous processes that take up a lot of RAM to make this take less time :<)
 
+## Before you run anything! (Note from Jess)
+1. As stated in `~/README.md`, you must download the dataset files. Note the final paths of each of these files
+2. Check out `config.py`. This is where you can specify...
+- the folder that you downloaded/moved those `*.xml` files to.
+- the file names if you changed them.
+- To my dearest collabrators, please don't over-write this! 
+    - If you want to use a local version of mysql server...
+    - you can change the constants in this file. 
+    - Also note my comment on the top of `setup_sql.py/connect_to_server`
+
 ## Dummy data
 `Miniature database code/*` currently pulls 100 entries from our dataset to construct the database.
 - this is just the first 100 entries from the dataset.

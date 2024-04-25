@@ -12,7 +12,15 @@ Configuration for our mysql database!
     - If you want to use a local version of mysql server...
     - you can change the constants in this file. 
     - Also note my comment on the top of `setup_sql.py/connect_to_server`
-
+3. Install dependencies:
+- `mysql`
+```shell
+pip install mysql-connector
+```
+- `lxml`
+```
+pip install lxml
+```
 ## Dummy data
 `Miniature database code/*` currently pulls 100 entries from our dataset to construct the database.
 - this is just the first 100 entries from the dataset.

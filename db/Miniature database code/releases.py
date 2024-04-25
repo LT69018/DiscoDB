@@ -16,7 +16,7 @@ class Video:
                             
                             
 class Release:
-    def __init__(self, release_id, title="Untitled", artists=[], extraartists=[], genres_and_styles=[], released="Unknown", notes="", tracklist: list[Track]=[], videos: list[Video]=[]):
+    def __init__(self, release_id, title="Untitled", artists=[], extraartists=[], genres_and_styles=[], released="Unknown", notes="", tracklist=[], videos=[]):
         self.release_id = release_id
         self.title = title
         self.artists = artists

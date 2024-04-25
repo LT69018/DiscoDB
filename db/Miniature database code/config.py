@@ -1,5 +1,5 @@
 # local paths and file names for raw dataset files
-DATASET_FOLDER_PATH = "C:\Users\jturn\Documents\UMBC\DiscoDB_Downloads/"
+DATASET_FOLDER_PATH = r"C:\Users\jturn\Documents\UMBC\DiscoDB_Downloads/"
 ARTISTS_DATASET_FILE_NAME= "discogs_20240201_artists_modified.xml"
 ALL_RELEASES_DATASET_FILE_NAME = "main_releases_modified.xml"
 

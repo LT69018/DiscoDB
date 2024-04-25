@@ -1,4 +1,8 @@
-This will contain the backend code for DiscoDB.
+This will contain the backend (node.js express) code for DiscoDB.
+
+The main section of this README is the endpoints I am writing to interface with the database. However, we also need to discuss the two different ways you may run this backend/express server. 
+- **Docker**: If you are running this with docker, you should be able to see the console of that from when you did `docker compose up`
+- **Local** : If you are NOT running the docker (i.e. we couldn't fix the backend image before Sun 4/29), __please scroll down to the header with "local run instructions"__ 
 
 I will use these emojis to talk about the status of each of these.
 - 🟢 : done
@@ -103,7 +107,29 @@ GET /load_user_saves
 }
 ```
 
+# Instructions for Running Locally
+Since docker set important database environment variables for us, you may have to set it manually. 
+
+I will try to have them automatically set in `./src/config.js`, but this is a backup of the environment variables to set.
+```
+DATABASE_DB=example
+DATABASE_USER=root
+DATABASE_PASSWORD=db-btf5q
+DATABASE_HOST=db
+MYSQL_DATABASE=discodb
+```
+See the `~/compose.yaml` for the most up to date docker env vars.
+
 # Packages / Dependencies
+Todo: make sure these installations are being run in the docker backend image if we fix that.
+
+As a backup, you can run the backend locally and install the packages using `npm install` (which will get all of the libraries from `package.json`).
+
+These are the individual dependencies:
+- express
+```
+npm install express
+```
 - mysql
 ```
 npm install mysql

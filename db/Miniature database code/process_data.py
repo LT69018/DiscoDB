@@ -169,11 +169,6 @@ def get_all_release_info():
                         continue
 
                     if sub_tag.tag == "videos":
-                        # The videos in file_2 are not useful to us
-                        # (they have no source listed)
-                        if my_file == file_2:
-                            continue
-
                         for video in sub_tag.iter("video"):
                             video_dict = {"src": video.get("src"),
                                           "duration": video.get("duration")}

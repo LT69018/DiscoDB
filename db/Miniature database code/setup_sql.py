@@ -338,7 +338,7 @@ if __name__ == "__main__":
             if artist.get("id"):
                 # Add the artist's info to artist_album_credits_to_insert as a non-primary artist
                 initial_artist_album_credits_to_insert.append((artist.get("id"), release.release_id, artist.get("role"), 0))
-        for genre in release.genres:
+        for genre in release.genres_and_styles:
             genres_to_insert.append((release.release_id, genre))
 
         for song in release.tracklist:

@@ -1,3 +1,4 @@
+from config import *
 from artist import Artist
 from releases import Release, Track, Video
 from os.path import join as os_path_join

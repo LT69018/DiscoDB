@@ -1,4 +1,5 @@
 import time
+from config import *
 import mysql.connector
 from mysql.connector import Error
 from process_data import get_artist_info, get_all_release_info

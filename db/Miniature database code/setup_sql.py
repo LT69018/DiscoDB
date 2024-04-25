@@ -3,7 +3,7 @@ import mysql.connector
 from mysql.connector import Error
 from process_data import get_artist_info, get_all_release_info
 
-PASSWORD = "" # TODO: Fill this constant in with your password
+PASSWORD = "4#FsV!DFwpC9uyu" # TODO: Fill this constant in with your password
 
 
 def connect_to_server(host_name, username):
@@ -32,7 +32,7 @@ def connect_to_db(host_name, username, db_name):
 
 def create_database(cursor):
     try:
-        cursor.execute("CREATE DATABASE IF NOT EXISTS discodb")
+        cursor.execute("CREATE DATABASE IF NOT EXISTS discodb_mini")
         print("Database created successfully!")
     except Error as error:
         print("Error creating database:", error)
@@ -228,7 +228,7 @@ def create_album_tables(connection):
                 );
                 """
 
-    table_creation_queries = [create_albums_table, create_songs_table, create_artist_song_credits_table, create_artist_album_credits_table, create_genres_table,
+    table_creation_queries = [create_albums_table, create_songs_table, create_artist_album_credits_table, create_genres_table,
                               create_videos_table]
     for query in table_creation_queries:
         execute_and_commit(connection, query)
@@ -268,7 +268,7 @@ if __name__ == "__main__":
     create_database(cursor)
 
     # Connect to the MySQL database
-    connection = connect_to_db("127.0.0.1", "Cobyz1", "discodb")
+    connection = connect_to_db("127.0.0.1", "Cobyz1", "discodb_mini")
 
     # --------- Artist data ---------
 

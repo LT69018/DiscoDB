@@ -8,7 +8,7 @@ parser = etree.XMLParser(remove_blank_text=True)
 
 # Set up the Artists table
 def get_artist_info():
-    with open("C:/Users/cnzsp/Documents/CMSC 461/discogs_20240201_artists_modified.xml", "rb") as my_file:
+    with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/discogs_20240201_artists_modified.xml", "rb") as my_file:
         start = time.time()
 
         tree = etree.parse(my_file, parser)
@@ -19,76 +19,90 @@ def get_artist_info():
 
         artist_list = []
 
-        count = 0
-
         target_artists = ["Taylor Swift", "Olivia Rodrigo", "Billie Eilish", "The Beatles", "The Rolling Stones",
                           "Erykah Badu", "Stevie Wonder", "Tank and the Bangas",
                           "AC/DC", "Weston Estate", "Bad Bunny",
                           "Benny Sings", "The Internet", "Anderson .Paak",
-                          "The Mothers", "Carlos Santana", "The Doors"]
+                          "The Mothers", "Santana", "The Doors"]
+        found_artists = []
 
-        for artist in root:
+        past_len_target = 0
+        past_len_found = 0
 
-            artist_id = ""
-            name = ""
-            realname = ""
-            namevariations = []
-            groups = []
-            aliases = []
-            members = []
+        while past_len_target != len(target_artists) or past_len_found != len(found_artists):
+            print("\n\nlen(target_artists):", len(target_artists))
+            print("len(found_artists):", len(found_artists))
 
-            not_target = False
-            for sub_tag in artist:
-                if sub_tag.tag == "name":
-                    name = sub_tag.text
-                    if name not in target_artists:
-                        not_target = True
-                        break
-                    #else:
-                        #print(name)
-                        #target_artists.remove(name)
+            past_len_target = len(target_artists)
+            past_len_found = len(found_artists)
 
-            if not_target:
-                continue
+            for artist in root:
 
-            for sub_tag in artist:
-                if sub_tag.tag == "id":
-                    artist_id = sub_tag.text
+                artist_id = ""
+                name = ""
+                realname = ""
+                namevariations = []
+                groups = []
+                aliases = []
+                members = []
 
-                if sub_tag.tag == "name":
-                    name = sub_tag.text
+                not_target = False
+                create_artist = False
+                for sub_tag in artist:
+                    if sub_tag.tag == "name":
+                        name = sub_tag.text
+                        if name not in target_artists:
+                            not_target = True
+                            break
+                        else:
+                            if name not in found_artists:
+                                found_artists.append(name)
+                                create_artist = True
 
-                if sub_tag.tag == "realname":
-                    realname = sub_tag.text
+                if not_target:
+                    continue
 
-                if sub_tag.tag == "namevariations":
-                    for name_var in sub_tag.iter("name"):
-                        namevariations.append(name_var.text)
+                for sub_tag in artist:
+                    if sub_tag.tag == "id":
+                        artist_id = sub_tag.text
 
-                if sub_tag.tag == "groups":
-                    for group in sub_tag.iter("name"):
-                        groups.append((group.get("id"), group.text))
+                    if sub_tag.tag == "name":
+                        name = sub_tag.text
 
-                if sub_tag.tag == "aliases":
-                    for alias in sub_tag.iter("name"):
-                        aliases.append((alias.get("id"), alias.text))
-                        if alias.text not in target_artists:
-                            target_artists.append(alias.text)
+                    if sub_tag.tag == "realname":
+                        realname = sub_tag.text
 
-                if sub_tag.tag == "members":
-                    for member in sub_tag.iter("name"):
-                        members.append((member.get("id"), member.text))
-                        if member.text not in target_artists:
-                            target_artists.append(member.text)
+                    if sub_tag.tag == "namevariations":
+                        for name_var in sub_tag.iter("name"):
+                            namevariations.append(name_var.text)
 
-            artist_list.append(Artist(artist_id, name, realname, namevariations, groups, aliases, members))
-            #count += 1
-            
-            #if count >= 100:
-            #    break
+                    if sub_tag.tag == "groups":
+                        for group in sub_tag.iter("name"):
+                            groups.append((group.get("id"), group.text))
 
-        print("target_artists:", target_artists, len(target_artists))
-        print("artist_list:", len(artist_list))
+                    if sub_tag.tag == "aliases":
+                        for alias in sub_tag.iter("name"):
+                            aliases.append((alias.get("id"), alias.text))
+                            if alias.text not in target_artists:
+                                target_artists.append(alias.text)
+
+                    if sub_tag.tag == "members":
+                        for member in sub_tag.iter("name"):
+                            members.append((member.get("id"), member.text))
+                            if member.text not in target_artists:
+                                target_artists.append(member.text)
+
+                if create_artist:
+                    artist_list.append(Artist(artist_id, name, realname, namevariations, groups, aliases, members))
+
+        print("\n\ntarget_artists:", target_artists, len(target_artists))
+        print("\nfound_artists:", found_artists, len(found_artists))
+        print("\nlen(target_artists):", len(target_artists))
+        print("len(found_artists):", len(found_artists))
+        print(set(target_artists) - set(found_artists), len(set(target_artists) - set(found_artists)))
+        print(set(found_artists) - set(target_artists), len(set(found_artists) - set(target_artists)))
+        print(len(set(target_artists)), len(set(found_artists)))
+        print("\nartist_list:", len(artist_list))
         end = time.time()
         print(end - start)
 
@@ -96,19 +110,11 @@ def get_artist_info():
 
 
 def get_all_release_info(artist_list):
-    #with open("C:/Users/cnzsp/Documents/CMSC 461/main_releases_modified (1).xml", "rb") as file_1, \
-            #open("C:/Users/cnzsp/Documents/CMSC 461/recovered_missing_releases_modified.xml", "rb") as file_2, \
-            #open("C:/Users/cnzsp/Documents/CMSC 461/found_missing_releases_masters.xml","rb") as file_3:
-
-        #start = time.time()
-
-        #files = [file_1, file_2, file_3]
-
-    with open("C:/Users/cnzsp/Documents/CMSC 461/main_releases_modified (1).xml", "rb") as file_1:
+    with open("C:/Users/Coby/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/main_releases_modified.xml", "rb") as file_1:
 
         start = time.time()
 
-        files = [file_1] #, file_2, file_3]
+        files = [file_1]
 
         total_releases_list = []
 
@@ -127,7 +133,6 @@ def get_all_release_info(artist_list):
 
             count = 0
             for release in root:
-                # print(count, artist)
 
                 release_id = release.get("id")
                 title = ""
@@ -269,14 +274,9 @@ def get_all_release_info(artist_list):
                 total_releases_list.append(Release(release_id, title, artists, extraartists, genres_and_styles, released, notes, tracklist, videos))
                 count += 1
 
-                #if count >= 100:
-                #    break
-
             end = time.time()
             print(end - start)
-
-            #print(count, len(total_releases_list))
             
-        print(len(total_releases_list))
+        print(count, len(total_releases_list))
 
         return total_releases_list

@@ -3,7 +3,7 @@ import mysql.connector
 from mysql.connector import Error
 from process_data import get_artist_info, get_all_release_info
 
-PASSWORD = "4#FsV!DFwpC9uyu" # TODO: Fill this constant in with your password
+PASSWORD = ""  # TODO: Fill this constant in with your password
 
 
 def connect_to_server(host_name, username):
@@ -302,7 +302,7 @@ if __name__ == "__main__":
     genres_to_insert = []
     videos_to_insert = []
 
-    song_count = 1
+    song_count = 0
     for release in release_list:
 
         albums_to_insert.append((release.release_id, release.title, release.released, release.notes, len(release.tracklist)))

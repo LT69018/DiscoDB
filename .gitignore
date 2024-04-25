@@ -4,6 +4,7 @@
 # metadata from machine I believe.
 .DS_Store
 
+db/*/__pycache__
 # too large dataset that we'll parse.
 db/*/dataset/discogs_20240201_artists_modified.xml
 db/*/dataset/found_missing_releases_masters.xml

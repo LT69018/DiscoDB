@@ -40,6 +40,9 @@ services:
     image: mysql:8.0.27
     command: '--default-authentication-plugin=mysql_native_password'
     restart: always
+    # JT added this to try to make it accessible from our python / express.
+    ports: 
+    - 3306:3306
     secrets:
       - db-password
     volumes:

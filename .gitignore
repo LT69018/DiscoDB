@@ -4,6 +4,12 @@
 # metadata from machine I believe.
 .DS_Store
 
+# too large dataset that we'll parse.
+db/*/dataset/discogs_20240201_artists_modified.xml
+db/*/dataset/found_missing_releases_masters.xml
+db/*/dataset/main_releases_modified.xml
+db/*/dataset/recovered_missing_releases_modified.xml
+C:\Users\jturn\Documents\GitHub\project-discodb\db\Miniature database code\dataset\main_releases_modified-002.xml
 # Logs
 logs
 *.log

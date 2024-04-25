@@ -20,7 +20,9 @@ export default function AlbumPage(){
                     </div>
                     <div className="column">
                         <div className="album-details">
-                            <h1>AN</h1>
+
+                            <h1>Album Name</h1>
+
                             <h2>Artist Name</h2> 
                             {/*<h1>{location.state.album}</h1>
                             <h2>{location.state.artist}</h2>*/}

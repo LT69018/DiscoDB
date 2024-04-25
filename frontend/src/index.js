@@ -36,16 +36,17 @@ root.render(
           />
 
         </Navbar.Brand>
+
         <Dropdown className="float-center">
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Menu
           </Dropdown.Toggle>
           <Dropdown.Menu>
                 <Dropdown.Item href="http://localhost:3000/">Home</Dropdown.Item>
-                <Dropdown.Item href="#">Log in</Dropdown.Item>
+                {/*<Dropdown.Item href="#">Log in</Dropdown.Item>*/}
                 <Dropdown.Item href="/UserProfile">Profile</Dropdown.Item>
-                <Dropdown.Item href="#">Settings</Dropdown.Item>
-                <Dropdown.Item href="#">Log Out</Dropdown.Item>
+                {/*<Dropdown.Item href="#">Settings</Dropdown.Item>*}
+                {/*<Dropdown.Item href="#">Log Out</Dropdown.Item>*/}
           </Dropdown.Menu>
         </Dropdown>
       </Toolbar>

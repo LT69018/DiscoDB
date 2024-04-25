@@ -1,16 +1,16 @@
 import time
 import mysql.connector
 from mysql.connector import Error
-from getpass import getpass
-from string import punctuation
 from process_data import get_artist_info, get_all_release_info
+
+PASSWORD = "" # TODO: Fill this constant in with your password
 
 
 def connect_to_server(host_name, username):
     connection = None
 
     try:
-        connection = mysql.connector.connect(host=host_name, user=username, password="heKf$4W?.3%r7dp") #password=getpass())
+        connection = mysql.connector.connect(host=host_name, user=username, password=PASSWORD)
         print("Server connection successful!")
     except Error as error:
         print("Error connecting to the SQL server:", error)
@@ -22,7 +22,7 @@ def connect_to_db(host_name, username, db_name):
     connection = None
 
     try:
-        connection = mysql.connector.connect(host=host_name, user=username, password="heKf$4W?.3%r7dp", database=db_name) #password=getpass(), database=db_name)
+        connection = mysql.connector.connect(host=host_name, user=username, password=PASSWORD, database=db_name)
         print("Database connection successful!")
     except Error as error:
         print("Error connecting to the database:", error)
@@ -99,6 +99,7 @@ def process_artist_data(artist_list):
             # then add their real name to the name_variations table
             if artist.real_name != artist.name:
                 name_vars_to_insert.append((artist.artist_id, artist.real_name))
+            name_vars_to_insert.append((artist.artist_id, artist.name))
         else:
             artists_to_insert.append((artist.artist_id, artist.name, None))
 
@@ -186,24 +187,11 @@ def create_album_tables(connection):
             CREATE TABLE IF NOT EXISTS songs (
                 song_id         INT AUTO_INCREMENT,
                 album_id        INT,
-                song_title      VARCHAR(2048) NOT NULL DEFAULT 'Untitled',
+                song_title      VARCHAR(2048) DEFAULT 'Untitled',
                 position        VARCHAR(255),
                 song_duration   VARCHAR(32),
                 PRIMARY KEY (song_id),
                 FOREIGN KEY (album_id) REFERENCES albums(album_id)
-                );
-                """
-
-    create_artist_song_credits_table = """
-            CREATE TABLE IF NOT EXISTS artist_song_credits (
-                artist_id           INT,
-                song_id             INT,
-                artist_song_role    VARCHAR(1024),
-                is_primary_artist   INT DEFAULT 0,  
-                PRIMARY KEY (artist_id, song_id),
-                FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
-                FOREIGN KEY (song_id) REFERENCES songs(song_id),
-                CHECK(is_primary_artist IN (0, 1))
                 );
                 """
 
@@ -298,20 +286,18 @@ if __name__ == "__main__":
 
     print(time.time() - start)
 
-    """
     # --------- Album data ---------
 
     # Create the album tables
     create_album_tables(connection)
 
     # Get the data to enter into the albums tables
-    release_list = get_all_release_info()
+    release_list = get_all_release_info(artists_to_insert)
 
     # Process the data to enter into the album tables
     # separate the data into appropriate groups
     albums_to_insert = []
     songs_to_insert = []
-    initial_artist_song_credits_to_insert = []
     initial_artist_album_credits_to_insert = []
     genres_to_insert = []
     videos_to_insert = []
@@ -330,30 +316,18 @@ if __name__ == "__main__":
             if artist.get("id"):
                 # Add the artist's info to artist_album_credits_to_insert as a non-primary artist
                 initial_artist_album_credits_to_insert.append((artist.get("id"), release.release_id, artist.get("role"), 0))
-        for genre in release.genres:
+
+        for genre in release.genres_and_styles:
             genres_to_insert.append((release.release_id, genre))
 
         for song in release.tracklist:
             songs_to_insert.append((release.release_id, song.title, song.position, song.duration))
-
-            for artist in song.artists:
-                if artist.get("id"):
-                    # Add the artist's info to artist_album_credits_to_insert as a primary artist
-                    initial_artist_song_credits_to_insert.append((artist.get("id"), song_count, artist.get("role"), 1))
-
-            for artist in song.extraartists:
-                if artist.get("id"):
-                    # Add the artist's info to artist_album_credits_to_insert as a non-primary artist
-                    initial_artist_song_credits_to_insert.append((artist.get("id"), song_count, artist.get("role"), 0))
-
             song_count += 1
+
         for video in release.videos:
             videos_to_insert.append((release.release_id, video.src, video.title, video.duration))
 
     print("Song count:", song_count)
-
-    # Remove invalid aliases
-    # (aliases that point to artists that are not in artists_list)
     
     # Construct a dictionary of artist ids to allow for non-sequential lookup
     artist_ids = {}
@@ -366,29 +340,15 @@ if __name__ == "__main__":
         if not artist_ids.get(artist[0]):
             not_found_album_artists.append(artist)
 
-    not_found_song_artists = []
-    for artist in initial_artist_song_credits_to_insert:
-        if not artist_ids.get(artist[0]):
-            not_found_song_artists.append(artist)
-
     # Construct a dictionary of all aliases to allow for non-sequential lookup
     album_artists_dict = {}
     for artist in initial_artist_album_credits_to_insert:
         album_artists_dict[artist] = artist
 
-    song_artists_dict = {}
-    for artist in initial_artist_song_credits_to_insert:
-        song_artists_dict[artist] = artist
-
     # Remove invalid aliases from album_artists_dict and song_artists_dict
     for artist in not_found_album_artists:
         try:
             album_artists_dict.pop(artist)
-        except KeyError:
-            pass
-    for artist in not_found_song_artists:
-        try:
-            song_artists_dict.pop(artist)
         except KeyError:
             pass
 
@@ -397,25 +357,15 @@ if __name__ == "__main__":
     for artist in album_artists_dict:
         artist_album_credits_to_insert.append(artist)
 
-    artist_song_credits_to_insert = []
-    for artist in song_artists_dict:
-        artist_song_credits_to_insert.append(artist)
-
     print("\nArtist list length differences:")
     print(len(initial_artist_album_credits_to_insert), len(artist_album_credits_to_insert), len(initial_artist_album_credits_to_insert) - len(artist_album_credits_to_insert))
-    print(len(initial_artist_song_credits_to_insert), len(artist_song_credits_to_insert), len(initial_artist_song_credits_to_insert) - len(artist_song_credits_to_insert))
-    """
 
     insert_albums_query = """
                 INSERT IGNORE INTO albums (album_id, album_title, release_date, notes, num_songs)
                 VALUES (%s, %s, %s, %s, %s)"""
 
     insert_songs_query = """
-                INSERT INTO songs (album_id, song_title, position, song_duration)
-                VALUES (%s, %s, %s, %s)"""
-
-    insert_artist_song_credits_query = """
-                INSERT IGNORE INTO artist_song_credits (artist_id, song_id, artist_song_role, is_primary_artist)
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
                 VALUES (%s, %s, %s, %s)"""
 
     insert_artist_album_credits_query = """
@@ -430,20 +380,30 @@ if __name__ == "__main__":
                 INSERT IGNORE INTO videos (album_id, src, video_title, video_duration)
                 VALUES (%s, %s, %s, %s)"""
 
-    """
+    # The songs insertion is done last because it is the most likely to fail
     table_insertion_queries = {insert_albums_query: albums_to_insert,
-                               insert_songs_query: songs_to_insert,
-                               insert_artist_song_credits_query: artist_song_credits_to_insert,
                                insert_artist_album_credits_query: artist_album_credits_to_insert,
                                insert_genres_query: genres_to_insert,
-                               insert_videos_query: videos_to_insert}
+                               insert_videos_query: videos_to_insert,
+                               insert_songs_query: songs_to_insert}
 
     for query in table_insertion_queries.keys():
-        execute_many_and_commit(connection, query, table_insertion_queries[query])
+        # Split the execution of song insertion into 20 parts.
+        # If this is not done, the program is likely to crash because of its high RAM usage
+        if query == insert_songs_query:
+            song_count_twentieths = song_count // 20
+
+            for i in range(1, 21):
+                if i == 20:
+                    execute_many_and_commit(connection, insert_songs_query, songs_to_insert[song_count_twentieths * (i - 1):])
+                else:
+                    execute_many_and_commit(connection, insert_songs_query, songs_to_insert[song_count_twentieths * (i - 1):song_count_twentieths * i])
+            pass
+        else:
+            execute_many_and_commit(connection, query, table_insertion_queries[query])
 
     end = time.time()
     print(end - start)
-    """
 
 """
 References used:

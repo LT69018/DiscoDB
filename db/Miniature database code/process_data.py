@@ -88,13 +88,14 @@ def get_artist_info():
             #    break
 
         print("target_artists:", target_artists, len(target_artists))
+        print("artist_list:", len(artist_list))
         end = time.time()
         print(end - start)
 
         return artist_list
 
 
-def get_all_release_info():
+def get_all_release_info(artist_list):
     #with open("C:/Users/cnzsp/Documents/CMSC 461/main_releases_modified (1).xml", "rb") as file_1, \
             #open("C:/Users/cnzsp/Documents/CMSC 461/recovered_missing_releases_modified.xml", "rb") as file_2, \
             #open("C:/Users/cnzsp/Documents/CMSC 461/found_missing_releases_masters.xml","rb") as file_3:
@@ -110,6 +111,12 @@ def get_all_release_info():
         files = [file_1] #, file_2, file_3]
 
         total_releases_list = []
+
+        target_artists = []
+        for artist in artist_list:
+            target_artists.append(artist[1])
+
+        print("target_artists:", len(target_artists), len(artist_list))
 
         for my_file in files:
             tree = etree.parse(my_file, parser)
@@ -132,6 +139,34 @@ def get_all_release_info():
                 notes = None
                 tracklist = []
                 videos = []
+
+                found_target = False
+                for sub_tag in release:
+                    if sub_tag.tag == "artists":
+                        for artist in sub_tag.iter("artist"):
+                            for artist_tags in artist:
+                                if artist_tags.tag == "name":
+                                    if artist_tags.text in target_artists:
+                                        found_target = True
+                                        break
+                            if found_target:
+                                break
+                        if found_target:
+                            break
+                    if sub_tag.tag == "extraartists":
+                        for artist in sub_tag.iter("artist"):
+                            for artist_tags in artist:
+                                if artist_tags.tag == "name":
+                                    if artist_tags.text in target_artists:
+                                        found_target = True
+                                        break
+                            if found_target:
+                                break
+                        if found_target:
+                            break
+
+                if not found_target:
+                    continue
 
                 for sub_tag in release:
                     if sub_tag.tag == "artists":
@@ -234,13 +269,13 @@ def get_all_release_info():
                 total_releases_list.append(Release(release_id, title, artists, extraartists, genres_and_styles, released, notes, tracklist, videos))
                 count += 1
 
-                if count >= 100:
-                    break
+                #if count >= 100:
+                #    break
 
             end = time.time()
             print(end - start)
 
-            print(count, len(total_releases_list))
+            #print(count, len(total_releases_list))
             
         print(len(total_releases_list))
 

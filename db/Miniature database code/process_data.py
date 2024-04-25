@@ -1,22 +1,20 @@
-from lxml import etree
-import time
 from artist import Artist
 from releases import Release, Track, Video
-from getpass import getuser
+from os.path import join as os_path_join
+from lxml import etree
+import time
 
-DATASET_PATH = "/Documents/CMSC 461/Project/Cleaned datasets/Full dataset/"  # TODO: Fill this constant in with the path to your dataset
 parser = etree.XMLParser(remove_blank_text=True)
 
-
 def get_artist_info():
-    with open("C:/Users/" + getuser() + DATASET_PATH + "discogs_20240201_artists_modified.xml", "rb") as my_file:
+    with open(os_path_join(DATASET_FOLDER_PATH, ARTISTS_DATASET_FILE_NAME), "rb") as my_file:
         start = time.time()
 
         tree = etree.parse(my_file, parser)
         root = tree.getroot()
 
-        end = time.time()
-        print("XML Parse time:", end - start)
+        parse_end = time.time()
+        print("XML Parse time:", parse_end - start)
 
         artist_list = []
 
@@ -124,7 +122,7 @@ def get_artist_info():
 
 
 def get_all_release_info(artist_list):
-    with open("C:/Users/" + getuser() + DATASET_PATH + "main_releases_modified.xml", "rb") as my_file:
+    with open(os_path_join(DATASET_FOLDER_PATH, ALL_RELEASES_DATASET_FILE_NAME), "rb") as my_file:
 
         start = time.time()
 

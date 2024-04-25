@@ -3,14 +3,13 @@ import mysql.connector
 from mysql.connector import Error
 from process_data import get_artist_info, get_all_release_info
 
-PASSWORD = ""  # TODO: Fill this constant in with your password
+NON_ROOT_PASSWORD = ""  # Optional: Fill this constant in with your user's password
 
-
-def connect_to_server(host_name, username):
+def connect_to_server(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, pswd=DISCODB_MYSQL_PASSWORD):
     connection = None
 
     try:
-        connection = mysql.connector.connect(host=host_name, user=username, password=PASSWORD)
+        connection = mysql.connector.connect(host=host_name, user=username, password=pswd)
         print("Server connection successful!")
     except Error as error:
         print("Error connecting to the SQL server:", error)
@@ -18,11 +17,11 @@ def connect_to_server(host_name, username):
     return connection
 
 
-def connect_to_db(host_name, username, db_name):
+def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, pswd=DISCODB_MYSQL_PASSWORD, db_name=DISCODB_NAME):
     connection = None
 
     try:
-        connection = mysql.connector.connect(host=host_name, user=username, password=PASSWORD, database=db_name)
+        connection = mysql.connector.connect(host=host_name, user=username, password=pswd, database=db_name)
         print("Database connection successful!")
     except Error as error:
         print("Error connecting to the database:", error)
@@ -32,7 +31,9 @@ def connect_to_db(host_name, username, db_name):
 
 def create_database(cursor):
     try:
-        cursor.execute("CREATE DATABASE IF NOT EXISTS discodb_mini")
+        # Double check that this query structure actually works
+        query = "CREATE DATABASE IF NOT EXISTS %(db_name)s"
+        cursor.execute(query, { "db_name": DISCODB_NAME })
         print("Database created successfully!")
     except Error as error:
         print("Error creating database:", error)
@@ -175,7 +176,7 @@ def create_album_tables(connection):
     create_albums_table = """
             CREATE TABLE IF NOT EXISTS albums (
                 album_id        INT,
-                album_title     VARCHAR(2048) NOT NULL DEFAULT 'Untitled',
+                album_title     VARCHAR(2048) DEFAULT 'Untitled',
                 release_date    VARCHAR(16) NOT NULL,
                 notes           LONGTEXT,
                 num_songs       INT DEFAULT 0,
@@ -194,7 +195,7 @@ def create_album_tables(connection):
                 FOREIGN KEY (album_id) REFERENCES albums(album_id)
                 );
                 """
-
+    
     create_artist_album_credits_table = """
             CREATE TABLE IF NOT EXISTS artist_album_credits (
                 artist_id           INT,
@@ -257,18 +258,17 @@ def execute_many_and_commit(connection, query, vals):
 
 
 if __name__ == "__main__":
-
     start = time.time()
 
     # Connect to the MySQL server
-    connection = connect_to_server("127.0.0.1", "Cobyz1")   # input("Username: "))
+    connection = connect_to_server(DISCODB_MYSQL_URL, DISCODB_MYSQL_USERNAME, DISCODB_MYSQL_PASSWORD)
     cursor = connection.cursor()
 
     # Create the database
     create_database(cursor)
 
     # Connect to the MySQL database
-    connection = connect_to_db("127.0.0.1", "Cobyz1", "discodb_mini")
+    connection = connect_to_db(DISCODB_MYSQL_URL, DISCODB_MYSQL_USERNAME, DISCODB_MYSQL_PASSWORD, DISCODB_NAME)
 
     # --------- Artist data ---------
 
@@ -329,6 +329,9 @@ if __name__ == "__main__":
 
     print("Song count:", song_count)
     
+    # Remove invalid artist_ids from initial_artist_album_credits_to_insert
+    # (initial_artist_album_credits_to_insert that contain to artist_ids that are not in artists_list)
+    
     # Construct a dictionary of artist ids to allow for non-sequential lookup
     artist_ids = {}
     for artist in artist_list:
@@ -357,7 +360,7 @@ if __name__ == "__main__":
     for artist in album_artists_dict:
         artist_album_credits_to_insert.append(artist)
 
-    print("\nArtist list length differences:")
+    print("\nArtist credits list length differences:")
     print(len(initial_artist_album_credits_to_insert), len(artist_album_credits_to_insert), len(initial_artist_album_credits_to_insert) - len(artist_album_credits_to_insert))
 
     insert_albums_query = """
@@ -409,8 +412,6 @@ if __name__ == "__main__":
 References used:
     For the functions to connect to the SQL server:
         https://www.freecodecamp.org/news/connect-python-with-sql/
-    For the nested REPLACE function (Neil Menon's answer):    
-        https://stackoverflow.com/questions/1289178/search-column-in-sql-database-ignoring-special-characters
     For how to use INSERT IGNORE:
         https://dev.mysql.com/doc/refman/8.0/en/insert.html
     For printing the affected rows from queries:

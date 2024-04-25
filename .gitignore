@@ -1,5 +1,6 @@
 # terminal preferences
 .vscode/
+*/__pycache__
 .idea/ 
 # metadata from machine I believe.
 .DS_Store

@@ -62,12 +62,21 @@ app.get("/healthz", function(req, res) {
 /* ======================== (end) REFERENCE:github/docker ================== */
 
 app.get("/test_db_connection", function(req, res, next){
-  const query_string = "SHOW TABLES";
+  const query_string = "SELECT 1"; // "SHOW TABLES";
   const result = null;
+  // According to npm `mysql` documentation, query() should automatically try to make a connection.
+  // but I was having trouble with that so I'll try manually.
+  database.connection.connect(function(err) {
+    if (err) {
+      console.error("[GET /test_db_connection] Connection Error:", err);
+      throw(err);
+    }
+    console.log('connected as id ' + connection.threadId);
+  });
   database.connection.query(query_string, (err, res) => {
     if (err) {
-      console.error("[GET /test_db_connection] Error:", err);
-      throw ("Database error!");
+      console.error("[GET /test_db_connection] Query Error:", err);
+      throw (err);
     }
     result = res;
   });

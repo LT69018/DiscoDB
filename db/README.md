@@ -20,6 +20,8 @@ https://github.com/UMBC-CMSC461-SP2024/project-discodb/tree/Coby's_database_code
 - Not -1 i.e. (`0`) means it's good 
 
 View it in the docker container by following instructions like these.
+
+# Docker help
 If you do not have docker desktop, start a shell in the container by doing
 ```shell
 docker exec -it project-discodb-db-1 bash
@@ -27,19 +29,37 @@ docker exec -it project-discodb-db-1 bash
 Alternatively to get right into the mysql shell...
 
 1. Find the password. 
+- Currently the password is in `./password.txt`
+- If that doesn't exist, it may have been auto-generated...
 - If auto generated you have to do this in a linux shell.
     ```
     docker logs project-discodb-db-1 2>&1 | grep GENERATED
     ```
+2. Run this command. Enter password when prompted.
 ```shell
 docker exec -it myproject-discodb-db-1 mysql -uroot -p
 ```
-- Enter either the password from running that command to get the password. 
-- Currently the password is in `./password.txt`
 Reference: https://dev.mysql.com/doc/mysql-linuxunix-excerpt/8.3/en/docker-mysql-getting-started.html
 
 
-# Shell Commands to view Database
-```shell
-ls /var/lib/mysql
+3. Enjoy the fruits of your labor!
+This should bring you to a mySQL terminal :)
+
+Example appearance on Windows powershell.
+```ps
+PS C:\...\jturn>docker exec -it project-discodb-db-1 mysql -uroot -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.27 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
 ```

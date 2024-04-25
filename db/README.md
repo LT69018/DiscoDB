@@ -1,11 +1,23 @@
 Configuration for our mysql database!
 
+# Code to construct the database
+**Note:** Try to shut off miscellaneous processes that take up a lot of RAM to make this take less time :<)
+
+## Dummy data
 `Miniature database code/*` currently pulls 100 entries from our dataset to construct the database.
 - this is just the first 100 entries from the dataset.
+- **Runtime**: ~5 min
+- @LT69018 Todo: use mySQL username / password (set global :0)
 
+## Our tailored small dataset.
 To see most up to date version of this code, check Coby's branch:
 https://github.com/UMBC-CMSC461-SP2024/project-discodb/tree/Coby's_database_code/db
 - he is working on targeting relevant artists (from our group members preferences) 
+- **Runtime**: ~30 min (the price we pay for interesting data.)
+
+## Error codes
+- `-1` means stop the program running, it ain't gonna work
+- Not -1 i.e. (`0`) means it's good 
 
 View it in the docker container by following instructions like these.
 If you do not have docker desktop, start a shell in the container by doing

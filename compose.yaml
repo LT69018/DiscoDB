@@ -18,9 +18,9 @@ services:
       - DATABASE_HOST=db
       - NODE_ENV=development
     ports:
-      - 8080:8080 # attempt fix port error 4/20 evening.
-      - 9229:9229
-      - 9230:9230
+      - "5000:5000" # attempt fix port error 4/20 evening. Use different port numbers for inside/outside.
+      - "9229:9229"
+      - "9230:9230"
     secrets:
       - db-password
     volumes:
@@ -47,7 +47,7 @@ services:
     networks:
       - private
     environment:
-      - MYSQL_DATABASE=example
+      - MYSQL_DATABASE=discodb
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
   frontend:
     build:

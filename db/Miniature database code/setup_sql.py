@@ -34,13 +34,16 @@ def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, 
 def create_database(cursor):
     try:
         # Double check that this query structure actually works
-        query = "CREATE DATABASE IF NOT EXISTS `%s`"
+        query = "CREATE DATABASE IF NOT EXISTS " + DISCODB_NAME
         # JT changed the escape sequence to see if that fixes the SQL syntax error about quotations near the db name
         #   %(db_name)s 
         #     => 
-        #   `%s` (the back ticks are needed!)
-        # I tried just %s, but that didn't fix it either.
-        cursor.execute(query, (DISCODB_NAME,)) # <- only works when const uses _'s instead of - in config :0
+        #   " + DISCO_DB_NAME # <- WORKS! 
+        #   (If parameterizing, make sure to use `%s` (the back ticks are needed!)
+        #   However, beware of double escaped strings (it puts the quotes around it on mySQL too, so your table name literally has quotes in it :0)
+        # I tried just %s, but that didn't fix it either. (%s) doesn't work either. Same w/  ... QUOTE(" + ") ..."
+        # -only works when const uses _'s instead of - in config :0
+        cursor.execute(query) 
         print("Database created successfully!")
     except Error as error:
         print("Error creating database:\n\t", error)

@@ -2,8 +2,6 @@
 # Dockerfile for our express backend!
 # Modifications: Use port 5000 instead of 80, 8080, or 8081.
 # ----------------------------------------------------------------------------- */
-
-
 # syntax=docker/dockerfile:1.4
 
 # if you're doing anything beyond your local machine, please pin this to a specific version at https://hub.docker.com/_/node/
@@ -31,8 +29,6 @@ RUN npm install
 # check every 30s to ensure this service returns HTTP 200
 HEALTHCHECK --interval=30s \
   CMD node healthcheck.js
-
-
 
 # copy in our source code last, as it changes the most
 COPY .. /code

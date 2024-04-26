@@ -109,8 +109,6 @@ GET /load_user_saves
 npm install mysql
 ```
 
-
-
 If running into problems revolving around the backend unable to load dependencies, make sure to run: 
 
 docker-compose down -v

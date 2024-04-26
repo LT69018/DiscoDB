@@ -8,7 +8,6 @@ var cors = require("cors");
 var searchRouter = require("./routes/search");
 const PORT = process.env.PORT;
 
-const express = require("express");
 const mysql = require("mysql2");
 
 const app = express();
@@ -52,8 +51,7 @@ app.get("/", function(req, res, next) {
   //   .catch(next);
   json_response["message"] = "Successfully pinged GET '/'";
   res.send(json_response);
-    
-var app = express();
+});
 
 // view engine setu
 app.set('view engine', 'jade')
@@ -81,8 +79,6 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     //res.render("error");
 });
-
-app.listen(PORT);
 
 
 app.get('/healthz', function(req, res, next) {
@@ -187,5 +183,7 @@ app.use((err, req, res, next) => {
                 + err.stack + 
               "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   res.status(500).send('Something broke!')
-})
+});
+
+
 module.exports = app;

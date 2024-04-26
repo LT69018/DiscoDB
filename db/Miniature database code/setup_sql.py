@@ -40,8 +40,7 @@ def create_database(cursor):
         #     => 
         #   `%s` (the back ticks are needed!)
         # I tried just %s, but that didn't fix it either.
-        # where it thought we wanted to name the table ''discodb-mini-top-100'' (it doubled the quotes I believe)
-        cursor.execute(query, (DISCODB_NAME,))
+        cursor.execute(query, (DISCODB_NAME,)) # <- only works when const uses _'s instead of - in config :0
         print("Database created successfully!")
     except Error as error:
         print("Error creating database:\n\t", error)

@@ -83,8 +83,8 @@ app.get("/test_db_connection", function(req, res, next){
       result["message"] = "Can't connect to database.";
       res.status(500).json(result_json);
       throw(err);
+      return;
     }
-    console.log('connected as id ' + connection.threadId);
     database.connection.query(query_string, (query_err, query_res) => {
       if (query_err) {
         console.error("[GET /test_db_connection] Query Error:", query_err);
@@ -92,11 +92,13 @@ app.get("/test_db_connection", function(req, res, next){
         result["message"] = "Can't execute query.";
         res.status(500).json(result_json);
         throw (query_err);
+        return;
       } else {
-        result["query_result"] = query_res;
-        console.log(`\tSuccessfully ran /test_db_connection! Result: \n\t${result_json}`);
-        result_json["message"] = "Successfully ran /test_db_connection";
+        result_json["query_result"] = query_res;
+        console.log(`\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
+        result_json["message"] = "Successfully ran /test_db_connection (connected and queried)";
         res.status(200).json(result_json);
+        return res;
       }
       
     });

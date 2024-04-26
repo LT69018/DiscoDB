@@ -115,8 +115,12 @@ GET /load_user_saves
 
 Since docker set important database environment variables for us, you have to set it manually. I've heard that best practice isn't to push the .env file to github, but I don't think we can get around it this time.
 
-## 1. (If it doesn't already exist) Create a .env file with this info
+## 1. Make sure backend/.env file has this info (create/modify)
 I use the `dotenv` package in express so that I can import these values.
+
+## (1. cont) Important note **If you used db/setup_sql.py**
+<span style="color: red;"><u>You must make sure these constants match up to the values in `db/config.py`</u></span>. If you don't, you'll get an error about invalid database configuration, i.e. invalid database name.
+
 ```
 DATABASE_DB="discodb-mini-top-100"
 DATABASE_USER="root"

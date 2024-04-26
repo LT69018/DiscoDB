@@ -82,36 +82,26 @@ app.get("/test_db_connection", function(req, res, next){
       result_json["query_string"] = null;
       result_json["message"] = "Can't connect to database.";
       res.status(500).json(result_json);
-      Promise.resolve().then(() => {
-        throw new conn_err;
-      }).catch(next) // Errors will be passed to Express.
+      next(conn_err);
+    } else {
+      console.log("[GET /test_db_connection] Successfully connected to database!!");
     }
     database.connection.query(query_string, (query_err, query_res) => {
       if (query_err) {
         console.error("[GET /test_db_connection] Query Error:", query_err);
         result_json["query_result"] = null;
         result_json["message"] = "Can't execute query.";
+        // sendStatus doesn't seem to work either :(
         res.status(500).json(result_json);
-        
-        Promise.resolve().then(() => {
-          throw query_err;
-        }).catch(next) // Errors will be passed to Express.
+        next(query_err);
       } else {
         result_json["query_result"] = query_res;
-        console.log(`\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
+        console.log(`[GET /test_db_connection]\n\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
         result_json["message"] = "Successfully ran /test_db_connection (connected and queried)";
         res.status(200).json(result_json);
-      }
-      
+      } 
     });
   });
-  // this is my backup in case catching an error in the database query function doesn't work
-  // Promise.resolve().then(()=>{
-  //   res.status(500).json({"message": "Failed to /test_db_connection", "query_result": result});
-  // }).catch(next);
-
-  result_json["message"] = "At bottom of /test_db_connection, response should've already been sent! Something is wrong";
-  res.status(500).json(result_json);
 });
 
 app.post("/add_user", function(req, res, next){

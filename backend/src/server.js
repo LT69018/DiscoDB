@@ -76,29 +76,31 @@ app.get("/test_db_connection", function(req, res, next){
   
   // According to npm `mysql` documentation, query() should automatically try to make a connection.
   // but I was having trouble with that so I'll try manually.
-  database.connection.connect(function(err) {
-    if (err) {
-      console.error("[GET /test_db_connection] Connection Error:", err);
-      result["query_string"] = null;
-      result["message"] = "Can't connect to database.";
+  database.connection.connect(function(conn_err) {
+    if (conn_err) {
+      console.error("[GET /test_db_connection] Connection Error:", conn_err);
+      result_json["query_string"] = null;
+      result_json["message"] = "Can't connect to database.";
       res.status(500).json(result_json);
-      throw(err);
-      return;
+      Promise.resolve().then(() => {
+        throw new conn_err;
+      }).catch(next) // Errors will be passed to Express.
     }
     database.connection.query(query_string, (query_err, query_res) => {
       if (query_err) {
         console.error("[GET /test_db_connection] Query Error:", query_err);
-        result["query_result"] = null;
-        result["message"] = "Can't execute query.";
+        result_json["query_result"] = null;
+        result_json["message"] = "Can't execute query.";
         res.status(500).json(result_json);
-        throw (query_err);
-        return;
+        
+        Promise.resolve().then(() => {
+          throw query_err;
+        }).catch(next) // Errors will be passed to Express.
       } else {
         result_json["query_result"] = query_res;
         console.log(`\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
         result_json["message"] = "Successfully ran /test_db_connection (connected and queried)";
         res.status(200).json(result_json);
-        return res;
       }
       
     });

@@ -137,6 +137,9 @@ Feel free to consolidate the values with what is shown in `~/compose.yaml`.
 
 2. Set the `IS_RUNNING_LOCAL` constant in config.js (true)
 
+3. Run using `npm run [chosenRunCmd]`
+- without the code resetting for changes: `npm start`
+- (i.e. if debugging) with resetting for changes `npm start-watch` (this is what the docker is currently set to use as well).
 
 # Packages / Dependencies
 Todo: make sure these installations are being run in the docker backend image if we fix that.

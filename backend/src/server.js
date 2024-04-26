@@ -7,9 +7,11 @@ Description: Express code. Contains endpoints for DiscoDB backend.
 const PORT = process.env.PORT;
 
 const express = require("express");
+var cors = require('cors');
 const mysql = require("mysql2");
 
 const app = express();
+app.use(cors()); // prep for frontend pings.
 /* ======================== (start) REFERENCE:github/docker ==================
 /* - these comments and imports come from the reference. */
 // simple node web server that displays hello world

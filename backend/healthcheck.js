@@ -17,8 +17,10 @@ const options = {
 
 const request = http.request(options, res => {
   console.info("STATUS: " + res.statusCode);
+  console.log("Performed status check on PORT:" + res.PORT)
   process.exitCode = res.statusCode === 200 ? 0 : 1;
   process.exit();
+  
 });
 
 request.on("error", function(err) {

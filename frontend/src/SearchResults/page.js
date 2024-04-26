@@ -30,7 +30,7 @@ import { useLocation, // get data from previous page
          // useNavigate // send data to next page
        } from 'react-router-dom';
 import "./SearchResults.css"
-
+import assert from 'assert';
 
 const BACKEND_COVER_URL_KEY = "coverURL";
 const BACKEND_ARTIST_NAME_KEY = "artist";
@@ -51,6 +51,8 @@ const FRONTEND_COVER_IMAGE_KEY = "coverImage";
 const handleSaveClick = () => {
 
 }
+
+
 
 function populateImagesAndEmptyKeys(searchResult) {
     // (if can't load the image reference) use the default album image that we drew on a white board 
@@ -101,36 +103,26 @@ function renderResultRow(index, resultRow) {
     );
 }
 
-
 // not sure why it won't let me use tab size of 2
 export default function SearchResults() {
     const location = useLocation();
     console.log("SearchResults.location=", location);
 
     // using `[constKey]: value` in brackets so that JS uses the string instead of the variable name as the key.
-    const test_api_result = [
-        {[BACKEND_ARTIST_NAME_KEY]: 'Artist zero', [BACKEND_ALBUM_NAME_KEY]: 'Album Name', 
-            [BACKEND_YEAR_KEY]: 1970, [BACKEND_COVER_URL_KEY]: null,
-            // these last few are just for the /AlbumInfo page, I won't display them
-            [BACKEND_TRACKS_KEY]: ["Song1", "Song2"], [BACKEND_DESCRIPTION_KEY]:"Hey I'm an album"
-            },
-        {[BACKEND_ARTIST_NAME_KEY]: "Artist one", [BACKEND_ALBUM_NAME_KEY]:"Album Name",
-             [BACKEND_YEAR_KEY]: 2024,[BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/237/200/300"},
-        {[BACKEND_ARTIST_NAME_KEY]: "Artist two", [BACKEND_ALBUM_NAME_KEY]:"Album Name", 
-            [BACKEND_YEAR_KEY]: 2024, [BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/238/200/300"}
-    ];
+    console.log("REACT FRONT END HAS RECIEVED DATA")
+    const apiResult = location.state.apiResult;
 
-    let renderedResults = test_api_result.map((row, index) => (
+    let renderedResults = apiResult.map((row, index) => (
         renderResultRow(index, row)
     ));
-
+    
     return (
         <div className="container">
             <h1>Search Results</h1>
             <div>
                 Displaying results for <span style={{color: "green"}}>{location.state.searchString} </span> 
                 
-                 Search by <span style={{color: "purple"}}>{location.state.searchBy}</span>
+                    Search by <span style={{color: "purple"}}>{location.state.searchBy}</span>
             </div>
             <p>Under Construction :P</p>
             <div className="row categoriesRow">
@@ -141,4 +133,6 @@ export default function SearchResults() {
             {renderedResults}
         </div>
     );
+    
+
 }

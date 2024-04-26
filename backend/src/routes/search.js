@@ -25,7 +25,7 @@ const test_api_result = [
 /* GET home page. */
 router.get('/', function(req, res, next) {
   console.log("HELLO WORLD")
-  res.send("API is running correctly")
+  res.json(test_api_result)
 });
 
 module.exports = router;

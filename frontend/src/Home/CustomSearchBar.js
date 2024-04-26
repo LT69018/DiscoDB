@@ -35,12 +35,22 @@ function CustomSearchBar() {
     const value = event.target.value;
     setUserInput(value);
     console.log("I see you typing! Current saved value: ", event.target.value);
+    
   };
 
   const handleSelection = (event) => {
     const value = event.target.value;
     setDropdownInput(value);
     console.log("Recording selection value =", event.target.value);
+  }
+
+  function callAPI() {
+    return fetch("http://localhost:8080/SearchResults")
+        .then(res => {
+          console.log("api call is happening");
+          return res.json();
+        })
+        .catch(err => err);
   }
 
   // When they press [Search]
@@ -62,7 +72,12 @@ function CustomSearchBar() {
 
       // todo: replace with page switching! (i.e. react-router-dom)
       // calling my data variable "state" because of convention.
-      navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue}});
+
+      //perform query here?
+      callAPI().then(test_api_result => {
+        console.log("test api call: " + test_api_result)
+        navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue, apiResult:test_api_result}});
+      });
     }
   }
 

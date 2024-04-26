@@ -7,7 +7,7 @@ This repository contains the code for our database application, "DiscoDB".
 The goal is to allow users to search for and save albums to "listening lists", 
 similar to how goodreads allows readers to save books they want to read.
 
-The frontend is hosted on port 3000, the backend is hosted on port 80. See the Dockerfiles.
+The frontend is hosted on port 3000, the backend is hosted on port 8080. See the Dockerfiles.
 
 # Directory Structure / Docker
 Note: You may have to have `docker` desktop running in order to start up and run our docker image.

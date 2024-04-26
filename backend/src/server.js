@@ -64,30 +64,50 @@ app.get("/healthz", function(req, res) {
 /* ======================== (end) REFERENCE:github/docker ================== */
 
 app.get("/test_db_connection", function(req, res, next){
+  /*
+  Run a simple query to see if we can connect to the docker image, particularly to a designated database.
+  :param: (none required)
+  :return: {"query_result": ..., "message": "..."}
+  - In case of failure, aiming to explain why the "query_result" is null in the "message"
+  */
   const query_string = "SELECT 1"; // "SHOW TABLES";
-  const result = null;
+  const result_json = {"query_result": null, "message": ""}; 
+  //^  if these values are returned in this same state, (null / ""), that means I forgot to set them in every case :p
+  
   // According to npm `mysql` documentation, query() should automatically try to make a connection.
   // but I was having trouble with that so I'll try manually.
   database.connection.connect(function(err) {
     if (err) {
       console.error("[GET /test_db_connection] Connection Error:", err);
+      result["query_string"] = null;
+      result["message"] = "Can't connect to database.";
+      res.status(500).json(result_json);
       throw(err);
     }
     console.log('connected as id ' + connection.threadId);
-  });
-  database.connection.query(query_string, (err, res) => {
-    if (err) {
-      console.error("[GET /test_db_connection] Query Error:", err);
-      throw (err);
-    }
-    result = res;
+    database.connection.query(query_string, (query_err, query_res) => {
+      if (query_err) {
+        console.error("[GET /test_db_connection] Query Error:", query_err);
+        result["query_result"] = null;
+        result["message"] = "Can't execute query.";
+        res.status(500).json(result_json);
+        throw (query_err);
+      } else {
+        result["query_result"] = query_res;
+        console.log(`\tSuccessfully ran /test_db_connection! Result: \n\t${result_json}`);
+        result_json["message"] = "Successfully ran /test_db_connection";
+        res.status(200).json(result_json);
+      }
+      
+    });
   });
   // this is my backup in case catching an error in the database query function doesn't work
   // Promise.resolve().then(()=>{
   //   res.status(500).json({"message": "Failed to /test_db_connection", "query_result": result});
   // }).catch(next);
-  console.log(`\tSuccessfully ran query\n\t'${query_string}'\n\tWith result:\n\t\t${result}`)
-  res.status(200).json({"message": "Successfully ran /test_db_connection", "query_result": result})
+
+  result_json["message"] = "At bottom of /test_db_connection, response should've already been sent! Something is wrong";
+  res.status(500).json(result_json);
 });
 
 app.post("/add_user", function(req, res, next){

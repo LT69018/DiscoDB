@@ -3,6 +3,7 @@ This will contain the backend (node.js express) code for DiscoDB.
 The main section of this README is the endpoints I am writing to interface with the database. However, we also need to discuss the two different ways you may run this backend/express server. 
 - **Docker**: If you are running this with docker, you should be able to see the console of that from when you did `docker compose up`
 - **Local** : If you are NOT running the docker (i.e. we couldn't fix the backend image before Sun 4/29), __please scroll down to the header with "local run instructions"__ 
+    - TLDR: create a .env file with the constant names used in `config.js` with mapped info from `compose.yaml` i.e. make sure to check the expected type and convert and change values as needed (i.e. if your current database table is different, change that, etc.)
 
 I will use these emojis to talk about the status of each of these.
 - 🟢 : done
@@ -108,17 +109,30 @@ GET /load_user_saves
 ```
 
 # Instructions for Running Locally
-Since docker set important database environment variables for us, you may have to set it manually. 
+- Todo: consider having a virtual environment for this (`nodenv`):
+    - https://pypi.org/project/nodeenv/#configuration
 
-I will try to have them automatically set in `./src/config.js`, but this is a backup of the environment variables to set.
+
+Since docker set important database environment variables for us, you have to set it manually. I've heard that best practice isn't to push the .env file to github, but I don't think we can get around it this time.
+
+## 1. (If it doesn't already exist) Create a .env file with this info
+I use the `dotenv` package in express so that I can import these values.
 ```
-DATABASE_DB=example
-DATABASE_USER=root
-DATABASE_PASSWORD=db-btf5q
-DATABASE_HOST=db
-MYSQL_DATABASE=discodb
+DATABASE_DB="discodb-mini-top-100"
+DATABASE_USER="root"
+DATABASE_PASSWORD="../db/password.txt"
+DATABASE_HOST="localhost"
+DATABASE_PORT=3306
+NODE_ENV="development"
 ```
-See the `~/compose.yaml` for the most up to date docker env vars.
+Feel free to consolidate the values with what is shown in `~/compose.yaml`.
+
+**Note 4-25 8pm-ish**     
+- Currently struggling to make docker use the database table name specified here though :(
+- Todo: make sure our mySql server is using the right database table name. Maybe have another .env in the root to set the database name so we don't have to check the name in multiple places?
+
+2. Set the `IS_RUNNING_LOCAL` constant in config.js (true)
+
 
 # Packages / Dependencies
 Todo: make sure these installations are being run in the docker backend image if we fix that.
@@ -134,3 +148,8 @@ npm install express
 ```
 npm install mysql
 ```
+- (only if running locally) 
+    - dotenv
+    ```
+    npm install dotenv
+    ```

@@ -5,7 +5,7 @@ from os.path import join as os_path_join
 from artist import Artist
 from releases import Release, Track, Video
 
-from config import DATASET_FOLDER_PATH
+from config import *
 
 parser = etree.XMLParser(remove_blank_text=True)
 

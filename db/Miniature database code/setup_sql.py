@@ -2,7 +2,7 @@ import time
 from config import *
 import mysql.connector
 from mysql.connector import Error
-from process_data import get_artist_info, get_all_release_info
+from process_data import get_artist_info, get_release_info
 
 NON_ROOT_PASSWORD = ""  # Optional: Fill this constant in with your user's password
 
@@ -33,9 +33,8 @@ def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, 
 
 def create_database(cursor):
     try:
-        # Double check that this query structure actually works
-        query = "CREATE DATABASE IF NOT EXISTS %(db_name)s"
-        cursor.execute(query, { "db_name": DISCODB_NAME })
+        query = "CREATE DATABASE IF NOT EXISTS " + DISCODB_NAME
+        cursor.execute(query)
         print("Database created successfully!")
     except Error as error:
         print("Error creating database:", error)
@@ -237,10 +236,49 @@ def create_album_tables(connection):
         execute_and_commit(connection, query)
 
 
+def create_user_tables(connection):
+    create_users_table = """
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id             INT AUTO_INCREMENT,
+                    username            VARCHAR(255),
+                    user_pswd           VARCHAR(256) NOT NULL,
+                    user_full_name      VARCHAR(255),
+                    PRIMARY KEY (user_id, username)
+                    );
+                    """
+
+    create_security_table = """
+                    CREATE TABLE IF NOT EXISTS security (
+                        user_id             INT,
+                        salt                VARCHAR(256),
+                        PRIMARY KEY (user_id, salt),
+                        FOREIGN KEY (user_id) REFERENCES users(user_id)
+                        );
+                        """
+
+    create_listening_table = """
+                    CREATE TABLE IF NOT EXISTS listening (
+                        user_id             INT,
+                        album_id            INT,
+                        listening_time      VARCHAR(16) NOT NULL,
+                        listening_method    VARCHAR(16),
+                        PRIMARY KEY (user_id, album_id),
+                        FOREIGN KEY (user_id) REFERENCES users(user_id),
+                        FOREIGN KEY (album_id) REFERENCES albums(album_id),
+                        CHECK(listening_time IN ('Past', 'Present', 'Future')),
+                        CHECK(listening_method IN ('Vinyl', 'CD', 'Cassette', '8-Track', 'Digital', 'Other'))
+                        );
+                        """
+
+    table_creation_queries = [create_users_table, create_security_table, create_listening_table]
+    for query in table_creation_queries:
+        execute_and_commit(connection, query)
+
+
 def execute_and_commit(connection, query):
     cursor = connection.cursor()
     try:
-        cursor.execute(query, multi=True)
+        cursor.execute(query)
         connection.commit()
         print("Query executed successfully!")
         print("Number of rows affected by statement '{}': \n\t{}".format(query, cursor.rowcount))
@@ -272,6 +310,9 @@ if __name__ == "__main__":
     # Connect to the MySQL database
     connection = connect_to_db(DISCODB_MYSQL_URL, DISCODB_MYSQL_USERNAME, DISCODB_MYSQL_PASSWORD, DISCODB_NAME)
 
+    # --------- Create the user tables ---------
+    create_user_tables(connection)
+
     # --------- Artist data ---------
 
     # Create the artist tables
@@ -294,7 +335,7 @@ if __name__ == "__main__":
     create_album_tables(connection)
 
     # Get the data to enter into the albums tables
-    release_list = get_all_release_info(artists_to_insert)
+    release_list = get_release_info(artists_to_insert)
 
     # Process the data to enter into the album tables
     # separate the data into appropriate groups

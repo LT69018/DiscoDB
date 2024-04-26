@@ -123,7 +123,7 @@ def get_artist_info():
         return artist_list
 
 
-def get_all_release_info(artist_list):
+def get_release_info(artist_list):
     with open(os_path_join(DATASET_FOLDER_PATH, ALL_RELEASES_DATASET_FILE_NAME), "rb") as my_file:
 
         start = time.time()

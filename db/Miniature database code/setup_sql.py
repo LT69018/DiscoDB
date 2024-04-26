@@ -248,7 +248,7 @@ def create_album_tables(connection):
 def execute_and_commit(connection, query):
     cursor = connection.cursor()
     try:
-        cursor.execute(query, multi=True)
+        cursor.execute(query) # , multi=True)
         connection.commit()
         print("Query executed successfully!")
         print("Number of rows affected by statement '{}': \n\t{}".format(query, cursor.rowcount))
@@ -302,7 +302,7 @@ if __name__ == "__main__":
     create_album_tables(connection)
 
     # Get the data to enter into the albums tables
-    release_list = get_all_release_info(artists_to_insert)
+    release_list = get_all_release_info()
 
     # Process the data to enter into the album tables
     # separate the data into appropriate groups

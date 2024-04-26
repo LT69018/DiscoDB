@@ -34,11 +34,17 @@ def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, 
 def create_database(cursor):
     try:
         # Double check that this query structure actually works
-        query = "CREATE DATABASE IF NOT EXISTS %(db_name)s"
-        cursor.execute(query, { "db_name": DISCODB_NAME })
+        query = "CREATE DATABASE IF NOT EXISTS `%s`"
+        # JT changed the escape sequence to see if that fixes the SQL syntax error about quotations near the db name
+        #   %(db_name)s 
+        #     => 
+        #   `%s` (the back ticks are needed!)
+        # I tried just %s, but that didn't fix it either.
+        # where it thought we wanted to name the table ''discodb-mini-top-100'' (it doubled the quotes I believe)
+        cursor.execute(query, (DISCODB_NAME,))
         print("Database created successfully!")
     except Error as error:
-        print("Error creating database:", error)
+        print("Error creating database:\n\t", error)
 
 
 def create_artist_tables(connection):

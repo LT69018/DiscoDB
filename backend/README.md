@@ -108,6 +108,7 @@ GET /load_user_saves
 ```
 npm install mysql
 ```
+https://stackoverflow.com/questions/32612650/how-to-get-docker-compose-to-always-re-create-containers-from-fresh-images
 
 If running into problems revolving around the backend unable to load dependencies, make sure to run: 
 
@@ -115,6 +116,10 @@ docker-compose down -v
 
 Followed by the normal command
 docker compose up
+
+or the single line:
+
+docker-compose down && docker-compose build --no-cache && docker-compose up
 
 Characteristic Error:
 

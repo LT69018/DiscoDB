@@ -179,19 +179,6 @@ app.get("/load_user_saves", function(req, res){
   */
 });
 
-// IMPORTANT
-// todo: implement this at least with 1 dummy result with the same format as the database.
-// -> then try selectOne from the database, then try select * (or some set number)
-app.get("/query_user_search", function(req, res, next){
-  /*
-  - params: 
-    - searchString (string) i.e. "Thriller"
-    - searchBy (string) i.e. "album name" (other options: "artist", "song")   
-  - return top 50 results  
-  */
-});
-
-
 
 // Reference: https://expressjs.com/en/guide/error-handling.html
 app.use((err, req, res, next) => {

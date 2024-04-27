@@ -22,7 +22,12 @@ const test_api_result = [
 ];
 
 
-/* GET home page. */
+/* GET home page (/query_user_search). 
+  - params: 
+    - searchString (string) i.e. "Thriller"
+    - searchBy (string) i.e. "album name" (other options: "artist", "song")   
+  - return top 50 results  
+*/
 router.get('/', function(req, res, next) {
   console.log("HELLO WORLD: recieved param: " + req.query.query)
   

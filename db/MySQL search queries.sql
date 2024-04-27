@@ -22,16 +22,8 @@ SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOI
             '%') collate utf8mb4_0900_ai_ci and is_primary_artist;
 
 -- THIS IS THE FINAL QUERY STRUCTURE FOR SEARCHING BY ARTIST NAME
-SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(album_id, '!', ''),
-    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
-    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
-    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
-    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', '')
+SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+    WHERE album_id
         IN (
             SELECT album_id FROM name_variations NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
             REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
@@ -58,16 +50,8 @@ SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOI
         and is_primary_artist;
 
 -- THIS IS THE FINAL QUERY STRUCTURE FOR SEARCHING BY SONG TITLE
-SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-    REPLACE(album_id, '!', ''),
-    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
-    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
-    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
-    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', '')
+SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+    WHERE album_id
         IN (
             SELECT album_id FROM songs WHERE
             REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(

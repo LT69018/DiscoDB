@@ -272,23 +272,44 @@ def create_search_procedures(connection):
     # When using this procedure, use the cursor.callproc(proc_name, args=()) function
     # and get the results (as there will be 5 relations returned) using cursor.stored_results()
     create_search_by_album_id = """
-            delimiter //
+            DELIMITER //
             CREATE PROCEDURE search_by_album_id (search_term INT)
                 BEGIN
                     SELECT album_title, release_date, notes, num_songs FROM albums WHERE album_id = search_term;
                     SELECT song_title, position, song_duration FROM songs WHERE album_id = search_term;
                     SELECT genre FROM genres WHERE album_id = search_term;
                     SELECT src FROM videos WHERE album_id = search_term;
-                    SELECT artist_name, is_primary_artist, artist_album_role FROM artist_album_credits NATURAL JOIN artists WHERE album_id = search_term order by is_primary_artist desc, artist_name asc;
+                    SELECT artist_name, is_primary_artist, artist_album_role FROM artist_album_credits NATURAL JOIN artists WHERE album_id = search_term ORDER BY is_primary_artist DESC, artist_name ASC;
                 END//
-            delimiter ;
+            DELIMITER ;
             """
 
+    create_search_user_listening = """
+                DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term VARCHAR(255))
+                    BEGIN
+                        SELECT album_id, album_title, release_date, artist_name 
+                        FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+                        WHERE album_id 
+                            IN (
+                                SELECT album_id 
+                                FROM listening
+                                WHERE user_id = (
+                                    SELECT user_id 
+                                    FROM users
+                                    WHERE username = search_term)
+                            )
+                            AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                    END//
+                DELIMITER ;
+                """
+
     create_search_by_album_title = """
-            delimiter //
+            DELIMITER //
             CREATE PROCEDURE search_by_album_title (search_term VARCHAR(2048))
                 BEGIN
-                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+                    WHERE
                         REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
                         REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
                         REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
@@ -308,13 +329,13 @@ def create_search_procedures(connection):
                                 '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
                                 '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
                                 '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', ''),
-                                '%') collate utf8mb4_0900_ai_ci and is_primary_artist;
+                                '%') COLLATE utf8mb4_0900_ai_ci AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
                 END//
-            delimiter ;
+            DELIMITER ;
             """
 
     create_search_by_artist_name = """
-            delimiter //
+            DELIMITER //
             CREATE PROCEDURE search_by_artist_name (search_term VARCHAR(255))
                 BEGIN
                     SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
@@ -340,15 +361,15 @@ def create_search_procedures(connection):
                                     '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
                                     '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
                                     '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', ''),
-                                    '%') collate utf8mb4_0900_ai_ci
+                                    '%') COLLATE utf8mb4_0900_ai_ci
                             )
-                        and is_primary_artist;
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
                 END//
-            delimiter ;
+            DELIMITER ;
             """
 
     create_search_by_song_title = """
-            delimiter //
+            DELIMITER //
             CREATE PROCEDURE search_by_song_title (search_term VARCHAR(2048))
                 BEGIN
                     SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
@@ -374,34 +395,14 @@ def create_search_procedures(connection):
                                     '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
                                     '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
                                     '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', ''),
-                                    '%') collate utf8mb4_0900_ai_ci
+                                    '%') COLLATE utf8mb4_0900_ai_ci
                             )
-                        and is_primary_artist;
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
                 END//
-            delimiter ;
+            DELIMITER ;
             """
 
-    create_search_user_listening = """
-            delimiter //
-            CREATE PROCEDURE search_user_listening (search_term VARCHAR(255))
-                BEGIN
-                    SELECT album_id, album_title, release_date, artist_name 
-                    FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
-                    WHERE album_id 
-                        IN (
-                            SELECT album_id 
-                            FROM listening
-                            WHERE user_id = (
-                                SELECT user_id 
-                                FROM users
-                                WHERE username = search_term)
-                        )
-                        and is_primary_artist;
-                END//
-            delimiter ;
-            """
-
-    procedure_creation_queries = [create_search_by_album_id, create_search_by_album_title, create_search_by_artist_name, create_search_by_song_title, create_search_user_listening]
+    procedure_creation_queries = [create_search_by_album_id, create_search_user_listening, create_search_by_album_title, create_search_by_artist_name, create_search_by_song_title]
     for query in procedure_creation_queries:
         execute_and_commit(connection, query)
 

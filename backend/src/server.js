@@ -8,7 +8,7 @@ var cors = require("cors");
 var searchRouter = require("./routes/search");
 const PORT = process.env.PORT;
 
-const mysql = require("mysql2");
+//const mysql = require("mysql2");
 
 const app = express();
 app.use(cors()); // prep for frontend pings.
@@ -57,7 +57,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/SearchResults", searchRouter);
+app.use("/query_user_search", searchRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

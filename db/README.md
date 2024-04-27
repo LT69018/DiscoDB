@@ -12,6 +12,7 @@ Configuration for our mysql database!
     - If you want to use a local version of mysql server...
     - you can change the constants in this file. 
     - Also note my comment on the top of `setup_sql.py/connect_to_server`
+
 3. If you want to change the database table name, do so in `~/compose.yaml
 See the `DATABASE_DB` value.
 
@@ -24,6 +25,7 @@ pip install mysql-connector
 ```
 pip install lxml
 ```
+
 ## Ready to Run!
 (find the inner directory with `setup_sql.py` then run it!)
 

@@ -1,10 +1,13 @@
-/* 
-File: server.js
-Description: Express code. Contains endpoints for DiscoDB backend.
+var createError = require("http-errors");
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+var cors = require("cors");
 
-*/
-
+var searchRouter = require("./routes/search");
 const PORT = process.env.PORT;
+
 
 const express = require("express");
 var cors = require('cors');
@@ -52,17 +55,42 @@ app.get("/", function(req, res, next) {
   //   .catch(next);
   json_response["message"] = "Successfully pinged GET '/'";
   res.send(json_response);
-    
 });
 
-app.get("/healthz", function(req, res) {
-  // do app logic here to determine if app is truly healthy
-  // you should return 200 if healthy, and anything else will fail
-  // if you want, you should be able to restrict this to localhost (include ipv4 and ipv6)
-  res.send("I am happy and healthy\n");
-});
-/* ======================== (end) REFERENCE:github/docker ================== */
+// view engine setu
+app.set('view engine', 'jade')
+app.use(cors());
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
+app.use("/SearchResults", searchRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get("env") === "development" ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    //res.render("error");
+});
+
+
+app.get('/healthz', function(req, res, next) {
+  console.log("HELLO WORLD")
+  res.send(80)
+});
+
+console.log("Started running on PORT " + PORT)
 app.get("/test_db_connection", function(req, res, next){
   /*
   Run a simple query to see if we can connect to the docker image, particularly to a designated database.
@@ -182,5 +210,7 @@ app.use((err, req, res, next) => {
                 + err.stack + 
               "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
   res.status(500).send('Something broke!')
-})
+});
+
+
 module.exports = app;

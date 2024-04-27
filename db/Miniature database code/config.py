@@ -13,3 +13,4 @@ DISCODB_MYSQL_PASSWORD = "db-btf5q"
 DISCODB_NAME = 'discodb_mini_top_100' 
 # ^ attempted reformatting this string as well to fix database incorrectly naming itself with inner quotes
 # r'...' and b'...' don't work.
+

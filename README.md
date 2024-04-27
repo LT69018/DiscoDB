@@ -7,7 +7,7 @@ This repository contains the code for our database application, "DiscoDB".
 The goal is to allow users to search for and save albums to "listening lists", 
 similar to how goodreads allows readers to save books they want to read.
 
-The frontend is hosted on port 3000, the backend is hosted on port 80. See the Dockerfiles.
+The frontend is hosted on port 3000, the backend is hosted on port 8080. See the Dockerfiles.
 
 # Directory Structure / Docker
 Note: You may have to have `docker` desktop running in order to start up and run our docker image.
@@ -110,7 +110,20 @@ Removing project-discodb_db_1       ... done
 Removing network project-discodb_default
 
 ```
-## ======================== (end) REFERENCE:github/docker ==================
+## In case of failure (How I somewhat reset a docker image)
+Section Author: Jess Turner
+
+Run the following commands. I know this isn't ideal at all because it deletes ALL your docker containers, but this is just what may have worked as of 4/22 when I wanted to reset my backend docker image.
+- Recalling the problem in case you wonder if you are in this same "emergency" that I had: ( I updated the packages and I was constantly getting package not found "cors" errors as well as the app was using the wrong port, 5001 (i.e. when viewing the docker layers) likely because of docker caching an earlier version of the system which used that port )
+```shell
+docker system prune
+docker build --no-cache backend
+```
+I suppose you can replace backend with whichever image is giving you trouble :P
+
+Then you can re-run the app with
+`docker compose up -d` as usual.
+
 
 
 ## In case of failure (How I somewhat reset a docker image)

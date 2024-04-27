@@ -1,9 +1,17 @@
-import "./Constants.js";
+import {BACKEND_COVER_URL_KEY,
+    BACKEND_ARTIST_NAME_KEY,
+    BACKEND_ALBUM_NAME_KEY,
+    BACKEND_YEAR_KEY,
+    // BACKEND_ALBUM_ID_KEY,
+    // BACKEND_TRACKS_KEY,
+    // BACKEND_DESCRIPTION_KEY,
+    NUM_ITEMS_PER_ROW,
+    FRONTEND_COVER_IMAGE_KEY} from "./Constants.js";
 import  "./SearchResults.css";
 
-const ResultRow = ({index, resultRow}) => {
-
-  const htmlRow = Object.assign({}, resultRow); // fully copy it so we can make changes
+const ResultRow = ({index, row, handleSaveClick}) => {
+  const htmlRow = {} // initalize on separate row to Object.assign() in case that was the reason not all keys were present.
+  Object.assign(htmlRow, row); // fully copy it so we can make changes
   populateImagesAndEmptyKeys(htmlRow);
   if (Object.keys(htmlRow).length < NUM_ITEMS_PER_ROW) {
       console.log("Unable to render this row:", htmlRow,

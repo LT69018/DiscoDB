@@ -21,16 +21,10 @@ app.use(cors()); // prep for frontend pings.
 // you'll see long build times on every code change + build. If done correctly,
 // code changes should be only a few seconds to build locally due to build cache.
 
-const morgan = require("morgan");
-// morgan provides easy logging for express, and by default it logs to stdout
-// which is a best practice in Docker. Friends don't let friends code their apps to
-// do app logging to files in containers.
-
 const database = require("./database");
 
-app.use(morgan("common"));
+app.use(logger("common"));
 /* ======================== ( end ) REFERENCE:github/docker ================== */
-
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

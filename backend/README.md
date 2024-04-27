@@ -168,7 +168,10 @@ docker-compose down -v
 Followed by the normal command
 ```
 docker compose up
-```
+
+or the single line:
+
+docker-compose down && docker-compose build --no-cache && docker-compose up
 
 Characteristic Error:
 ```

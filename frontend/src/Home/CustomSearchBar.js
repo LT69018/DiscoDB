@@ -44,8 +44,9 @@ function CustomSearchBar() {
     console.log("Recording selection value =", event.target.value);
   }
 
-  function callAPI() {
-    return fetch("http://localhost:8080/query_user_search")
+  function callAPI(userInput) {
+    const encodedInput = encodeURIComponent(userInput);
+    return fetch(`http://localhost:8080/SearchResults?query=${encodedInput}`)
         .then(res => {
           console.log("api call is happening");
           return res.json();
@@ -54,7 +55,11 @@ function CustomSearchBar() {
   }
 
   // When they press [Search]
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+
+    //upon submit, we make an API request to backend to peform the search
+    event.preventDefault(); //prevents default form submission behavior!
+
     let dropdownValue = dropdownInput;
     if (dropdownValue === "") {
       console.log("Auto filling in dropdownInput to be default = 'album'");
@@ -74,9 +79,14 @@ function CustomSearchBar() {
       // calling my data variable "state" because of convention.
 
       //perform query here?
-      callAPI().then(test_api_result => {
+      callAPI(userInput).then(test_api_result => {
         console.log("test api call: " + test_api_result)
-        navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue, apiResult:test_api_result}});
+        try{
+          navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue, apiResult:test_api_result}});
+        }catch(error) {
+          console.log(error)
+        }
+        
       });
     }
   }

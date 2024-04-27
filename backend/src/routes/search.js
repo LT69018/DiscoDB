@@ -24,7 +24,8 @@ const test_api_result = [
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log("HELLO WORLD")
+  console.log("HELLO WORLD: recieved param: " + req.query.query)
+  
   res.json(test_api_result)
 });
 

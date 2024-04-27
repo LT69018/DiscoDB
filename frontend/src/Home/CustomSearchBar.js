@@ -45,7 +45,7 @@ function CustomSearchBar() {
   }
 
   function callAPI() {
-    return fetch("http://localhost:8080/SearchResults")
+    return fetch("http://localhost:8080/query_user_search")
         .then(res => {
           console.log("api call is happening");
           return res.json();

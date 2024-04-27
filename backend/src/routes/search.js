@@ -9,6 +9,14 @@ const BACKEND_ALBUM_ID_KEY = "album_id";
 const BACKEND_TRACKS_KEY = "tracks";
 const BACKEND_DESCRIPTION_KEY = "description";
 
+/*
+Search by album_id returns 5 relations now:
+- albums
+- songs
+- genres
+- videos
+- artist_album_credits NATURAL JOIN artists (artist_name, role (i.e. writer/producer/bass-player))
+*/
 const test_api_result = [
     {[BACKEND_ARTIST_NAME_KEY]: 'Artist zero', [BACKEND_ALBUM_NAME_KEY]: 'Album Name', 
         [BACKEND_YEAR_KEY]: 1970, [BACKEND_COVER_URL_KEY]: null,

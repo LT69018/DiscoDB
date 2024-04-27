@@ -40,19 +40,31 @@ const FRONTEND_COVER_IMAGE_KEY = "coverImage";
 /* ======== THESE ARE THEM BEING EXPORTED, LEAVE ALONE =============== */
 
 // eslint-disable-next-line
-export const BACKEND_COVER_URL_KEY =  BACKEND_KEYS["cover url key"];
+const BACKEND_COVER_URL_KEY =  BACKEND_KEYS["cover url key"];
 // eslint-disable-next-line
-export const BACKEND_ARTIST_NAME_KEY = BACKEND_KEYS["artist name key"] ;
+const BACKEND_ARTIST_NAME_KEY = BACKEND_KEYS["artist name key"] ;
 // eslint-disable-next-line
-export const BACKEND_ALBUM_NAME_KEY = BACKEND_KEYS["album name key"] ;
+const BACKEND_ALBUM_NAME_KEY = BACKEND_KEYS["album name key"] ;
 // eslint-disable-next-line
-export const BACKEND_YEAR_KEY = BACKEND_KEYS["year key"] ;
+const BACKEND_YEAR_KEY = BACKEND_KEYS["year key"] ;
 // eslint-disable-next-line
-export const BACKEND_ALBUM_ID_KEY = BACKEND_KEYS["album id key"] ;
+const BACKEND_ALBUM_ID_KEY = BACKEND_KEYS["album id key"] ;
 // eslint-disable-next-line
-export const BACKEND_TRACKS_KEY = BACKEND_KEYS["tracks key"] ;
+const BACKEND_TRACKS_KEY = BACKEND_KEYS["tracks key"] ;
 // eslint-disable-next-line
-export const BACKEND_DESCRIPTION_KEY = BACKEND_KEYS["description key"] ;
+const BACKEND_DESCRIPTION_KEY = BACKEND_KEYS["description key"] ;
 // eslint-disable-next-line
-export const NUM_ITEMS_PER_ROW = KEYS_TO_CHECK.length ;
+const NUM_ITEMS_PER_ROW = KEYS_TO_CHECK.length ;
 //const FRONTEND_COVER_IMAGE_KEY = String(FRONTEND_COVER_IMAGE_KEY)
+
+export {
+  BACKEND_COVER_URL_KEY,
+  BACKEND_ARTIST_NAME_KEY,
+  BACKEND_ALBUM_NAME_KEY,
+  BACKEND_YEAR_KEY,
+  BACKEND_ALBUM_ID_KEY,
+  BACKEND_TRACKS_KEY,
+  BACKEND_DESCRIPTION_KEY,
+  NUM_ITEMS_PER_ROW,
+  FRONTEND_COVER_IMAGE_KEY
+};

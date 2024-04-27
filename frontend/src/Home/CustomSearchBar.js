@@ -46,7 +46,7 @@ function CustomSearchBar() {
 
   function callAPI(userInput) {
     const encodedInput = encodeURIComponent(userInput);
-    return fetch(`http://localhost:8080/SearchResults?query=${encodedInput}`)
+    return fetch(`http://localhost:8080/query_user_search?query=${encodedInput}`)
         .then(res => {
           console.log("api call is happening");
           return res.json();

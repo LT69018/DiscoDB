@@ -52,12 +52,14 @@ export default function SearchResults() {
         console.log("[React Front End / SearchResults] Failed to get state from location :(");
     } else {
         console.log("REACT FRONT END HAS RECIEVED DATA");
+        console.log("State = ", location.state);
         displayHeader = (<div>
                 Displaying results for <span style={{color: "green"}}>{location.state.searchString} </span> 
                 
                     Search by <span style={{color: "purple"}}>{location.state.searchBy}</span>
         </div>);
         const apiResult = location.state.apiResult;
+        console.log("Api Result: ", apiResult);
         if (apiResult === null) {
             // do nothing.
         } else {

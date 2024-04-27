@@ -8,8 +8,9 @@ import {BACKEND_COVER_URL_KEY,
   NUM_ITEMS_PER_ROW,
   FRONTEND_COVER_IMAGE_KEY} from "./Constants.js";
 import  "./SearchResults.css";
+import {Link} from "react-router-dom";
 
-const ResultRow = ({index, row, handleSaveClick}) => {
+const ResultRow = ({index, row, handleSaveClick}) => { // note, row should contain `album_id` to nav to search results page.
 
   const htmlRow = {} // initalize on separate row to Object.assign() in case that was the reason not all keys were present.
   Object.assign(htmlRow, row); // fully copy it so we can make changes
@@ -34,11 +35,24 @@ const ResultRow = ({index, row, handleSaveClick}) => {
               {htmlRow[FRONTEND_COVER_IMAGE_KEY]}
           </div>
           <div className="col" style={{textAlign: "left"}}> 
-              <p className="albumTitle">{htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})</p>
+              <p className="albumTitle">
+                <Link to="/AlbumInfo" className="albumLink" state={{
+                    
+                }}>
+                {htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})
+                </Link>
+              </p>
               <p>{htmlRow[BACKEND_ARTIST_NAME_KEY]}</p>
           </div>
           <div className="col-2 saveCol colVerticalCenter">
-              <button id={index} onClick={handleSaveClick}>Save</button>
+                <div>
+                    <select name="whichTableSaveTo" style={{width: "50%"}}>
+                        <option value="past">Past</option>
+                        <option value="present">Present</option>
+                        <option value="future">Future</option>
+                    </select>
+                </div>
+                <button id={index} onClick={handleSaveClick} style={{width: "50%"}}>Save</button>
           </div>
       </div>
   );

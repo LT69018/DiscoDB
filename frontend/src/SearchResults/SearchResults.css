@@ -82,3 +82,8 @@ p.albumTitle {
     border-left: 1px ridge black;
     justify-content: center;
 }
+
+a.albumLink {
+    color: white;
+    font-size: 20px;
+}

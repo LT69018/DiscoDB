@@ -11,6 +11,12 @@ const fs = require("fs");
 const readFileSync = filename => fs.readFileSync(filename).toString("utf8");
 
 // Constants
+const IS_RUNNING_LOCAL = true;
+
+if (IS_RUNNING_LOCAL) {
+  require('dotenv').config(); // <-
+}
+
 module.exports = {
   database: {
     host: process.env.DATABASE_HOST || "localhost",

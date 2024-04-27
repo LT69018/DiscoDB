@@ -110,7 +110,6 @@ Removing project-discodb_db_1       ... done
 Removing network project-discodb_default
 
 ```
-
 ## In case of failure (How I somewhat reset a docker image)
 Section Author: Jess Turner
 
@@ -125,7 +124,35 @@ I suppose you can replace backend with whichever image is giving you trouble :P
 Then you can re-run the app with
 `docker compose up -d` as usual.
 
-## ======================== (end) REFERENCE:github/docker ==================
+
+
+## In case of failure (How I somewhat reset a docker image)
+Section Author: Jess Turner
+
+Run the following commands. I know this isn't ideal at all because it deletes ALL your docker containers, but this is just what may have worked as of 4/22 when I wanted to reset my backend docker image. Unfortunately this doesn't consistently work, but it's worth a try :/
+- Recalling the problem in case you wonder if you are in this same "emergency" that I had: ( I updated the packages and I was constantly getting package not found "cors" errors as well as the app was using the wrong port, 5001 (i.e. when viewing the docker layers) likely because of docker caching an earlier version of the system which used that port )
+```shell
+docker system prune
+docker build --no-cache backend
+```
+I suppose you can replace backend with whichever image is giving you trouble :P
+
+Then you can re-run the app with
+`docker compose up -d` as usual.
+
+### Other commands that may help in case of failure
+According to this github thread on docker/postgress, you can do `docker rm [instance-name]`
+
+For example, on 4-25 ~8:45pm, I'm trying to reset the mySQL docker image (i.e. delete and re-create) using a different database table name based on my change in the `compose.yaml` file. This is what I attempted before rerunning "docker compose up". It didn't work for me, but it may work for you :p
+```
+PS C:\...\jturn>docker ps -a
+CONTAINER ID   IMAGE                      COMMAND                  CREATED          STATUS                      PORTS                    NAMES
+7a91f30eea9c   project-discodb-frontend   "docker-entrypoint.s…"   31 minutes ago   Up 31 minutes               0.0.0.0:3000->3000/tcp   project-discodb-frontend-1
+8d94fb992915   project-discodb-backend    "docker-entrypoint.s…"   31 minutes ago   Exited (1) 29 minutes ago                            project-discodb-backend-1
+d15ae67dfa4c   mysql:8.0.27               "docker-entrypoint.s…"   31 minutes ago   Exited (0) 30 seconds ago                            project-discodb-db-1
+PS C:\...\jturn>docker rm project-discodb-db-1
+project-discodb-db-1
+```
 
 # Appearance
 <figure>

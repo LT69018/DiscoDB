@@ -1,4 +1,9 @@
-This will contain the backend code for DiscoDB.
+This will contain the backend (node.js express) code for DiscoDB.
+
+The main section of this README is the endpoints I am writing to interface with the database. However, we also need to discuss the two different ways you may run this backend/express server. 
+- **Docker**: If you are running this with docker, you should be able to see the console of that from when you did `docker compose up`
+- **Local** : If you are NOT running the docker (i.e. we couldn't fix the backend image before Sun 4/29), __please scroll down to the header with "local run instructions"__ 
+    - TLDR: create a .env file with the constant names used in `config.js` with mapped info from `compose.yaml` i.e. make sure to check the expected type and convert and change values as needed (i.e. if your current database table is different, change that, etc.)
 
 I will use these emojis to talk about the status of each of these.
 - 🟢 : done
@@ -103,18 +108,65 @@ GET /load_user_saves
 }
 ```
 
+# Instructions for Running Locally
+- Todo: consider having a virtual environment for this (`nodenv`):
+    - https://pypi.org/project/nodeenv/#configuration
+
+
+Since docker set important database environment variables for us, you have to set it manually. I've heard that best practice isn't to push the .env file to github, but I don't think we can get around it this time.
+
+## 1. Make sure backend/.env file has this info (create/modify)
+I use the `dotenv` package in express so that I can import these values.
+
+## (1. cont) Important note **If you used db/setup_sql.py**
+<span style="color: red;"><u>You must make sure these constants match up to the values in `db/config.py`</u></span>. If you don't, you'll get an error about invalid database configuration, i.e. invalid database name.
+
+```
+DATABASE_DB="discodb-mini-top-100"
+DATABASE_USER="root"
+DATABASE_PASSWORD="../db/password.txt"
+DATABASE_HOST="localhost"
+DATABASE_PORT=3306
+NODE_ENV="development"
+```
+Feel free to consolidate the values with what is shown in `~/compose.yaml`.
+
+**Note 4-25 8pm-ish**     
+- Currently struggling to make docker use the database table name specified here though :(
+- Todo: make sure our mySql server is using the right database table name. Maybe have another .env in the root to set the database name so we don't have to check the name in multiple places?
+
+2. Set the `IS_RUNNING_LOCAL` constant in config.js (true)
+
+3. Run using `npm run [chosenRunCmd]`
+- without the code resetting for changes: `npm start`
+- (i.e. if debugging) with resetting for changes `npm start-watch` (this is what the docker is currently set to use as well).
+
 # Packages / Dependencies
-- mysql
+Todo: make sure these installations are being run in the docker backend image if we fix that.
+
+As a backup, you can run the backend locally and install the packages using `npm install` (which will get all of the libraries from `package.json`).
+
+These are the individual dependencies:
+- express
 ```
-npm install mysql
+npm install express
 ```
-https://stackoverflow.com/questions/32612650/how-to-get-docker-compose-to-always-re-create-containers-from-fresh-images
+- mysql and mysql2 (we're still between the two, so do both to be safe :) )
+```
+npm install mysql2 && npm install mysql
+```
+- (only if running locally) 
+    - dotenv
+    ```
+    npm install dotenv
+    ```
 
 If running into problems revolving around the backend unable to load dependencies, make sure to run: 
-
+```
 docker-compose down -v
-
+```
 Followed by the normal command
+```
 docker compose up
 
 or the single line:
@@ -122,7 +174,7 @@ or the single line:
 docker-compose down && docker-compose build --no-cache && docker-compose up
 
 Characteristic Error:
-
+```
 node:internal/modules/cjs/loader:1146
 project-discodb-main-backend-1   |   throw err;
 project-discodb-main-backend-1   |   ^
@@ -146,7 +198,7 @@ project-discodb-main-backend-1   | }
 project-discodb-main-backend-1   | 
 project-discodb-main-backend-1   | Node.js v20.12.2
 project-discodb-main-backend-1   | [nodemon] app crashed - waiting for file changes before starting...
-
+```
 
 https://stackoverflow.com/questions/42040317/cannot-find-module-for-a-node-js-app-running-in-a-docker-compose-environment
 

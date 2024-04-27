@@ -12,7 +12,7 @@ services:
       target: development
     command: npm run start-watch
     environment:
-      - DATABASE_DB=example
+      - DATABASE_DB=discodb-mini-top-100
       - DATABASE_USER=root
       - DATABASE_PASSWORD=/run/secrets/db-password
       - DATABASE_HOST=db
@@ -40,6 +40,9 @@ services:
     image: mysql:8.0.27
     command: '--default-authentication-plugin=mysql_native_password'
     restart: always
+    # JT added this to try to make it accessible from our python / express.
+    ports: 
+    - 3306:3306
     secrets:
       - db-password
     volumes:
@@ -47,7 +50,7 @@ services:
     networks:
       - private
     environment:
-      - MYSQL_DATABASE=discodb
+      - MYSQL_DATABASE=discodb-mini-top-100
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
   frontend:
     build:

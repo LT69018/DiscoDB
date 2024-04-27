@@ -84,8 +84,8 @@ header {
     margin-left: 20px;
     */
     display:inline;
-    justify-content: center;
-    
+    align-items: left;
+    text-align: left;
 
     flex: 0 0 50%;
     max-width: 80%;
@@ -100,4 +100,16 @@ header {
 
 .tracklist li {
     margin-bottom: 5px;
+}
+
+h2.album-name {
+    color:rgb(0, 85, 242);
+}
+
+h2.artist-name {
+    color:rgb(0, 85, 242);
+}
+
+p.album-notes {
+    color:rgb(80, 66, 51);
 }

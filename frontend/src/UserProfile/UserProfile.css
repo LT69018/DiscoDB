@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+}
+
+/* Attempting to put space after the header*/
+.pageInfoHeader {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    height: 30%;
+}
+
+.albumsColumn {
+    margin-left: 5%;
+    margin-right: 5%;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    overflow:scroll; /* <- allow user to scroll through the particular table! */
+}
+
+.columnTitle {
+    background-color: white;
+}

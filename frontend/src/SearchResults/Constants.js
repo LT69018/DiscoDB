@@ -23,22 +23,6 @@ const KEYS_TO_CHECK =  [BACKEND_KEYS["cover url key"], BACKEND_KEYS["artist name
 
 // eslint-disable-next-line
 const FRONTEND_COVER_IMAGE_KEY = "coverImage";
-
-// module.exports = {
-//   BACKEND_COVER_URL_KEY: BACKEND_KEYS["cover url key"],
-//   BACKEND_ARTIST_NAME_KEY: BACKEND_KEYS["artist name key"],
-//   BACKEND_ALBUM_NAME_KEY: BACKEND_KEYS["album name key"],
-//   BACKEND_YEAR_KEY: BACKEND_KEYS["year key"],
-//   BACKEND_ALBUM_ID_KEY: BACKEND_KEYS["album id key"],
-//   BACKEND_TRACKS_KEY: BACKEND_KEYS["tracks key"],
-//   BACKEND_DESCRIPTION_KEY: BACKEND_KEYS["description key"],
-  
-//   NUM_ITEMS_PER_ROW: KEYS_TO_CHECK.length,
-//   FRONTEND_COVER_IMAGE_KEY: String(FRONTEND_COVER_IMAGE_KEY)
-// }
-
-/* ======== THESE ARE THEM BEING EXPORTED, LEAVE ALONE =============== */
-
 // eslint-disable-next-line
 const BACKEND_COVER_URL_KEY =  BACKEND_KEYS["cover url key"];
 // eslint-disable-next-line

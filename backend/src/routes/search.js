@@ -37,9 +37,11 @@ const test_api_result = [
   - return top 50 results  
 */
 router.get('/', function(req, res, next) {
-  console.log("HELLO WORLD: recieved param: " + req.query.query)
+  console.log("HELLO WORLD: recieved param: " + JSON.stringify(req.query))
   
   res.json(test_api_result)
+
+
 });
 
 module.exports = router;

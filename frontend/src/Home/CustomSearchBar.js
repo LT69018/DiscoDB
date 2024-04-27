@@ -44,10 +44,10 @@ function CustomSearchBar() {
     console.log("Recording selection value =", event.target.value);
   }
 
-  function callAPI(userInput) {
-    const encodedInput = encodeURIComponent(userInput);
-    const encodedSelection = encodeURIComponent(dropdownInput);
-    return fetch(`http://localhost:8080/query_user_search?searchString=${encodedInput}&searchBy=${encodedSelection}`)
+  function callAPI(userInput, dropdownInput) {
+    const encodedUserInput = encodeURIComponent(userInput);
+    const encodedDropdownInput = encodeURIComponent(dropdownInput);
+    return fetch(`http://localhost:8080/query_user_search?searchString=${encodedUserInput}&searchBy=${encodedDropdownInput}`)
         .then(res => {
           console.log("api call is happening");
           return res.json();
@@ -80,7 +80,7 @@ function CustomSearchBar() {
       // calling my data variable "state" because of convention.
 
       //perform query here?
-      callAPI(userInput).then(test_api_result => {
+      callAPI(userInput, dropdownValue).then(test_api_result => {
         console.log("test api call: " + test_api_result)
         try{
           navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue, apiResult:test_api_result}});

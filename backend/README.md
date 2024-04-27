@@ -151,9 +151,9 @@ These are the individual dependencies:
 ```
 npm install express
 ```
-- mysql
+- mysql and mysql2 (we're still between the two, so do both to be safe :) )
 ```
-npm install mysql
+npm install mysql2 && npm install mysql
 ```
 - (only if running locally) 
     - dotenv

@@ -4,14 +4,11 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+const mysql = require("mysql2");
 
 var searchRouter = require("./routes/search");
-const PORT = process.env.PORT;
-
-
-const express = require("express");
-var cors = require('cors');
-const mysql = require("mysql2");
+const { port } = require("./config");
+const PORT = port;
 
 const app = express();
 app.use(cors()); // prep for frontend pings.
@@ -90,7 +87,7 @@ app.get('/healthz', function(req, res, next) {
   res.send(80)
 });
 
-console.log("Started running on PORT " + PORT)
+// console.log("Started running on PORT " + PORT)
 app.get("/test_db_connection", function(req, res, next){
   /*
   Run a simple query to see if we can connect to the docker image, particularly to a designated database.

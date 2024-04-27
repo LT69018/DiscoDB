@@ -30,7 +30,6 @@ import { useLocation, // get data from previous page
          // useNavigate // send data to next page
        } from 'react-router-dom';
 import "./SearchResults.css"
-import assert from 'assert';
 
 const BACKEND_COVER_URL_KEY = "coverURL";
 const BACKEND_ARTIST_NAME_KEY = "artist";

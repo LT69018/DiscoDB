@@ -42,7 +42,7 @@ const ResultRow = ({index, row, handleSaveClick}) => { // note, row should conta
                     [BACKEND_ALBUM_ID_KEY]: album_id,
                     [BACKEND_ALBUM_NAME_KEY]: htmlRow[BACKEND_ALBUM_NAME_KEY],
                     [BACKEND_ARTIST_NAME_KEY]: htmlRow[BACKEND_ARTIST_NAME_KEY],
-                    [BACKEND_YEAR_KEY]: htmlRow[BACKEND_YEAR_KEY],
+                    [BACKEND_YEAR_KEY]: htmlRow[BACKEND_YEAR_KEY],
                     [BACKEND_COVER_URL_KEY]: htmlRow[BACKEND_COVER_URL_KEY]
                 }}>
                 {htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})

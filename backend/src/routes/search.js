@@ -18,14 +18,17 @@ Search by album_id returns 5 relations now:
 - artist_album_credits NATURAL JOIN artists (artist_name, role (i.e. writer/producer/bass-player))
 */
 const test_api_result = [
-    {[BACKEND_ARTIST_NAME_KEY]: 'Artist zero', [BACKEND_ALBUM_NAME_KEY]: 'Album Name', 
+    { [BACKEND_ALBUM_ID_KEY]: 1000,
+      [BACKEND_ARTIST_NAME_KEY]: 'Artist zero', [BACKEND_ALBUM_NAME_KEY]: 'Album Name', 
         [BACKEND_YEAR_KEY]: 1970, [BACKEND_COVER_URL_KEY]: null,
         // these last few are just for the /AlbumInfo page, I won't display them
         [BACKEND_TRACKS_KEY]: ["Song1", "Song2"], [BACKEND_DESCRIPTION_KEY]:"Hey I'm an album"
         },
-    {[BACKEND_ARTIST_NAME_KEY]: "Artist one", [BACKEND_ALBUM_NAME_KEY]:"Album Name",
+    {[BACKEND_ALBUM_ID_KEY]: 2000,
+      [BACKEND_ARTIST_NAME_KEY]: "Artist one", [BACKEND_ALBUM_NAME_KEY]:"Album Name",
          [BACKEND_YEAR_KEY]: 2024,[BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/237/200/300"},
-    {[BACKEND_ARTIST_NAME_KEY]: "Artist two", [BACKEND_ALBUM_NAME_KEY]:"Album Name", 
+    {[BACKEND_ALBUM_ID_KEY]: 3000,
+      [BACKEND_ARTIST_NAME_KEY]: "Artist two", [BACKEND_ALBUM_NAME_KEY]:"Album Name", 
         [BACKEND_YEAR_KEY]: 2024, [BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/238/200/300"}
 ];
 

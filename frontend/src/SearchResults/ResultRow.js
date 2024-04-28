@@ -57,7 +57,7 @@ const ResultRow = ({index, row, handleSaveClick}) => { // note, row should conta
                 <option value="future">Future</option>
             </Form.Select>
             
-            <Button id={index} onClick={handleSaveClick}>Save</Button>
+            <Button id={index} onClick={() => handleSaveClick(htmlRow[BACKEND_ALBUM_ID_KEY])}>Save</Button>
           </div>
       </div>
   );

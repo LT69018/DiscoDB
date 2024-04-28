@@ -33,6 +33,7 @@ import "./SearchResults.css"
 import "./Constants.js";
 
 import ResultRow from "./ResultRow.js";
+import { BACKEND_ALBUM_NAME_KEY } from "./Constants.js";
 
 const handleSaveClick = () => {
 
@@ -59,6 +60,7 @@ export default function SearchResults() {
                     Search by <span style={{color: "purple"}}>{location.state.searchBy}</span>
         </div>);
         const apiResult = location.state.apiResult;
+        // apiResult.push({"album": "a", "album_id":1, "year": 2020, "artist": "JT"}); // for testing overflow :P
         console.log("Api Result: ", apiResult);
         if (apiResult === null) {
             // do nothing.
@@ -75,16 +77,24 @@ export default function SearchResults() {
     
     
     return (
-        <div className="container">
+        <div className="container-fluid">
             <h1>Search Results</h1>
             {displayHeader}
             <p>Under Construction :P</p>
-            <div className="row categoriesRow">
-                <div className="col-1 indexCol categoryColumn">#</div> 
-                <div className="col-10 categoryColumn">Album Information</div>
-                <div className="col-1 categoryColumn">Save</div>
+            
+            <div className="row">
+                <div className="col-1"></div>
+                <div className="col-10 allResultsRow rounded">
+                <div className="row categoriesRow">
+                    <div className="col-1 indexCol categoryColumn">#</div> 
+                    <div className="col-2 categoryColumn">Album Cover</div>
+                    <div className="col categoryColumn">Album Information</div>
+                    <div className="col-2 categoryColumn">Save</div>
+                </div>  
+                    {renderedResults}
+                </div>
+            <div className="col-1"></div>
             </div>
-            {renderedResults}
         </div>
     );
     

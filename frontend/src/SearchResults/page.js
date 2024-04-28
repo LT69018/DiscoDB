@@ -27,7 +27,7 @@ Can direct the user to AlbumInfo by sending the following info to that page:
 
 import React from "react";
 import { useLocation, // get data from previous page
-         // useNavigate // send data to next page
+        useNavigate // send data to next page
        } from 'react-router-dom';
 import "./SearchResults.css"
 import "./Constants.js";
@@ -35,17 +35,26 @@ import "./Constants.js";
 import ResultRow from "./ResultRow.js";
 import { BACKEND_ALBUM_NAME_KEY } from "./Constants.js";
 
-const handleSaveClick = () => {
-
-}
-
-
 
 // not sure why it won't let me use tab size of 2
 export default function SearchResults() {
     const location = useLocation();
+    const navigate = useNavigate();
     console.log("SearchResults.location=", location);
-
+    
+    const handleSaveClick = (album_id, selectedDestTable) => {
+        const encodedAlbumID = encodeURIComponent(album_id);
+        const encodedSelection = encodeURIComponent(selectedDestTable)
+        // todo: consolidate expected key names for this method :P
+        fetch(`localhost:8080/save_album_for_user?album_id=${encodedAlbumID}&saveTo=${encodedSelection}`, 
+            {method:"POST"}
+        )
+            .then(res => {
+                console.log("Sent [POST /save_album_for_user] with album_id", album_id,
+                            "\tGot result:", res)
+                return res.json})
+            .catch(err => err);
+    }
     // using `[constKey]: value` in brackets so that JS uses the string instead of the variable name as the key.
     let displayHeader = <div>Attempting to display results</div>;
     let renderedResults = <div>Unable to render search results.</div>;
@@ -81,19 +90,22 @@ export default function SearchResults() {
             <h1>Search Results</h1>
             {displayHeader}
             <p>Under Construction :P</p>
-            
+
             <div className="row">
                 <div className="col-1"></div>
                 <div className="col-10 allResultsRow rounded">
-                <div className="row categoriesRow">
-                    <div className="col-1 indexCol categoryColumn">#</div> 
-                    <div className="col-2 categoryColumn">Album Cover</div>
-                    <div className="col categoryColumn">Album Information</div>
-                    <div className="col-2 categoryColumn">Save</div>
-                </div>  
+                    {/* Note: 4/27 - I know it may be inconvenient that the category strings move down when you scroll 
+                        But we don't have time or energy to fix it :p I tried :/
+                    */}
+                    <div className="row categoriesRow">
+                        <div className="col-1 indexCol categoryColumn">#</div> 
+                        <div className="col-2 categoryColumn">Album Cover</div>
+                        <div className="col categoryColumn">Album Information</div>
+                        <div className="col-2 categoryColumn">Save</div>
+                    </div>  
                     {renderedResults}
                 </div>
-            <div className="col-1"></div>
+                <div className="col-1"></div>
             </div>
         </div>
     );

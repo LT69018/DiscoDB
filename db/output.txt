@@ -1,0 +1,877 @@
+                listening_time      VARCHAR(16) NOT NULL,
+                listening_method    VARCHAR(16),
+                PRIMARY KEY (user_id, album_id),
+                FOREIGN KEY (user_id) REFERENCES users(user_id)
+                    ON DELETE CASCADE,
+                FOREIGN KEY (album_id) REFERENCES albums(album_id),
+                CHECK(listening_time IN ('Past', 'Present', 'Future')),
+                CHECK(listening_method IN ('Vinyl', 'CD', 'Cassette', '8-Track', 'Digital', 'Other'))
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS artists (
+                artist_id   INT,
+                artist_name VARCHAR(255) NOT NULL,
+                real_name   VARCHAR(255),
+                PRIMARY KEY (artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS name_variations (
+                artist_id       INT,
+                name_variation  VARCHAR(255),
+                PRIMARY KEY (artist_id, name_variation),
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS artist_aliases (
+                artist_id           INT,
+                artist_alias_id     INT,
+                PRIMARY KEY (artist_id, artist_alias_id),
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+                FOREIGN KEY (artist_alias_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS band_membership (
+                member_id   INT,
+                band_id     INT,
+                PRIMARY KEY (member_id, band_id),
+                FOREIGN KEY (member_id) REFERENCES artists(artist_id),
+                FOREIGN KEY (band_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_album_id (search_term INT)
+ ' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_id (search_term INT)
+                BEGIN
+                    SELECT album_title, release_date, notes, num_songs FROM albums WHERE album_id = search_term;        
+                    SELECT song_title, position, song_duration FROM songs WHERE album_id = search_term;
+                    SELECT genre FROM genres WHERE album_id = search_term;
+                    SELECT src FROM videos WHERE album_id = search_term;
+                    SELECT artist_name, is_primary_artist, artist_album_role FROM artist_album_credits NATURAL JOIN artists WHERE album_id = search_term ORDER BY is_primary_artist DESC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term' at line 1
+Query with error:
+                DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term VARCHAR(255))
+                    BEGIN
+                        SELECT album_id, album_title, release_date, artist_name
+                        FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                        WHERE album_id
+                            IN (
+                                SELECT album_id
+                                FROM listening
+                                WHERE user_id = (
+                                    SELECT user_id
+                                    FROM users
+                                    WHERE username = search_term)
+                            )
+                            AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                    END//
+                DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_album_title (search_term VAR' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(album_title, '!', ''),
+                        '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                        '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                        '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                        '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                            LIKE concat(
+                                '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(        
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(        
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(search_term, '!', ''),
+                                '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                                '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                                '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                                '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '       
+', ''),
+                                '%') COLLATE utf8mb4_0900_ai_ci AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_artist_name (search_term VAR' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_artist_name (search_term VARCHAR(255))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM name_variations NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(name_variation, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),     
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),     
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),     
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '   
+', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_song_title (search_term VARC' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_song_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM songs WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(song_title, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),     
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),     
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),     
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '   
+', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+0.08416533470153809
+PS C:\...\Miniature database code>python .\setup_sql.py
+Server connection successful!
+Database created successfully!
+Database connection successful!
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS users (
+                user_id             INT AUTO_INCREMENT,
+                username            VARCHAR(255),
+                user_salt           VARCHAR(256) NOT NULL,
+                user_pswd           VARCHAR(256) NOT NULL,
+                user_full_name      VARCHAR(255),
+                PRIMARY KEY (user_id, username)
+                );
+                ':
+        0
+Error executing query: 1824 (HY000): Failed to open the referenced table 'albums'
+Query with error:
+            CREATE TABLE IF NOT EXISTS listening (
+                user_id             INT,
+                album_id            INT,
+                listening_time      VARCHAR(16) NOT NULL,
+                listening_method    VARCHAR(16),
+                PRIMARY KEY (user_id, album_id),
+                FOREIGN KEY (user_id) REFERENCES users(user_id)
+                    ON DELETE CASCADE,
+                FOREIGN KEY (album_id) REFERENCES albums(album_id),
+                CHECK(listening_time IN ('Past', 'Present', 'Future')),
+                CHECK(listening_method IN ('Vinyl', 'CD', 'Cassette', '8-Track', 'Digital', 'Other'))
+                );
+
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS artists (
+                artist_id   INT,
+                artist_name VARCHAR(255) NOT NULL,
+                real_name   VARCHAR(255),
+                PRIMARY KEY (artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS name_variations (
+                artist_id       INT,
+                name_variation  VARCHAR(255),
+                PRIMARY KEY (artist_id, name_variation),
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS artist_aliases (
+                artist_id           INT,
+                artist_alias_id     INT,
+                PRIMARY KEY (artist_id, artist_alias_id),
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+                FOREIGN KEY (artist_alias_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS band_membership (
+                member_id   INT,
+                band_id     INT,
+                PRIMARY KEY (member_id, band_id),
+                FOREIGN KEY (member_id) REFERENCES artists(artist_id),
+                FOREIGN KEY (band_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_album_id (search_term INT)
+ ' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_id (search_term INT)
+                BEGIN
+                    SELECT album_title, release_date, notes, num_songs FROM albums WHERE album_id = search_term;        
+                    SELECT song_title, position, song_duration FROM songs WHERE album_id = search_term;
+                    SELECT genre FROM genres WHERE album_id = search_term;
+                    SELECT src FROM videos WHERE album_id = search_term;
+                    SELECT artist_name, is_primary_artist, artist_album_role FROM artist_album_credits NATURAL JOIN artists WHERE album_id = search_term ORDER BY is_primary_artist DESC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term' at line 1
+Query with error:
+                DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term VARCHAR(255))
+                    BEGIN
+                        SELECT album_id, album_title, release_date, artist_name
+                        FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                        WHERE album_id
+                            IN (
+                                SELECT album_id
+                                FROM listening
+                                WHERE user_id = (
+                                    SELECT user_id
+                                    FROM users
+                                    WHERE username = search_term)
+                            )
+                            AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                    END//
+                DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_album_title (search_term VAR' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(album_title, '!', ''),
+                        '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                        '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                        '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                        '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                            LIKE concat(
+                                '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(        
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(        
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(search_term, '!', ''),
+                                '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                                '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                                '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                                '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '       
+', ''),
+                                '%') COLLATE utf8mb4_0900_ai_ci AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_artist_name (search_term VAR' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_artist_name (search_term VARCHAR(255))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM name_variations NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(name_variation, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),     
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),     
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),     
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '   
+', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_song_title (search_term VARC' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_song_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM songs WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(song_title, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),     
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),     
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),     
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '   
+', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+0.20927023887634277
+PS C:\...\Miniature database code>python .\setup_sql.py
+Server connection successful!
+Database created successfully!
+Database connection successful!
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS users (
+                user_id             INT AUTO_INCREMENT,
+                username            VARCHAR(255),
+                user_salt           VARCHAR(256) NOT NULL,
+                user_pswd           VARCHAR(256) NOT NULL,
+                user_full_name      VARCHAR(255),
+                PRIMARY KEY (user_id, username)
+                );
+                ':
+        0
+Error executing query: 1824 (HY000): Failed to open the referenced table 'albums'
+Query with error:
+            CREATE TABLE IF NOT EXISTS listening (
+                user_id             INT,
+                album_id            INT,
+                listening_time      VARCHAR(16) NOT NULL,
+                listening_method    VARCHAR(16),
+                PRIMARY KEY (user_id, album_id),
+                FOREIGN KEY (user_id) REFERENCES users(user_id)
+                    ON DELETE CASCADE,
+                FOREIGN KEY (album_id) REFERENCES albums(album_id),
+                CHECK(listening_time IN ('Past', 'Present', 'Future')),
+                CHECK(listening_method IN ('Vinyl', 'CD', 'Cassette', '8-Track', 'Digital', 'Other'))
+                );
+
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS artists (
+                artist_id   INT,
+                artist_name VARCHAR(255) NOT NULL,
+                real_name   VARCHAR(255),
+                PRIMARY KEY (artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS name_variations (
+                artist_id       INT,
+                name_variation  VARCHAR(255),
+                PRIMARY KEY (artist_id, name_variation),
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS artist_aliases (
+                artist_id           INT,
+                artist_alias_id     INT,
+                PRIMARY KEY (artist_id, artist_alias_id),
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+                FOREIGN KEY (artist_alias_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS band_membership (
+                member_id   INT,
+                band_id     INT,
+                PRIMARY KEY (member_id, band_id),
+                FOREIGN KEY (member_id) REFERENCES artists(artist_id),
+                FOREIGN KEY (band_id) REFERENCES artists(artist_id)
+                );
+                ':
+        0
+XML Parse time: 19.88608193397522
+
+
+len(target_artists): 17
+len(found_artists): 0
+25.831664562225342
+
+
+len(target_artists): 263
+len(found_artists): 225
+31.848464250564575
+
+
+len(target_artists): 317
+len(found_artists): 313
+31.66721796989441
+
+
+len(target_artists): 317
+len(found_artists): 315
+32.67946243286133
+
+
+target_artists: ['Taylor Swift', 'Olivia Rodrigo', 'Billie Eilish', 'The Beatles', 'The Rolling Stones', 'Erykah Badu', 'Stevie Wonder', 'Tank and the Bangas', 'AC/DC', 'Weston Estate', 'Bad Bunny', 'Benny Sings', 'The Internet', 'Anderson .Paak', 'The Mothers', 'Santana', 'The Doors', 'Erica Wright', 'Ebi Breezy', 'Scorbu Productions', 'Stevland Morris', 'Stevie Judkins', 'El Toro Negro', 'Friend (8)', 'Nanker Phelge', 'The Glimmer Twins (2)', 'The Rockers (21)', 'The Moaning Groans', 'The Little Wonders (2)', 'The Greatest Group On Earth', 'The Cockroaches (4)', 'Mick Jagger', 'Keith Richards', 'Ian Stewart', 'Ron Wood', 'Bill Wyman', 'Charlie Watts', 'Mick Taylor', 'Brian Jones (5)', 'Dick Taylor (2)', 'Tony Chapman', 'Francisco Aguabella', 'Carlos Santana', 'Greg Walker', 'Armando Peraza', 'Alphonso Johnson', 'Leon Thomas', 'Leon Ndugu Chancler', 'Bill Ortiz', 'Michael Shrieve', 'Rico Reyes', 'Gregg Rolie', 'David Brown (5)', 'Mingo Lewis', 'Dennis Chambers', 'Cindy Blackman', 'Raul Rekow', 'Orestes Vilato', 'Chris Solberg', 'Pete Escovedo', 'Chris Rhyne', 'David Margen', 'Graham Lear', 'David Sancious', 'Tom Coster', 'Benny Rietveld', 'Karl Perazzo', 'Tony Lindsay', 'Andy Vargas', 'Richard Baker', 'Neal Schon', 'Michael Carabello', 'Chester Thompson (2)', 'Doug Rauch', 'Gaylord Birch', 'Walfredo De Los Reyes, Jr.', 'Leon Patillo', 'Richard Kermode', 'Jules Broussard', 'Greg Errico', 'Mario Ochoa (2)', 'Jeff Cressman', 'Myron Dove', 'Rodney Holmes', 'Alex Ligertwood', 'Pablo Tellez', 'Wendy Haas', 'David Prater (2)', 'Keith Jones (3)', 'Tommy Anthony', 'Paoli Mejias', 'Thomas Rutley', 'Marcus Malone', 'Bob "Doc" Livingston', 'David K. Mathews', 'Ray Greene (2)', 'Jose "Pepe" Jimenez', 'José "Chepito" Areas', 'Thomas Escovedo', 'The Wizards (16)', 'Ray Manzarek', 'Jim Morrison', 'Robby Krieger', 'John Densmore', 'A Friend', 'Devadip', 'The Quarrymen', 'The Beat Brothers (2)', 'Johnny And The Moondogs', 'Los Grillos (7)', 'The Fab Four', 'The Threetles', 'Paul McCartney', 'John Lennon', 'George Harrison', 'Richard Starkey', 'Pete Best', 'Stuart Sutcliffe', 'Dave Evans', 'Malcolm Young', 'Angus Young', 'Chris Slade', 'Cliff Williams', 'Phil Rudd', 'Brian Johnson', 'Bon Scott', 'Mark Evans (3)', 'Simon Wright (4)', 'Colin Burgess', 'Larry Van Kriedt', 'Steve Young (7)', 'Tony Currenti', 'Noel Taylor (6)', 'Peter Clack', 'Rob Bailey (5)', 'Neil Smith (27)', 'M. Phillips (3)', 'Embamba', 'Tim van Berkestijn', '"Sunshine"', 'Ray Daniels (4)', 'Nelson Wilbury', "George O'Hara-Smith Singers", 'Son Of Harry', 'Spike Wilbury', "L'Angelo Misterioso", 'P. Roducer', "George O'Hara", 'Buzz Trilby', 'John Mingo Lewis', 'Romulus Woodworth', 'Ruben And The Jets (4)', 'Freaky Frank & His Wreckless Daughters', 'Norma Jean Bell', 'George Duke', 'Frank Zappa', 'Don Preston', 'Jean-Luc Ponty', 'Joel Peskin', 'Chester Thompson', 'Ernie Watts', 'Kenny Shroyer', 'Ian Underwood', 'Don "Sugarcane" Harris', 'Aynsley Dunbar', 'Art Tripp', 'Don Van Vliet', 'Ruth Underwood', 'Andre Lewis', 'Roy Estrada', 'Arthur Barrow', 'Alan Estes', 'Mark Volman', 'Howard Kaylan', 'James William Guercio', 'Anthony Ortega', 'Billy Byers', 'Lowell George', 'Napoleon M. Brock', 'Elliot Ingber', 'Bunk Gardner', 'Ray Collins', 'Jimmy Carl Black', 'Buzz Gardner', 'Denny Walley', 'Motorhead Sherwood', 'Earl Dumler', 'Janet Ferguson', 'Tony Duran', 'Jeff Simmons', 'Sal Marquez', 'Mike Altschul', 'Jim Pons', 'Billy Mundi', 'Suzy Creamcheese', 'Tom Fowler', 'Kurt McGettrick', 'Ralph Humphrey', 'Ernie Tack', "Robert 'Frog' Camarena", 'Bob Zimmitti', 'Alice Stuart', 'Jim Fielder', 'John Rotella', 'Joanne Caldwell McNabb', 'Ricky Lancelotti', 'Alex Dmochowski', 'Peter Wolf (3)', 'Henry Vestine', 'Chunky (3)', 'Malcolm McNab', 'Bob Harris (5)', 'Ruben Ladron De Guevara', 'Steve Mann (7)', 'Tommy Mariano', 'Bruce Fowler (3)', 'Winged Eel Fingerling', 'Mercury Flyer', 'Geronimo Black (2)', 'Jim Sherwood', 'Larry Fanoga', 'Ringo Starr', 'Richie Snare', '"English Richie"', 'Billy Shears (4)', 'Chris Winters (9)', 'Marginal Chagrin', 'Tom Costa', 'Eivets Rednow', 'Benintino The Wizard', 'The Court Jester', 'Fredric Freeman', 'John Lowe (2)', 'Colin Hanton', 'Rod Davis', 'Len Garry', 'Eric Griffiths (2)', 'Pete Shotton', 'Roy Young', 'Ricardo Jolie Chose', 'Sir Dickie', 'Hari Georgeson', 'Alex Jackson (4)', 'Rick Lancelot', 'Erroneous', 'Sunflower (11)', 'Lauren Wood', 'Ilene Rappaport', 'Nils Sjöberg (2)', 'Tommy Mars', 'Breezy Lovejoy', 'Brandon Paak Anderson', 'Anjelika Joseph', 'Tarriona "Tank" Ball', 'Joshua Johnson (6)', 'Albert Allenback', 'Norman Spence', 'Joe Johnson (59)', 'Coke Escovedo', "Billie O'Connell", 'Jelly Joseph', 'Benito Antonio Martínez Ocasio', 'Alb the Builder', 'Dawilli Gonga', 'Richie "Fatman" R.', 'Apollo C. Vermouth', 'Bernard Webb', 'Superweed', 'Percy Thrillington', 'Clint Harrigan', 'A. Smith (8)', 'Paul Ramon', 'Some Dude', 'Pete Mitchell (9)', 'Friend (15)', "Dr. Winston O'Boogie", 'Dwarf McDougal', 'Kaptain Kundalini', 'Rev. Fred Ghurkin', 'Dr. Dream (2)', 'Rev. Thumbs Ghurkin', 'Mel Torment', "Dr. Winston O'Ghurkin", "Dr. Winston O'Reggae", 'Joel Nohnn', "John O'Cean", 'Dad (3)', 'Hon. John St. John Johnson', 'Dr. Winston', "Dr. Winston And Booker Table And The Maitre d's", "Booker Table And The Maitre D's", 'Musketeer Gripweed & The Third Troop', 'Johnny Silver (2)', 'Big Mother', "Obdewl'l X", 'Mr. Clean (6)', 'La Marr Bruister', 'Stucco Homes', 'Billy Dexter', 'Mario Fuente', 'Junier Mintz', 'Junior Mintz', 'Dom DeWild', 'Junior Dunn', 'Ed Marimba', 'Ted Cactus', 'Captain Beefheart', "Bloodshot Rollin' Red", 'Ruth Komanoff', 'Mandré', 'Oréjon', 'M. Salz', 'H. Pfeffer', 'Eddie (55)', 'Lex Mond', 'Sneed Urn', 'Fritz (35)'] 317
+
+found_artists: ['Erykah Badu', 'Stevie Wonder', 'The Rolling Stones', 'Santana', 'The Doors', 'Carlos Santana', 'The Beatles', 'AC/DC', 'Mick Jagger', 'Greg Walker', 'Armando Peraza', 'Alphonso Johnson', 'Keith Richards', 'Leon Thomas', 'Leon Ndugu Chancler', 'Bill Ortiz', 'Benny Sings', 'Michael Shrieve', 'Ray Manzarek', 'George Harrison', 'Rico Reyes', 'Gregg Rolie', 'David Brown (5)', 'Ian Stewart', 'Jim Morrison', 'Mingo Lewis', 'Dennis Chambers', 'Cindy Blackman', 'Dave Evans', 'Ron Wood', 'Robby Krieger', 'John Densmore', 'Raul Rekow', 'Bill Wyman', 'Malcolm Young', 'Angus Young', 'Orestes Vilato', 'The Mothers', 'Chris Solberg', 'Pete Escovedo', 'Chris Rhyne', 'David Margen', 'Graham Lear', 'David Sancious', 'Elliot Ingber', 'Bunk Gardner', 'Ray Collins', 'Jimmy Carl Black', 'Buzz Gardner', 'Denny Walley', 'Motorhead Sherwood', 'Richard Starkey', 'Charlie Watts', 'Mick Taylor', 'Earl Dumler', 'Tom Coster', 'A Friend', 'Scorbu Productions', 'Janet Ferguson', 'Tony Duran', 'Jeff Simmons', 'Sal Marquez', 'Mike Altschul', 'Benny Rietveld', 'Karl Perazzo', 'Tony Lindsay', 'Andy Vargas', 'Chris Slade', 'Jim Pons', 'Pete Best', 'Billy Mundi', 'Suzy Creamcheese', 'Richard Baker', 'Tom Fowler', 'Kurt McGettrick', 'Ralph Humphrey', 'Neal Schon', 'The Quarrymen', 'Ernie Tack', 'Michael Carabello', 'Chester Thompson (2)', 'Doug Rauch', "Robert 'Frog' Camarena", 'The Beat Brothers (2)', 'Jim Sherwood', 'Gaylord Birch', 'Walfredo De Los Reyes, Jr.', 'Leon Patillo', 'Cliff Williams', 'Phil Rudd', 'Brian Johnson', 'Brian Jones (5)', 'Richard Kermode', 'Jules Broussard', 'Bob Zimmitti', 'Dick Taylor (2)', 'John Lowe (2)', 'Greg Errico', 'Nelson Wilbury', 'Mario Ochoa (2)', 'Jeff Cressman', 'Stuart Sutcliffe', 'Bon Scott', 'Myron Dove', 'Rodney Holmes', 'Alex Ligertwood', "George O'Hara-Smith Singers", 'Richie Snare', 'Pablo Tellez', 'Tim van Berkestijn', 'Mark Evans (3)', 'Alice Stuart', 'Jim Fielder', 'John Rotella', 'Wendy Haas', 'Joanne Caldwell McNabb', 'David Prater (2)', 'Keith Jones (3)', 'Son Of Harry', 'Marginal Chagrin', 'Ricky Lancelotti', 'Alex Dmochowski', 'Devadip', 'Stevland Morris', 'Erica Wright', 'Peter Wolf (3)', 'Henry Vestine', 'Tony Chapman', 'Simon Wright (4)', 'Colin Burgess', 'Chunky (3)', 'Malcolm McNab', 'Nanker Phelge', 'Stevie Judkins', 'The Internet', 'Winged Eel Fingerling', 'Tommy Anthony', 'Spike Wilbury', 'Embamba', 'Paoli Mejias', "L'Angelo Misterioso", 'Colin Hanton', 'Thomas Rutley', '"English Richie"', 'Bob Harris (5)', 'Marcus Malone', 'Larry Van Kriedt', 'Bob "Doc" Livingston', 'Taylor Swift', 'Steve Young (7)', 'Ruben Ladron De Guevara', 'Ilene Rappaport', 'El Toro Negro', 'Ebi Breezy', 'P. Roducer', 'David K. Mathews', 'Johnny And The Moondogs', 'Steve Mann (7)', 'Tony Currenti', 'Larry Fanoga', 'Geronimo Black (2)', 'John Mingo Lewis', 'Tommy Mariano', 'Tom Costa', 'Ray Greene (2)', 'Bruce Fowler (3)', 'Mercury Flyer', "George O'Hara", 'Jose "Pepe" Jimenez', 'Romulus Woodworth', 'Rick Lancelot', 'Noel Taylor (6)', 'M. Phillips (3)', 'José "Chepito" Areas', 'Rod Davis', '"Sunshine"', 'Peter Clack', 'Rob Bailey (5)', 'Anderson .Paak', 'Len Garry', 'Eric Griffiths (2)', 'Pete Shotton', 'The Glimmer Twins (2)', 'Tank and the Bangas', 'Los Grillos (7)', 'Thomas Escovedo', 'Alex Jackson (4)', 'Sunflower (11)', 'The Court Jester', 'Benintino The Wizard', 'Nils Sjöberg (2)', 'Friend (8)', 'The Rockers (21)', 'Ruben And The Jets (4)', 'The Moaning Groans', 'Billie Eilish', 'Brandon Paak Anderson', 'Anjelika Joseph', 'Billy Shears (4)', 'Jelly Joseph', 'Bad Bunny', 'Ray Daniels (4)', 'The Fab Four', 'The Threetles', 'Benito Antonio Martínez Ocasio', 'Tarriona "Tank" Ball', 'Joshua Johnson (6)', "Billie O'Connell", 'The Little Wonders (2)', 'The Greatest Group On Earth', 'Albert Allenback', 'Fredric Freeman', 'Olivia Rodrigo', 'Neil Smith (27)', 'Norman Spence', 'Ricardo Jolie Chose', 'Weston Estate', 'The Cockroaches (4)', 'Chris Winters (9)', 'Freaky Frank & His Wreckless Daughters', 'Buzz Trilby', 'Sir Dickie', 'Joe Johnson (59)', 'Alb the Builder', 'The Wizards (16)', 'Norma Jean Bell', 'George Duke', 'Francisco Aguabella', 'Paul McCartney', 'John Lennon', 'Coke Escovedo', 'Frank Zappa', 'Don Preston', 'Jean-Luc Ponty', 'Joel Peskin', 'Chester Thompson', 'Ernie Watts', 'Kenny Shroyer', 'Ian Underwood', 'Don "Sugarcane" Harris', 'Aynsley Dunbar', 'Roy Young', 'Art Tripp', 'Don Van Vliet', 'Ruth Underwood', 'Andre Lewis', 'Roy Estrada', 'Ringo Starr', 'Arthur Barrow', 'Lauren Wood', 'Alan Estes', 'Mark Volman', 'Howard Kaylan', 'James William Guercio', 'Anthony Ortega', 'Billy Byers', 'Lowell George', 'Napoleon M. Brock', 'Tommy Mars', 'Erroneous', 'Dawilli Gonga', 'Oréjon', 'Ed Marimba', "Dr. Winston O'Boogie", 'Ruth Komanoff', 'Apollo C. Vermouth', 'Dwarf McDougal', 'Ted Cactus', 'Big Mother', "Bloodshot Rollin' Red", 'Junior Dunn', "Obdewl'l X", 'Mr. Clean (6)', 'Kaptain Kundalini', 'Rev. Fred Ghurkin', 'Dr. Dream (2)', 'Rev. Thumbs Ghurkin', 'Mel Torment', "Dr. Winston O'Ghurkin", "Dr. Winston O'Reggae", 'La Marr Bruister', 'Joel Nohnn', "John O'Cean", 'Bernard Webb', 'Superweed', 'Dad (3)', 'Stucco Homes', 'Hon. John St. John Johnson', 'Dr. Winston', 'Percy Thrillington', 'Lex Mond', "Dr. Winston And Booker Table And The Maitre d's", 'Clint Harrigan', 'A. Smith (8)', 'Billy Dexter', 'Mario Fuente', "Booker Table And The Maitre D's", 'Sneed Urn', 'H. Pfeffer', 'M. Salz', 'Musketeer Gripweed & The Third Troop', 'Johnny Silver (2)', 'Paul Ramon', 'Eddie (55)', 'Dom DeWild', 'Breezy Lovejoy', 'Richie "Fatman" R.', 'Some Dude', 'Junier Mintz', 'Junior Mintz', 'Fritz (35)', 'Pete Mitchell (9)', 'Friend (15)', 'Mandré', 'Captain Beefheart'] 315
+
+len(target_artists): 317
+len(found_artists): 315
+{'Hari Georgeson', 'Eivets Rednow'} 2
+set() 0
+317 315
+
+artist_list: 315
+141.95753479003906
+
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO artists (artist_id, artist_name, real_name)
+                VALUES (%s, %s, %s)':
+        315
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO name_variations (artist_id, name_variation)
+                VALUES (%s, %s)':
+        3166
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO artist_aliases (artist_id, artist_alias_id)
+                VALUES (%s, %s)':
+        904
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO band_membership (member_id, band_id)
+                VALUES (%s, %s)':
+        412
+163.90483379364014
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS albums (
+                album_id        INT,
+                album_title     VARCHAR(2048) DEFAULT 'Untitled',
+                release_date    VARCHAR(16) NOT NULL,
+                notes           LONGTEXT,
+                num_songs       INT DEFAULT 0,
+                PRIMARY KEY (album_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS songs (
+                song_id         INT AUTO_INCREMENT,
+                album_id        INT,
+                song_title      VARCHAR(2048) DEFAULT 'Untitled',
+                position        VARCHAR(255),
+                song_duration   VARCHAR(32),
+                PRIMARY KEY (song_id),
+                FOREIGN KEY (album_id) REFERENCES albums(album_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS artist_album_credits (
+                artist_id           INT,
+                album_id            INT,
+                artist_album_role   VARCHAR(1024),
+                is_primary_artist   INT DEFAULT 0,
+                PRIMARY KEY (artist_id, album_id),
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+                FOREIGN KEY (album_id) REFERENCES albums(album_id),
+                CHECK(is_primary_artist IN (0, 1))
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS genres (
+                album_id    INT,
+                genre       VARCHAR(32),
+                PRIMARY KEY (album_id, genre),
+                FOREIGN KEY (album_id) REFERENCES albums(album_id)
+                );
+                ':
+        0
+Query executed successfully!
+Number of rows affected by statement '
+            CREATE TABLE IF NOT EXISTS videos (
+                album_id            INT,
+                src                 VARCHAR(64),
+                video_title         VARCHAR(255),
+                video_duration      VARCHAR(32),
+                PRIMARY KEY (album_id, src),
+                FOREIGN KEY (album_id) REFERENCES albums(album_id)
+                );
+                ':
+        0
+XML Parse time: 214.56336164474487
+595.0388276576996
+11784
+
+Song count: 170821
+
+Artist credits list length differences:
+186175 20586 165589
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO albums (album_id, album_title, release_date, notes, num_songs)
+                VALUES (%s, %s, %s, %s, %s)':
+        11784
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO artist_album_credits (artist_id, album_id, artist_album_role, is_primary_artist)     
+                VALUES (%s, %s, %s, %s)':
+        16887
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO genres (album_id, genre)
+                VALUES (%s, %s)':
+        37248
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO videos (album_id, src, video_title, video_duration)
+                VALUES (%s, %s, %s, %s)':
+        28787
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8541
+Queries executed successfully!
+Number of rows affected by statement '
+                INSERT IGNORE INTO songs (album_id, song_title, position, song_duration)
+                VALUES (%s, %s, %s, %s)':
+        8542
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_album_id (search_term INT)
+ ' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_id (search_term INT)
+                BEGIN
+                    SELECT album_title, release_date, notes, num_songs FROM albums WHERE album_id = search_term;        
+                    SELECT song_title, position, song_duration FROM songs WHERE album_id = search_term;
+                    SELECT genre FROM genres WHERE album_id = search_term;
+                    SELECT src FROM videos WHERE album_id = search_term;
+                    SELECT artist_name, is_primary_artist, artist_album_role FROM artist_album_credits NATURAL JOIN artists WHERE album_id = search_term ORDER BY is_primary_artist DESC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term' at line 1
+Query with error:
+                DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term VARCHAR(255))
+                    BEGIN
+                        SELECT album_id, album_title, release_date, artist_name
+                        FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                        WHERE album_id
+                            IN (
+                                SELECT album_id
+                                FROM listening
+                                WHERE user_id = (
+                                    SELECT user_id
+                                    FROM users
+                                    WHERE username = search_term)
+                            )
+                            AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                    END//
+                DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_album_title (search_term VAR' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(album_title, '!', ''),
+                        '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                        '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                        '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                        '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                            LIKE concat(
+                                '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(        
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(        
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(search_term, '!', ''),
+                                '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                                '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                                '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                                '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '       
+', ''),
+                                '%') COLLATE utf8mb4_0900_ai_ci AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_artist_name (search_term VAR' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_artist_name (search_term VARCHAR(255))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM name_variations NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(name_variation, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),     
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),     
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),     
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '   
+', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+Error executing query: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER //
+            CREATE PROCEDURE search_by_song_title (search_term VARC' at line 1
+Query with error:
+            DELIMITER //
+            CREATE PROCEDURE search_by_song_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM songs WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(song_title, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '
+', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(    
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), ''', ''), '(', ''), ')', ''),     
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),     
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\', ''), ']', ''),     
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '   
+', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+
+1545.9451065063477

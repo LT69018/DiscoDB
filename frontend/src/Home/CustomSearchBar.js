@@ -108,7 +108,7 @@ function CustomSearchBar() {
             />
             
           </div>
-          <div className="col-auto">
+          <div className="col-2">
             {/* Use Form.Select so that it is formatted nicely (I don't have to manually style it, react-bootstrap does it for me.) */}
             <Form.Select id="search_by" onChange={handleSelection} defaultValue="album"> 
               <option value="album">Album</option>

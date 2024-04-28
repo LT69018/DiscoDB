@@ -9,14 +9,11 @@
     height: 30%;
 }
 
-.albumsColumn {
-    margin-left: 5%;
-    margin-right: 5%;
-    border-left: 1px solid #000;
-    border-right: 1px solid #000;
-    overflow:scroll; /* <- allow user to scroll through the particular table! */
-}
-
 .columnTitle {
     background-color: white;
+}
+
+.allTablesRow {
+    display: block;
+    height: 30vh;
 }

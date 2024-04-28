@@ -33,35 +33,35 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="container">
-      <div className="row pageInfoHeader"> {/* Currently pageInfoHeader doesn't work to make a space above the h1 */}
-        <div className="col">
-          <h1> User Profile </h1>
-          {statusHtml}
-          <hr></hr>
+    <div className="container-fluid">
+      <h1> User Profile </h1>
+      {statusHtml}
+      <hr></hr>
+      <div className="row">
+        <div className="col-4">
+          <h2 className="columnTitle">Past</h2>
+        </div>
+        <div className="col-4">
+          <h2 className="columnTitle">Present</h2>
+        </div>
+        <div className="col-4">
+          <h2 className="columnTitle">Future</h2>
         </div>
       </div>
-      <div className="row gx-5">
-        <div className="col-4">
-          <div className="col-spaced albumsColumn" id="pastColumn">
-            <h2 className="columnTitle">Past</h2>
-            <hr></hr>
+      <div className="row gx-5 allTablesRow">
+        
+        <div className="col-4 albumsColumn">
+          <div className="col-spaced" >
             {pastTable}
           </div>
         </div>
-        
-        <div className="col-4">
-          <div className="col-spaced albumsColumn" id="presentColumn">
-            <h2 className="columnTitle">Present</h2>
-            <hr></hr>
+        <div className="col-4 albumsColumn">
+          <div className="col-spaced " id="presentColumn">
             {presentTable}
           </div>
         </div>
-
-        <div className="col-4">
-          <div className="col-spaced albumsColumn" id="futureColumn">
-            <h2 className="columnTitle">Future</h2>
-            <hr></hr>
+        <div className="col-4 albumsColumn">
+          <div className="col-spaced " id="futureColumn">
             {futureTable}
           </div>
         </div>

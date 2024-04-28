@@ -10878,15 +10878,20 @@ textarea.form-control-lg {
   font-size: 4.5rem;
 }
 
-header.masthead {
-  position: relative;
+/* header.masthead { */
+div.container, div.container-fluid {
+  /* position: relative; */
   /* background-color: #343a40; */
   /* background: url("../assets/img/bg-masthead.jpg") no-repeat center center; */
   background-image: linear-gradient(to bottom right, blue, yellow);
-  background-size: cover;
-  padding-top: 8rem;
-  padding-bottom: 8rem;
-  height: 30%;
+  background-size: contain; 
+  /* ^ cover kinda works but makes the space repeat*/
+  padding-top: 5rem;
+  padding-bottom: 5rem; 
+  padding-left: 0px;
+  padding-right: 0px;
+  height: 85vh;
+  width: 100%;
   justify-content: center;
   text-align: center;
   color: white;

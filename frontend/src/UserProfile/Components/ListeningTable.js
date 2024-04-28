@@ -12,7 +12,7 @@ const ListeningTable = ({rows}) => {
   ));
 
   return (
-    <div>
+    <div class="col-spaced">
       {rowsHTML}
     </div>
   )

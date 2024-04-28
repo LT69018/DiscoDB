@@ -52,3 +52,9 @@ p.albumArtist {
     max-width: 100%;
     height: auto;
 }
+
+.albumsColumn {
+    /* padding-left: 2.5rem; */
+    max-height:40vh;
+    overflow-y: auto ; /* <- allow user to scroll through the particular table! */
+}

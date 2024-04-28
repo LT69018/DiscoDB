@@ -2,7 +2,8 @@ import time
 from config import *
 import mysql.connector
 from mysql.connector import Error
-from process_data import get_artist_info, get_all_release_info
+
+from process_data import get_artist_info, get_release_info
 
 NON_ROOT_PASSWORD = ""  # Optional: Fill this constant in with your user's password
 
@@ -33,17 +34,7 @@ def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, 
 
 def create_database(cursor):
     try:
-        # Double check that this query structure actually works
         query = "CREATE DATABASE IF NOT EXISTS " + DISCODB_NAME
-        # JT changed the escape sequence to see if that fixes the SQL syntax error about quotations near the db name
-        #   %(db_name)s 
-        #     => 
-        #   " + DISCODB_NAME # <- WORKS! 
-        #   (If parameterizing, make sure to use `%s` (the back ticks are needed!)
-        #   - Note^ this "CREATE DATABASE IF NOT EXISTS `%s`" doesn't work with `cursor.executemany(query, (DISCODB_NAME))`
-        #   However, beware of double escaped strings (it puts the quotes around it on mySQL too, so your table name literally has quotes in it :0)
-        # I tried just %s, but that didn't fix it either. (%s) doesn't work either. Same w/  ... QUOTE(" + ") ..."
-        # -only works when const uses _'s instead of - in config :0
         cursor.execute(query)
         print("Database created successfully!")
     except Error as error:
@@ -246,10 +237,181 @@ def create_album_tables(connection):
         execute_and_commit(connection, query)
 
 
+def create_user_tables(connection):
+    create_users_table = """
+            CREATE TABLE IF NOT EXISTS users (
+                user_id             INT AUTO_INCREMENT,
+                username            VARCHAR(255),
+                user_salt           VARCHAR(256) NOT NULL,
+                user_pswd           VARCHAR(256) NOT NULL,
+                user_full_name      VARCHAR(255),
+                PRIMARY KEY (user_id, username)
+                );
+                """
+
+    create_listening_table = """
+            CREATE TABLE IF NOT EXISTS listening (
+                user_id             INT,
+                album_id            INT,
+                listening_time      VARCHAR(16) NOT NULL,
+                listening_method    VARCHAR(16),
+                PRIMARY KEY (user_id, album_id),
+                FOREIGN KEY (user_id) REFERENCES users(user_id)
+                    ON DELETE CASCADE,
+                FOREIGN KEY (album_id) REFERENCES albums(album_id),
+                CHECK(listening_time IN ('Past', 'Present', 'Future')),
+                CHECK(listening_method IN ('Vinyl', 'CD', 'Cassette', '8-Track', 'Digital', 'Other'))
+                );
+                """
+
+    table_creation_queries = [create_users_table, create_listening_table]
+    for query in table_creation_queries:
+        execute_and_commit(connection, query)
+
+
+def create_search_procedures(connection):
+    # When using this procedure, use the cursor.callproc(proc_name, args=()) function
+    # and get the results (as there will be 5 relations returned) using cursor.stored_results()
+    create_search_by_album_id = """
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_id (search_term INT)
+                BEGIN
+                    SELECT album_title, release_date, notes, num_songs FROM albums WHERE album_id = search_term;
+                    SELECT song_title, position, song_duration FROM songs WHERE album_id = search_term;
+                    SELECT genre FROM genres WHERE album_id = search_term;
+                    SELECT src FROM videos WHERE album_id = search_term;
+                    SELECT artist_name, is_primary_artist, artist_album_role FROM artist_album_credits NATURAL JOIN artists WHERE album_id = search_term ORDER BY is_primary_artist DESC, artist_name ASC;
+                END//
+            DELIMITER ;
+            """
+
+    create_search_user_listening = """
+                DELIMITER //
+                CREATE PROCEDURE search_user_listening (search_term VARCHAR(255))
+                    BEGIN
+                        SELECT album_id, album_title, release_date, artist_name 
+                        FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+                        WHERE album_id 
+                            IN (
+                                SELECT album_id 
+                                FROM listening
+                                WHERE user_id = (
+                                    SELECT user_id 
+                                    FROM users
+                                    WHERE username = search_term)
+                            )
+                            AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                    END//
+                DELIMITER ;
+                """
+
+    create_search_by_album_title = """
+            DELIMITER //
+            CREATE PROCEDURE search_by_album_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+                    WHERE
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        REPLACE(album_title, '!', ''),
+                        '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
+                        '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                        '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
+                        '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', '')
+                            LIKE concat(
+                                '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                REPLACE(search_term, '!', ''),
+                                '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
+                                '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                                '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
+                                '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', ''),
+                                '%') COLLATE utf8mb4_0900_ai_ci AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+            """
+
+    create_search_by_artist_name = """
+            DELIMITER //
+            CREATE PROCEDURE search_by_artist_name (search_term VARCHAR(255))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM name_variations NATURAL JOIN artist_album_credits NATURAL JOIN albums WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(name_variation, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+            """
+
+    create_search_by_song_title = """
+            DELIMITER //
+            CREATE PROCEDURE search_by_song_title (search_term VARCHAR(2048))
+                BEGIN
+                    SELECT album_id, album_title, release_date, artist_name FROM artists NATURAL JOIN artist_album_credits NATURAL JOIN albums 
+                    WHERE album_id
+                        IN (
+                            SELECT album_id FROM songs WHERE
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                            REPLACE(song_title, '!', ''),
+                            '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
+                            '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                            '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
+                            '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', '')
+                                LIKE concat(
+                                    '%', REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                                    REPLACE(search_term, '!', ''),
+                                    '"', ''), '#', ''), '$', ''), '%', ''), '&', ''), '\'', ''), '(', ''), ')', ''),
+                                    '*', ''), '+', ''), ',', ''), '-', ''), '.', ''), '/', ''), ':', ''), ';', ''),
+                                    '<', ''), '=', ''), '>', ''), '?', ''), '@', ''), '[', ''), '\\', ''), ']', ''),
+                                    '^', ''), '_', ''), '`', ''), '{', ''), '|', ''), '}', ''), '~', ''), ' ', ''), '\n', ''),
+                                    '%') COLLATE utf8mb4_0900_ai_ci
+                            )
+                        AND is_primary_artist ORDER BY album_id ASC, artist_name ASC;
+                END//
+            DELIMITER ;
+            """
+
+    procedure_creation_queries = [create_search_by_album_id, create_search_user_listening, create_search_by_album_title, create_search_by_artist_name, create_search_by_song_title]
+    for query in procedure_creation_queries:
+        execute_and_commit(connection, query)
+
+
 def execute_and_commit(connection, query):
     cursor = connection.cursor()
     try:
-        cursor.execute(query) # , multi=True)
+        cursor.execute(query)
         connection.commit()
         print("Query executed successfully!")
         print("Number of rows affected by statement '{}': \n\t{}".format(query, cursor.rowcount))
@@ -281,6 +443,9 @@ if __name__ == "__main__":
     # Connect to the MySQL database
     connection = connect_to_db(DISCODB_MYSQL_URL, DISCODB_MYSQL_USERNAME, DISCODB_MYSQL_PASSWORD, DISCODB_NAME)
 
+    # --------- Create the user tables ---------
+    create_user_tables(connection)
+
     # --------- Artist data ---------
 
     # Create the artist tables
@@ -303,7 +468,7 @@ if __name__ == "__main__":
     create_album_tables(connection)
 
     # Get the data to enter into the albums tables
-    release_list = get_all_release_info()
+    release_list = get_release_info(artists_to_insert)
 
     # Process the data to enter into the album tables
     # separate the data into appropriate groups
@@ -415,6 +580,9 @@ if __name__ == "__main__":
             pass
         else:
             execute_many_and_commit(connection, query, table_insertion_queries[query])
+
+    # --------- Create the stored procedures for the database ---------
+    create_search_procedures(connection)
 
     end = time.time()
     print(end - start)

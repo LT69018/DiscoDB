@@ -2,14 +2,16 @@ import {BACKEND_COVER_URL_KEY,
   BACKEND_ARTIST_NAME_KEY,
   BACKEND_ALBUM_NAME_KEY,
   BACKEND_YEAR_KEY,
-  // BACKEND_ALBUM_ID_KEY,
+  BACKEND_ALBUM_ID_KEY,
   // BACKEND_TRACKS_KEY,
   // BACKEND_DESCRIPTION_KEY,
   NUM_ITEMS_PER_ROW,
   FRONTEND_COVER_IMAGE_KEY} from "./Constants.js";
 import  "./SearchResults.css";
+import {Link} from "react-router-dom";
+import {Form, Button} from "react-bootstrap";
 
-const ResultRow = ({index, row, handleSaveClick}) => {
+const ResultRow = ({index, row, handleSaveClick}) => { // note, row should contain `album_id` to nav to search results page.
 
   const htmlRow = {} // initalize on separate row to Object.assign() in case that was the reason not all keys were present.
   Object.assign(htmlRow, row); // fully copy it so we can make changes
@@ -25,6 +27,7 @@ const ResultRow = ({index, row, handleSaveClick}) => {
   }
   
   // THIS IS WHAT DISPLAYS ONE ROW :<)
+  const album_id = "album_id" in Object.keys(htmlRow) ? htmlRow[BACKEND_ALBUM_ID_KEY] : -1
   return (
       <div className="row resultRow rounded" id={index} key={"rowKey" + index}>
           <div className="col-1 indexCol colVerticalCenter">
@@ -34,11 +37,27 @@ const ResultRow = ({index, row, handleSaveClick}) => {
               {htmlRow[FRONTEND_COVER_IMAGE_KEY]}
           </div>
           <div className="col" style={{textAlign: "left"}}> 
-              <p className="albumTitle">{htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})</p>
+              <p className="albumTitle">
+                <Link to="/AlbumInfo" className="albumLink" state={{
+                    [BACKEND_ALBUM_ID_KEY]: album_id,
+                    [BACKEND_ALBUM_NAME_KEY]: htmlRow[BACKEND_ALBUM_NAME_KEY],
+                    [BACKEND_ARTIST_NAME_KEY]: htmlRow[BACKEND_ARTIST_NAME_KEY],
+                    [BACKEND_YEAR_KEY]: htmlRow[BACKEND_YEAR_KEY],
+                    [BACKEND_COVER_URL_KEY]: htmlRow[BACKEND_COVER_URL_KEY]
+                }}>
+                {htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})
+                </Link>
+              </p>
               <p>{htmlRow[BACKEND_ARTIST_NAME_KEY]}</p>
           </div>
           <div className="col-2 saveCol colVerticalCenter">
-              <button id={index} onClick={handleSaveClick}>Save</button>
+            <Form.Select size="sm" name="whichTableSaveTo">
+                <option value="past">Past</option>
+                <option value="present">Present</option>
+                <option value="future">Future</option>
+            </Form.Select>
+            
+            <Button id={index} onClick={handleSaveClick}>Save</Button>
           </div>
       </div>
   );

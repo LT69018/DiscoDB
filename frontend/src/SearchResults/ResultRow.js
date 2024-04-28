@@ -27,6 +27,7 @@ const ResultRow = ({index, row, handleSaveClick}) => { // note, row should conta
   }
   
   // THIS IS WHAT DISPLAYS ONE ROW :<)
+  const album_id = "album_id" in Object.keys(htmlRow) ? htmlRow[BACKEND_ALBUM_ID_KEY] : -1
   return (
       <div className="row resultRow rounded" id={index} key={"rowKey" + index}>
           <div className="col-1 indexCol colVerticalCenter">
@@ -38,10 +39,11 @@ const ResultRow = ({index, row, handleSaveClick}) => { // note, row should conta
           <div className="col" style={{textAlign: "left"}}> 
               <p className="albumTitle">
                 <Link to="/AlbumInfo" className="albumLink" state={{
-                    [BACKEND_ALBUM_ID_KEY]: "album_id" in Object.keys(htmlRow) ? htmlRow[BACKEND_ALBUM_ID_KEY] : -1,
+                    [BACKEND_ALBUM_ID_KEY]: album_id,
                     [BACKEND_ALBUM_NAME_KEY]: htmlRow[BACKEND_ALBUM_NAME_KEY],
                     [BACKEND_ARTIST_NAME_KEY]: htmlRow[BACKEND_ARTIST_NAME_KEY],
-                    [BACKEND_YEAR_KEY]: htmlRow[BACKEND_YEAR_KEY]
+                    [BACKEND_YEAR_KEY]: htmlRow[BACKEND_YEAR_KEY],
+                    [BACKEND_COVER_URL_KEY]: htmlRow[BACKEND_COVER_URL_KEY]
                 }}>
                 {htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})
                 </Link>

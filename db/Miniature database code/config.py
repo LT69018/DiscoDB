@@ -1,5 +1,6 @@
 # local paths and file names for raw dataset files
 DATASET_FOLDER_PATH = r"C:\Users\jturn\Documents\UMBC\DiscoDB_Downloads/"
+
 ARTISTS_DATASET_FILE_NAME= "discogs_20240201_artists_modified.xml"
 ALL_RELEASES_DATASET_FILE_NAME = "main_releases_modified.xml"
 
@@ -10,7 +11,4 @@ DISCODB_MYSQL_USERNAME = "root" # <- for docker
 # todo: in the future, be more secure about the password :0
 DISCODB_MYSQL_PASSWORD = "db-btf5q"
 
-DISCODB_NAME = 'discodb_mini_top_100' 
-# ^ attempted reformatting this string as well to fix database incorrectly naming itself with inner quotes
-# r'...' and b'...' don't work.
-
+DISCODB_NAME = "discodb_mini"

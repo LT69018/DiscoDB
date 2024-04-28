@@ -70,8 +70,8 @@ function albumDetails(albumName, artistName, releaseYear, description, tracklist
 	));
 	return (
 		<div className="album-details">
-			<h3 className="album-name">Name: <u>{albumName} ({releaseYear})</u></h3>
-			<h3 className="artist-name">Artist: <u>{artistName}</u></h3>
+			<h3 className="album-name">Name: <i>{albumName} ({releaseYear})</i></h3>
+			<h3 className="artist-name">Artist: <i>{artistName}</i></h3>
 			{/*<h1>{location.state.album}</h1>
             <h2>{location.state.artist}</h2>*/}
 			<p className="album-notes">Description: {description}</p>

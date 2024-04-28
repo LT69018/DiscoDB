@@ -2,13 +2,14 @@ import {BACKEND_COVER_URL_KEY,
   BACKEND_ARTIST_NAME_KEY,
   BACKEND_ALBUM_NAME_KEY,
   BACKEND_YEAR_KEY,
-  // BACKEND_ALBUM_ID_KEY,
+  BACKEND_ALBUM_ID_KEY,
   // BACKEND_TRACKS_KEY,
   // BACKEND_DESCRIPTION_KEY,
   NUM_ITEMS_PER_ROW,
   FRONTEND_COVER_IMAGE_KEY} from "./Constants.js";
 import  "./SearchResults.css";
 import {Link} from "react-router-dom";
+import {Form, Button} from "react-bootstrap";
 
 const ResultRow = ({index, row, handleSaveClick}) => { // note, row should contain `album_id` to nav to search results page.
 
@@ -37,7 +38,10 @@ const ResultRow = ({index, row, handleSaveClick}) => { // note, row should conta
           <div className="col" style={{textAlign: "left"}}> 
               <p className="albumTitle">
                 <Link to="/AlbumInfo" className="albumLink" state={{
-                    
+                    [BACKEND_ALBUM_ID_KEY]: "album_id" in Object.keys(htmlRow) ? htmlRow[BACKEND_ALBUM_ID_KEY] : -1,
+                    [BACKEND_ALBUM_NAME_KEY]: htmlRow[BACKEND_ALBUM_NAME_KEY],
+                    [BACKEND_ARTIST_NAME_KEY]: htmlRow[BACKEND_ARTIST_NAME_KEY],
+                    [BACKEND_YEAR_KEY]: htmlRow[BACKEND_YEAR_KEY]
                 }}>
                 {htmlRow[BACKEND_ALBUM_NAME_KEY]} ({htmlRow[BACKEND_YEAR_KEY]})
                 </Link>
@@ -45,14 +49,13 @@ const ResultRow = ({index, row, handleSaveClick}) => { // note, row should conta
               <p>{htmlRow[BACKEND_ARTIST_NAME_KEY]}</p>
           </div>
           <div className="col-2 saveCol colVerticalCenter">
-                <div>
-                    <select name="whichTableSaveTo" style={{width: "50%"}}>
-                        <option value="past">Past</option>
-                        <option value="present">Present</option>
-                        <option value="future">Future</option>
-                    </select>
-                </div>
-                <button id={index} onClick={handleSaveClick} style={{width: "50%"}}>Save</button>
+            <Form.Select size="sm" name="whichTableSaveTo">
+                <option value="past">Past</option>
+                <option value="present">Present</option>
+                <option value="future">Future</option>
+            </Form.Select>
+            
+            <Button id={index} onClick={handleSaveClick}>Save</Button>
           </div>
       </div>
   );

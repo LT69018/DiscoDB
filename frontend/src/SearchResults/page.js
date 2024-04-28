@@ -105,7 +105,7 @@ export default function SearchResults() {
                     </div>  
                     {renderedResults}
                 </div>
-            <div className="col-1"></div>
+                <div className="col-1"></div>
             </div>
         </div>
     );

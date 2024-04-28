@@ -20,7 +20,7 @@ const ListeningRow = ({index, row, album_id}) => {
       <div className="col-3 imageCol">
         <img className="img-responsive object-fit-scale albumCover" src="default_cover_art.jpg" alt="Unable to display generic cover art :("/>
       </div>
-      <div className="col" style={{textAlign: "left"}}> 
+      <div className="col-6" style={{textAlign: "left"}}> 
           <p className="albumTitle">Title: {row[BACKEND_ALBUM_NAME_KEY]} ({row[BACKEND_YEAR_KEY]})</p>
           <p className="albumArtist">Artist: {row[BACKEND_ARTIST_NAME_KEY]}</p>
       </div>

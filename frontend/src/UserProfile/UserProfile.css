@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+}
+
+/* Attempting to put space after the header*/
+.pageInfoHeader {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    height: 30%;
+}
+
+.columnTitle {
+    background-color: white;
+}
+
+.allTablesRow {
+    display: block;
+    height: 30vh;
+}

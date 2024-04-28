@@ -51,7 +51,7 @@ header {
 
 .album-info {
     max-width: 80vw;
-    max-height: 100%;
+    max-height:50vh;
     margin: 10px auto;
     display: flex;
     flex-direction: row;
@@ -70,7 +70,7 @@ header {
     max-width: 100%;
     margin: 20px;
     
-
+    
 }
 
 .album-image img{
@@ -84,8 +84,8 @@ header {
     margin-left: 20px;
     */
     display:inline;
-    justify-content: center;
-    
+    align-items: left;
+    text-align: left;
 
     flex: 0 0 50%;
     max-width: 80%;
@@ -100,4 +100,20 @@ header {
 
 .tracklist li {
     margin-bottom: 5px;
+}
+
+h3.album-name {
+    color:rgb(0, 85, 242);
+}
+
+h3.artist-name {
+    color:rgb(0, 85, 242);
+}
+
+p.album-notes {
+    color:rgb(80, 66, 51);
+}
+
+.row {
+    overflow: auto;
 }

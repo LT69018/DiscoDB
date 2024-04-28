@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home/page.js";
 import SearchResults from "./SearchResults/page.js";
 import UserProfile from "./UserProfile/page.js";
-import AlbumPage from "./AlbumInfo/albumpage.js"
+import AlbumPage from "./AlbumInfo/page.js"
 
 function App() {
 	return (

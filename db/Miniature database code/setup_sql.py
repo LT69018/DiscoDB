@@ -2,6 +2,7 @@ import time
 from config import *
 import mysql.connector
 from mysql.connector import Error
+
 from process_data import get_artist_info, get_release_info
 
 NON_ROOT_PASSWORD = ""  # Optional: Fill this constant in with your user's password
@@ -37,7 +38,7 @@ def create_database(cursor):
         cursor.execute(query)
         print("Database created successfully!")
     except Error as error:
-        print("Error creating database:", error)
+        print("Error creating database:\n\t", error)
 
 
 def create_artist_tables(connection):

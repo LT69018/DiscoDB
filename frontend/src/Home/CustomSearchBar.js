@@ -35,6 +35,7 @@ function CustomSearchBar() {
     const value = event.target.value;
     setUserInput(value);
     console.log("I see you typing! Current saved value: ", event.target.value);
+    
   };
 
   const handleSelection = (event) => {
@@ -43,8 +44,23 @@ function CustomSearchBar() {
     console.log("Recording selection value =", event.target.value);
   }
 
+  function callAPI(userInput, dropdownInput) {
+    const encodedUserInput = encodeURIComponent(userInput);
+    const encodedDropdownInput = encodeURIComponent(dropdownInput);
+    return fetch(`http://localhost:8080/query_user_search?searchString=${encodedUserInput}&searchBy=${encodedDropdownInput}`)
+        .then(res => {
+          console.log("api call is happening");
+          return res.json();
+        })
+        .catch(err => err);
+  }
+
   // When they press [Search]
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+
+    //upon submit, we make an API request to backend to peform the search
+    event.preventDefault(); //prevents default form submission behavior!
+
     let dropdownValue = dropdownInput;
     if (dropdownValue === "") {
       console.log("Auto filling in dropdownInput to be default = 'album'");
@@ -62,7 +78,17 @@ function CustomSearchBar() {
 
       // todo: replace with page switching! (i.e. react-router-dom)
       // calling my data variable "state" because of convention.
-      navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue}});
+
+      //perform query here?
+      callAPI(userInput, dropdownValue).then(test_api_result => {
+        console.log("test api call: " + test_api_result)
+        try{
+          navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue, apiResult:test_api_result}});
+        }catch(error) {
+          console.log(error)
+        }
+        
+      });
     }
   }
 

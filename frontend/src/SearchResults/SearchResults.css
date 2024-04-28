@@ -18,20 +18,31 @@ Columns:
 
 /* These are for the description row */
 .categoriesRow {
+    position: sticky;
     border-top: 2px ridge black;
     border-bottom: 2px ridge black;
     /* height: 7vh; */
-    text-align: left;
-    justify-content: left;
-    margin-bottom: 2vh;
+    background-color: cadetblue;
 }
 
 .categoryColumn {
-    border-right: 1px ridge black;
+    border-right: 2px ridge black;
+    
+    text-align: center;
+    justify-content: center;
+
+    font-weight: bold;
 }
 
 /* ---------------------------------- */
-
+.allResultsRow {
+    overflow:auto; 
+    /* ^ auto instead of scroll so it only shows scroll bars if necessary */
+    border-radius: 5px 5px 5px 5px;
+    /* border: 3px solid black; */
+    background-color: rgb(6, 24, 28);
+    max-height:40vh;
+}
 
 .resultRow {
     border-radius: 5px;
@@ -81,4 +92,15 @@ p.albumTitle {
 .saveCol {
     border-left: 1px ridge black;
     justify-content: center;
+    align-items: center;
+}
+
+a.albumLink {
+    color: white;
+    font-size: 20px;
+}
+
+select {
+    font-size: 10px;
+    max-width:75%;
 }

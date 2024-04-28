@@ -5,6 +5,8 @@ from os.path import join as os_path_join
 from lxml import etree
 import time
 
+from config import *
+
 parser = etree.XMLParser(remove_blank_text=True)
 
 
@@ -279,6 +281,8 @@ def get_release_info(artist_list):
 
         end = time.time()
         print(end - start)
+
         print(len(total_releases_list), "\n")
+
 
         return total_releases_list

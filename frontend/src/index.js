@@ -25,19 +25,20 @@ root.render(
   <React.StrictMode>
     {/* Show the app bar across all the pages! */}
     {/* Use "sticky" instead of fixed so the items aren't covered up */}
-    <AppBar position="sticky" sx={{bgcolor:"white"}}>
-      <Toolbar style={{justifyContent:"spaceBetween"}}>
+    <AppBar position="sticky" sx={{bgcolor:"white", maxHeight: "15vh"}}>
+      <Toolbar style={{justifyContent:"space-between"}}>
         <Navbar.Brand href="/">
           <img
             src="/DiscoDB_logo-clearbg.png"
-            height="100px"
+            // height="100px"
+            style={{height:"15vh", width:"auto", marginTop: "auto", marginBottom: "auto"}}
             className="d-inline-block align-top"
             alt="DiscoDB logo"
           />
 
         </Navbar.Brand>
 
-        <Dropdown className="float-center">
+        <Dropdown className="float-center" sx={{bgcolor:"white", maxHeight: "10vh"}}>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Menu
           </Dropdown.Toggle>

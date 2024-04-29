@@ -18,7 +18,7 @@ Columns:
 
 /* These are for the description row */
 .categoriesRow {
-    position: sticky;
+    /* position: sticky; */
     border-top: 2px ridge black;
     border-bottom: 2px ridge black;
     /* height: 7vh; */

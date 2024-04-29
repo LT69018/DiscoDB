@@ -4,7 +4,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-var searchRouter = require("./routes/search");
+var searchRouter = require("./routes/search"); 
+var createUserRouter = require("./routes/create_user");
 const { port } = require("./config");
 const PORT = port;
 
@@ -56,7 +57,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/query_user_search", searchRouter);
-
+app.use("/add_user", createUserRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));

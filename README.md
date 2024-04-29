@@ -48,11 +48,6 @@ const exampleCodeFromReference = exampleFuncCall();
 ```
 - this is ommitted for *.json because I can't make comments :P
 
-# ======================== (start) REFERENCE:github/docker ==================
-- Description: docker command instructions for the repository.
-- Changes from Reference: 
-    - separate the command to run from its expected output
-    - expected output should use our repo name instead of react-express-mysql
 ## Deploy with docker compose
 Command:
 ```bash

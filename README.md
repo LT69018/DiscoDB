@@ -48,11 +48,6 @@ const exampleCodeFromReference = exampleFuncCall();
 ```
 - this is ommitted for *.json because I can't make comments :P
 
-# ======================== (start) REFERENCE:github/docker ==================
-- Description: docker command instructions for the repository.
-- Changes from Reference: 
-    - separate the command to run from its expected output
-    - expected output should use our repo name instead of react-express-mysql
 ## Deploy with docker compose
 Command:
 ```bash
@@ -210,7 +205,13 @@ export default function RecipientComponent() {
 1. Go to this [Google Drive link](https://drive.google.com/drive/u/1/folders/1pKdHyqLQyvNPYMsrdXC8M1apf1UDdFR4)
 2. download all of the files in the folder 
     (the files are titled as follows: "discogs_20240201_artists_modified", "found_missing_releases_masters", "main_releases_modified", and "recovered_missing_releases_modified").
-3. Navigate to and put those downloads in the `db` folder.
-4. Change the `ROOT_PATH` in `process_data.py`
-5. Run `setup_sql.py
-. The setup file does not yet exist, but these will be the appropriate steps to follow once it is uploaded.
+3. Navigate to `db/Miniature database code` and change `DATASET_FOLDER_PATH` in `config.py` to the path to wherever you stored the dataset files.
+4. Run `pip install mysql-connector-python` and `pip install lxml` in your terminal to download the necessary packages used in parsing the data.
+5. Execute the following commands in your MySQL server:
+   ```
+    SET GLOBAL max_allowed_packet=1073741824;
+    SET GLOBAL wait_timeout = 6000;
+    SET GLOBAL net_read_timeout = 6000;
+    SET GLOBAL connect_timeout = 6000;
+   ```
+6. Run `setup_sql.py`

@@ -35,6 +35,43 @@ import "./Constants.js";
 import ResultRow from "./ResultRow.js";
 import { BACKEND_ALBUM_NAME_KEY } from "./Constants.js";
 
+//perform SAVE POST request here
+function callSaveAPI(albumSelected, saveToDropdown) {
+    const encodedAlbumInput = encodeURIComponent(albumSelected);
+    const encodedDropdownInput = encodeURIComponent(saveToDropdown);
+    //create POST request options
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ album: albumSelected, saveTo:saveToDropdown })
+    };
+
+    return fetch(`http://localhost:8080/save_to_user_listening`, requestOptions)
+    .then(res => {
+        console.log("POST Request was successful");
+        //this boolean response will be used by the caller to determine whether to apply a CSS highlight to the button indicating it has been pressed
+        return true;
+    }).catch(err => {
+            console.log("POST Request was unsuccessful")
+            return false;
+    });
+}
+
+const handleSaveClick = (event) => {
+    event.preventDefault(); //prevents default form submission behavior!
+
+    /*
+    //perform query here?
+    callSaveAPI(albumSelected, dropdownValue).then(test_api_result => {
+        console.log("test api call: " + test_api_result)
+        try{
+          navigate("/SearchResults", {state:{searchString: userInput, searchBy:dropdownValue, apiResult:test_api_result}});
+        }catch(error) {
+          console.log(error)
+        }
+    });
+    */
+}
 
 // not sure why it won't let me use tab size of 2
 export default function SearchResults() {
@@ -74,10 +111,11 @@ export default function SearchResults() {
         if (apiResult === null) {
             // do nothing.
         } else {
-            renderedResults = apiResult.map((row, index) => (
+            //renderedResults = Object.fromEntries(Object.entries(apiResult).map((row, index) => (
+            renderedResults = Object.keys(apiResult).map((key, index) => (
                 <ResultRow
                     index={index}
-                    row={row}
+                    row={apiResult[key]}
                     handleSaveClick={handleSaveClick} // todo: use this in ./ResultRow.js
                 />
             ));

@@ -40,11 +40,96 @@ const test_api_result = [
   - return top 50 results  
 */
 router.get('/', function(req, res, next) {
+  const mysql = require("mysql2");
+
+  var con = mysql.createConnection({
+    host: "localhost",
+    user: "sql_test_4_28",
+    password: "test12345",
+    insecureAuth : true
+  });
+
+  con.connect(function(err) {
+    if (err) {
+      throw err;
+    }
+    console.log("Connected!");
+  });
+
+  const database = require("../database");
+
+  searchString = req.query.searchString
+  searchBy = req.query.searchBy
+
+  console.log(searchString)
+  console.log(searchBy)
+
+  var query_string = ""
+  if (searchBy === "album") {
+    //const query_string = "call search_by_album_title('?');"
+    query_string = "call search_by_album_title('" + searchString +"');"
+  }
+  else if (searchBy === "artist") {
+    //const query_string = "call search_by_artist_name('?');"
+    query_string = "call search_by_artist_name('" + searchString +"');"
+  }
+  else {
+    //const query_string = "call search_by_song_title('?');"
+    query_string = "call search_by_song_title('" + searchString +"');"
+  }
+  console.log(query_string)
+
+  //const query_string = "call search_by_album_id(4795903)"
+  const result_json = {"query_result": null, "message": ""}; 
+
   console.log("HELLO WORLD: recieved param: " + JSON.stringify(req.query))
-  
-  res.json(test_api_result)
+  database.connection.connect(function(conn_err) {
+    if (conn_err) {
+      console.error("[GET /test_db_connection] Connection Error:", conn_err);
+      result_json["query_string"] = null;
+      result_json["message"] = "Can't connect to database.";
+      res.status(500).json(result_json);
+      next(conn_err);
+    } else {
+      console.log("[GET /test_db_connection] Successfully connected to database!!");
+    }
+    //database.connection.query(query_string, [searchString], (query_err, query_res) => {
+    database.connection.query(query_string, (query_err, query_res) => {
+      if (query_err) {
+        console.log("[GET /test_db_connection] Query Error:", query_err);
+        result_json["query_result"] = null;
+        result_json["message"] = "Can't execute query.";
+        // sendStatus doesn't seem to work either :(
+        res.status(500).json(result_json);
+        next(query_err);
+      } else {
+        result_json["query_result"] = query_res;
+        
+        api_results = {}
 
+        query_res[0].forEach(row => {
+          if (!api_results[row["album_id"]]) {
+            api_results[row["album_id"]] = {
+              [BACKEND_ALBUM_ID_KEY]: row["album_id"],
+                [BACKEND_ALBUM_NAME_KEY]: row["album_title"],
+                [BACKEND_YEAR_KEY]: row["release_date"],
+                [BACKEND_ARTIST_NAME_KEY]: row["artist_name"]
+              };
+          } else {
+            api_results[row["album_id"]][[BACKEND_ARTIST_NAME_KEY]]+= ", " + row["artist_name"];
+          }
+        });
 
+        console.log("api_results:")
+        console.log(api_results)
+        console.log(Object.keys(api_results).length)
+
+        //console.log(`[GET /test_db_connection]\n\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
+        result_json["message"] = "Successfully ran /test_db_connection (connected and queried)";
+        res.status(200).json(api_results)
+      } 
+    });
+  });
 });
 
 module.exports = router;

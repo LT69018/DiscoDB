@@ -18,6 +18,23 @@ Currently, the system is set to run for one user with this information:
 ```
 Make sure to run `POST /create_user?username="testUser"&user_id=123456` so that this user is created and you can interact with their listening tables :)
 
+# Appearance
+<figure>
+    <img src="./about_images/HomePage_3-30.png">
+    <figcaption>When you open the app you are greeted with a search header that looks like this!</figcaption>
+</figure>
+
+__**New!**__
+
+ Now you can enter something to the text box on the HomePage (We store it in `location.state.searchString`) then it takes you to the SearchResults page and shows you what you entered. I applied a similar procedure to store the result of the user's `searchBy` dropdown selection.
+ 
+ So far, there is no API call to actually query the database based on the input.
+<figure>
+    <img width="300px" src="./about_images/example_search_4-17_successfully-sent-to-SearchResults-and-searchby.png">
+    <img width="300px" src="./about_images/SearchResults_4-17_receives-searchString-AND-searchBy.png">
+    <figcaption>Progress by 4/17: HomePage sends searchString to SearchResults page so it can request the search info from the backend and display it. </figcaption>
+</figure>
+
 # Directory Structure / Docker
 Note: You may have to have `docker` desktop running in order to start up and run our docker image.
 
@@ -48,7 +65,24 @@ const exampleCodeFromReference = exampleFuncCall();
 ```
 - this is ommitted for *.json because I can't make comments :P
 
-## Deploy with docker compose
+
+## 1. Pulling the current dataset
+1. Go to this [Google Drive link](https://drive.google.com/drive/u/1/folders/1pKdHyqLQyvNPYMsrdXC8M1apf1UDdFR4)
+2. download all of the files in the folder 
+    (the files are titled as follows: "discogs_20240201_artists_modified", "found_missing_releases_masters", "main_releases_modified", and "recovered_missing_releases_modified").
+3. Navigate to `db/Miniature database code` and change `DATASET_FOLDER_PATH` in `config.py` to the path to wherever you stored the dataset files.
+4. Run `pip install mysql-connector-python` and `pip install lxml` in your terminal to download the necessary packages used in parsing the data.
+5. Execute the following commands in your MySQL server:
+   ```
+    SET GLOBAL max_allowed_packet=1073741824;
+    SET GLOBAL wait_timeout = 6000;
+    SET GLOBAL net_read_timeout = 6000;
+    SET GLOBAL connect_timeout = 6000;
+   ```
+6. Run `setup_sql.py`
+
+## 2. Deploy with docker compose
+There are two options for deploying our web app, the first is to use Docker Containers.
 Command:
 ```bash
 docker compose up -d
@@ -69,6 +103,12 @@ Creating project-discodb_db_1 ... done
 Creating project-discodb_backend_1 ... done
 Creating project-discodb_frontend_1 ... done
 ```
+
+## 2.5. Deploy manually
+If you do not have access to docker, or have issues. The second recommended approach is to do the following:
+1. Go into each folder (backend, frontend) in a separate command window , and run 'npm install' followed by 'npm start'.
+This will deploy the backend Node.js webserver and the React frontend respectively. Please see the DB folder for more instructions on getting the mysql database setup.
+
 
 ## Expected result
 
@@ -158,22 +198,6 @@ PS C:\...\jturn>docker rm project-discodb-db-1
 project-discodb-db-1
 ```
 
-# Appearance
-<figure>
-    <img src="./about_images/HomePage_3-30.png">
-    <figcaption>When you open the app you are greeted with a search header that looks like this!</figcaption>
-</figure>
-
-__**New!**__
-
- Now you can enter something to the text box on the HomePage (We store it in `location.state.searchString`) then it takes you to the SearchResults page and shows you what you entered. I applied a similar procedure to store the result of the user's `searchBy` dropdown selection.
- 
- So far, there is no API call to actually query the database based on the input.
-<figure>
-    <img width="300px" src="./about_images/example_search_4-17_successfully-sent-to-SearchResults-and-searchby.png">
-    <img width="300px" src="./about_images/SearchResults_4-17_receives-searchString-AND-searchBy.png">
-    <figcaption>Progress by 4/17: HomePage sends searchString to SearchResults page so it can request the search info from the backend and display it. </figcaption>
-</figure>
 
 # [Internal] Sharing information between pages
 ^ Note for developers:
@@ -200,18 +224,3 @@ export default function RecipientComponent() {
     console.log("Received data: ", location.state.attributeName);
 }
 ```
-
-## Pulling the current dataset
-1. Go to this [Google Drive link](https://drive.google.com/drive/u/1/folders/1pKdHyqLQyvNPYMsrdXC8M1apf1UDdFR4)
-2. download all of the files in the folder 
-    (the files are titled as follows: "discogs_20240201_artists_modified", "found_missing_releases_masters", "main_releases_modified", and "recovered_missing_releases_modified").
-3. Navigate to `db/Miniature database code` and change `DATASET_FOLDER_PATH` in `config.py` to the path to wherever you stored the dataset files.
-4. Run `pip install mysql-connector-python` and `pip install lxml` in your terminal to download the necessary packages used in parsing the data.
-5. Execute the following commands in your MySQL server:
-   ```
-    SET GLOBAL max_allowed_packet=1073741824;
-    SET GLOBAL wait_timeout = 6000;
-    SET GLOBAL net_read_timeout = 6000;
-    SET GLOBAL connect_timeout = 6000;
-   ```
-6. Run `setup_sql.py`

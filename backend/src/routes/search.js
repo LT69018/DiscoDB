@@ -41,21 +41,6 @@ const test_api_result = [
 */
 router.get('/', function(req, res, next) {
   const mysql = require("mysql2");
-
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: "sql_test_4_28",
-    password: "test12345",
-    insecureAuth : true
-  });
-
-  con.connect(function(err) {
-    if (err) {
-      throw err;
-    }
-    console.log("Connected!");
-  });
-
   const database = require("../database");
 
   searchString = req.query.searchString
@@ -65,11 +50,11 @@ router.get('/', function(req, res, next) {
   console.log(searchBy)
 
   var query_string = ""
-  if (searchBy === "album") {
+  if (searchBy == "album") {
     //const query_string = "call search_by_album_title('?');"
     query_string = "call search_by_album_title('" + searchString +"');"
   }
-  else if (searchBy === "artist") {
+  else if (searchBy == "artist") {
     //const query_string = "call search_by_artist_name('?');"
     query_string = "call search_by_artist_name('" + searchString +"');"
   }

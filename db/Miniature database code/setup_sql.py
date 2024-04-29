@@ -2,13 +2,20 @@ import time
 from config import *
 import mysql.connector
 from mysql.connector import Error
-
 from process_data import get_artist_info, get_release_info
 
 NON_ROOT_PASSWORD = ""  # Optional: Fill this constant in with your user's password
 
 
 def connect_to_server(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, pswd=DISCODB_MYSQL_PASSWORD):
+    """
+    This function allows the user to connect to a MySQL server
+        :param host_name: The host name of the server
+        :param username: The username of the user to log in as
+        :param pswd: The password of the user to log in as
+        :return: A MySQL connection object
+    """
+
     connection = None
 
     try:
@@ -20,7 +27,17 @@ def connect_to_server(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNA
     return connection
 
 
-def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, pswd=DISCODB_MYSQL_PASSWORD, db_name=DISCODB_NAME):
+def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, pswd=DISCODB_MYSQL_PASSWORD,
+                  db_name=DISCODB_NAME):
+    """
+    This function allows the user to connect to a specific database within a MySQL server
+        :param host_name: The host name of the server
+        :param username: The username of the user to log in as
+        :param pswd: The password of the user to log in as
+        :param db_name: The name of the database to connect to
+        :return: A MySQL connection object
+    """
+
     connection = None
 
     try:
@@ -33,15 +50,27 @@ def connect_to_db(host_name=DISCODB_MYSQL_URL, username=DISCODB_MYSQL_USERNAME, 
 
 
 def create_database(cursor):
+    """
+    This function creates the database
+        :param cursor: A MySQL cursor object
+        :return:
+    """
+
     try:
         query = "CREATE DATABASE IF NOT EXISTS " + DISCODB_NAME
         cursor.execute(query)
         print("Database created successfully!")
     except Error as error:
-        print("Error creating database:\n\t", error)
+        print("Error creating database:", error)
 
 
 def create_artist_tables(connection):
+    """
+    This function creates the database tables related exclusively to artist data
+        :param connection: A MySQL connection object
+        :return: N/a
+    """
+
     create_artists_table = """
             CREATE TABLE IF NOT EXISTS artists (
                 artist_id   INT,
@@ -50,7 +79,7 @@ def create_artist_tables(connection):
                 PRIMARY KEY (artist_id)
                 );
                 """
-                
+
     create_name_variations_table = """
             CREATE TABLE IF NOT EXISTS name_variations (
                 artist_id       INT,
@@ -87,6 +116,12 @@ def create_artist_tables(connection):
 
 
 def process_artist_data(artist_list):
+    """
+    This function parses the artist data passed in via artist_list
+        :param artist_list: A list of Artist objects
+        :return: artists_to_insert, name_vars_to_insert, aliases_to_insert, memberships_to_insert.
+                 These are lists that will hold tuples to insert into the various artist-related tables
+    """
 
     # Process the data to enter into the artist tables
     # separate the data into appropriate groups
@@ -122,7 +157,7 @@ def process_artist_data(artist_list):
 
     # Remove invalid aliases
     # (aliases that point to artists that are not in artists_list)
-    
+
     # Construct a dictionary of artist ids to allow for non-sequential lookup
     artist_ids = {}
     for artist in artist_list:
@@ -152,6 +187,15 @@ def process_artist_data(artist_list):
 
 
 def insert_artist_data(artists_to_insert, name_vars_to_insert, aliases_to_insert, memberships_to_insert):
+    """
+    This function inserts all tuples for the artist-related tables
+        :param artists_to_insert: A list of tuples to insert into the artists table
+        :param name_vars_to_insert: A list of tuples to insert into the name_variations table
+        :param aliases_to_insert: A list of tuples to insert into the artist_aliases table
+        :param memberships_to_insert: A list of tuples to insert into the band_membership table
+        :return: N/a
+    """
+
     insert_artists_query = """
                 INSERT IGNORE INTO artists (artist_id, artist_name, real_name) 
                 VALUES (%s, %s, %s)"""
@@ -175,6 +219,12 @@ def insert_artist_data(artists_to_insert, name_vars_to_insert, aliases_to_insert
 
 
 def create_album_tables(connection):
+    """
+    This function creates the database tables related to album data
+        :param connection: A MySQL connection object
+        :return: N/a
+    """
+
     create_albums_table = """
             CREATE TABLE IF NOT EXISTS albums (
                 album_id        INT,
@@ -197,7 +247,7 @@ def create_album_tables(connection):
                 FOREIGN KEY (album_id) REFERENCES albums(album_id)
                 );
                 """
-    
+
     create_artist_album_credits_table = """
             CREATE TABLE IF NOT EXISTS artist_album_credits (
                 artist_id           INT,
@@ -231,13 +281,20 @@ def create_album_tables(connection):
                 );
                 """
 
-    table_creation_queries = [create_albums_table, create_songs_table, create_artist_album_credits_table, create_genres_table,
+    table_creation_queries = [create_albums_table, create_songs_table, create_artist_album_credits_table,
+                              create_genres_table,
                               create_videos_table]
     for query in table_creation_queries:
         execute_and_commit(connection, query)
 
 
 def create_user_tables(connection):
+    """
+    This function creates the database tables related to user data
+        :param connection: A MySQL connection object
+        :return: N/a
+    """
+
     create_users_table = """
             CREATE TABLE IF NOT EXISTS users (
                 user_id             INT AUTO_INCREMENT,
@@ -270,6 +327,12 @@ def create_user_tables(connection):
 
 
 def create_search_procedures(connection):
+    """
+    This function creates stored procedures for searching based on certain criteria
+        :param connection: A MySQL connection object
+        :return: N/a
+    """
+
     # When using this procedure, use the cursor.callproc(proc_name, args=()) function
     # and get the results (as there will be 5 relations returned) using cursor.stored_results()
     create_search_by_album_id = """
@@ -403,12 +466,20 @@ def create_search_procedures(connection):
             DELIMITER ;
             """
 
-    procedure_creation_queries = [create_search_by_album_id, create_search_user_listening, create_search_by_album_title, create_search_by_artist_name, create_search_by_song_title]
+    procedure_creation_queries = [create_search_by_album_id, create_search_user_listening, create_search_by_album_title,
+                                  create_search_by_artist_name, create_search_by_song_title]
     for query in procedure_creation_queries:
         execute_and_commit(connection, query)
 
 
 def execute_and_commit(connection, query):
+    """
+    This function executes a MySQL query passed in as a parameter
+        :param connection: A MySQL connection object
+        :param query: A string representing a MySQL query
+        :return: N/a
+    """
+
     cursor = connection.cursor()
     try:
         cursor.execute(query)
@@ -420,6 +491,13 @@ def execute_and_commit(connection, query):
 
 
 def execute_many_and_commit(connection, query, vals):
+    """
+    This function executes a set of MySQL queries passed in as a parameter
+        :param connection: A MySQL connection object
+        :param query: A string representing a MySQL query
+        :param vals: A list of tuples representing rows to insert into a table
+        :return: N/a
+    """
     cursor = connection.cursor()
     try:
         cursor.executemany(query, vals)
@@ -481,17 +559,20 @@ if __name__ == "__main__":
     song_count = 0
     for release in release_list:
 
-        albums_to_insert.append((release.release_id, release.title, release.released, release.notes, len(release.tracklist)))
+        albums_to_insert.append(
+            (release.release_id, release.title, release.released, release.notes, len(release.tracklist)))
 
         for artist in release.artists:
             if artist.get("id"):
                 # Add the artist's info to artist_album_credits_to_insert as a primary artist
-                initial_artist_album_credits_to_insert.append((artist.get("id"), release.release_id, artist.get("role"), 1))
+                initial_artist_album_credits_to_insert.append(
+                    (artist.get("id"), release.release_id, artist.get("role"), 1))
 
         for artist in release.extraartists:
             if artist.get("id"):
                 # Add the artist's info to artist_album_credits_to_insert as a non-primary artist
-                initial_artist_album_credits_to_insert.append((artist.get("id"), release.release_id, artist.get("role"), 0))
+                initial_artist_album_credits_to_insert.append(
+                    (artist.get("id"), release.release_id, artist.get("role"), 0))
 
         for genre in release.genres_and_styles:
             genres_to_insert.append((release.release_id, genre))
@@ -504,10 +585,10 @@ if __name__ == "__main__":
             videos_to_insert.append((release.release_id, video.src, video.title, video.duration))
 
     print("Song count:", song_count)
-    
+
     # Remove invalid artist_ids from initial_artist_album_credits_to_insert
     # (initial_artist_album_credits_to_insert that contain to artist_ids that are not in artists_list)
-    
+
     # Construct a dictionary of artist ids to allow for non-sequential lookup
     artist_ids = {}
     for artist in artist_list:
@@ -537,7 +618,8 @@ if __name__ == "__main__":
         artist_album_credits_to_insert.append(artist)
 
     print("\nArtist credits list length differences:")
-    print(len(initial_artist_album_credits_to_insert), len(artist_album_credits_to_insert), len(initial_artist_album_credits_to_insert) - len(artist_album_credits_to_insert))
+    print(len(initial_artist_album_credits_to_insert), len(artist_album_credits_to_insert),
+          len(initial_artist_album_credits_to_insert) - len(artist_album_credits_to_insert))
 
     insert_albums_query = """
                 INSERT IGNORE INTO albums (album_id, album_title, release_date, notes, num_songs)
@@ -574,9 +656,11 @@ if __name__ == "__main__":
 
             for i in range(1, 21):
                 if i == 20:
-                    execute_many_and_commit(connection, insert_songs_query, songs_to_insert[song_count_twentieths * (i - 1):])
+                    execute_many_and_commit(connection, insert_songs_query,
+                                            songs_to_insert[song_count_twentieths * (i - 1):])
                 else:
-                    execute_many_and_commit(connection, insert_songs_query, songs_to_insert[song_count_twentieths * (i - 1):song_count_twentieths * i])
+                    execute_many_and_commit(connection, insert_songs_query,
+                                            songs_to_insert[song_count_twentieths * (i - 1):song_count_twentieths * i])
             pass
         else:
             execute_many_and_commit(connection, query, table_insertion_queries[query])

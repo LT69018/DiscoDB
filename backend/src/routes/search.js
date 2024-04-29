@@ -55,7 +55,25 @@ router.get('/', function(req, res, next) {
 
   const database = require("../database");
 
-  const query_string = "call search_by_song_title('muffin man')"
+  searchString = req.query.searchString
+  console.log(searchString)
+  seachBy = req.query.seachBy
+
+  var query_string = ""
+  if (seachBy == "album") {
+    //const query_string = "call search_by_album_title('?');"
+    query_string = "call search_by_album_title('" + searchString +"');"
+  }
+  else if (seachBy == "artist") {
+    //const query_string = "call search_by_artist_name('?');"
+    query_string = "call search_by_artist_name('" + searchString +"');"
+  }
+  else {
+    //const query_string = "call search_by_song_title('?');"
+    query_string = "call search_by_song_title('" + searchString +"');"
+  }
+  console.log(query_string)
+
   //const query_string = "call search_by_album_id(4795903)"
   const result_json = {"query_result": null, "message": ""}; 
 
@@ -70,6 +88,7 @@ router.get('/', function(req, res, next) {
     } else {
       console.log("[GET /test_db_connection] Successfully connected to database!!");
     }
+    //database.connection.query(query_string, [searchString], (query_err, query_res) => {
     database.connection.query(query_string, (query_err, query_res) => {
       if (query_err) {
         console.log("[GET /test_db_connection] Query Error:", query_err);
@@ -96,16 +115,13 @@ router.get('/', function(req, res, next) {
           }
         });
 
-        console.log(query_res[0][0])
-        console.log(query_res[0][0]["album_id"])
         console.log("api_results:")
         console.log(api_results)
-        console.log(api_results[367910])
         console.log(Object.keys(api_results).length)
 
         //console.log(`[GET /test_db_connection]\n\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
         result_json["message"] = "Successfully ran /test_db_connection (connected and queried)";
-        res.json(api_results)
+        res.status(200).json(api_results)
       } 
     });
   });

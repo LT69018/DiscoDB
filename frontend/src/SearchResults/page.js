@@ -60,6 +60,7 @@ function callSaveAPI(albumSelected, saveToDropdown) {
 const handleSaveClick = (event) => {
     event.preventDefault(); //prevents default form submission behavior!
 
+    /*
     //perform query here?
     callSaveAPI(albumSelected, dropdownValue).then(test_api_result => {
         console.log("test api call: " + test_api_result)
@@ -69,6 +70,7 @@ const handleSaveClick = (event) => {
           console.log(error)
         }
     });
+    */
 }
 
 
@@ -97,10 +99,11 @@ export default function SearchResults() {
         if (apiResult === null) {
             // do nothing.
         } else {
-            renderedResults = apiResult.map((row, index) => (
+            //renderedResults = Object.fromEntries(Object.entries(apiResult).map((row, index) => (
+            renderedResults = Object.keys(apiResult).map((key, index) => (
                 <ResultRow
                     index={index}
-                    row={row}
+                    row={apiResult[key]}
                     handleSaveClick={handleSaveClick} // todo: use this in ./ResultRow.js
                 />
             ));

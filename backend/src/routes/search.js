@@ -37,7 +37,7 @@ const test_api_result = [
   - return top 50 results  
 */
 router.get('/', function(req, res, next) {
-  const mysql = require("mysql2"); // could also use mysql2, but mysql apparently doesn't require compiling
+  const mysql = require("mysql2");
 
   var con = mysql.createConnection({
     host: "localhost",
@@ -61,7 +61,6 @@ router.get('/', function(req, res, next) {
 
   console.log("HELLO WORLD: recieved param: " + JSON.stringify(req.query))
   database.connection.connect(function(conn_err) {
-    console.log("eyyy I'm workin 'ere 2")
     if (conn_err) {
       console.error("[GET /test_db_connection] Connection Error:", conn_err);
       result_json["query_string"] = null;
@@ -72,7 +71,6 @@ router.get('/', function(req, res, next) {
       console.log("[GET /test_db_connection] Successfully connected to database!!");
     }
     database.connection.query(query_string, (query_err, query_res) => {
-      console.log("eyyy I'm workin 'ere")
       if (query_err) {
         console.log("[GET /test_db_connection] Query Error:", query_err);
         result_json["query_result"] = null;
@@ -83,7 +81,7 @@ router.get('/', function(req, res, next) {
       } else {
         result_json["query_result"] = query_res;
         
-        api_results = []
+        api_results = {}
 
         query_res[0].forEach(row => {
           if (!api_results[row["album_id"]]) {
@@ -94,7 +92,7 @@ router.get('/', function(req, res, next) {
                 [BACKEND_ARTIST_NAME_KEY]: row["artist_name"]
               };
           } else {
-            api_results[row["album_id"]].BACKEND_ARTIST_NAME_KEY += ", " + row["artist_name"];
+            api_results[row["album_id"]][[BACKEND_ARTIST_NAME_KEY]]+= ", " + row["artist_name"];
           }
         });
 
@@ -103,8 +101,9 @@ router.get('/', function(req, res, next) {
         console.log("api_results:")
         console.log(api_results)
         console.log(api_results[367910])
+        console.log(Object.keys(api_results).length)
 
-        console.log(`[GET /test_db_connection]\n\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
+        //console.log(`[GET /test_db_connection]\n\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
         result_json["message"] = "Successfully ran /test_db_connection (connected and queried)";
         res.json(api_results)
       } 

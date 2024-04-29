@@ -83,58 +83,18 @@ router.get('/', function(req, res, next) {
       } else {
         result_json["query_result"] = query_res;
         
-        console.log(query_res)
-
-
-        /*results_dict = {}
-        cursor.callproc("search_by_artist_name", args=("zappa"))
-        for result in cursor.stored_results():
-            for row in result:
-                if not results_dict.get(row[0]):
-                    # Construct the dictionary for this album
-                    results_dict[row[0]] = {"album_title": row[1],
-                                            "release_date": row[2],
-                                            "primary_artists": [row[3]]}
-                else:
-                    # Add a primary artist to the primary_artists list
-                    results_dict[row[0]]["primary_artists"].append(row[3])*/
-
-        /*for result in query_res[0]:
-          if not results_dict.get(row[0]):
-            // Construct the dictionary for this album
-            test_api_result[0][row[0]] = {"album_title": row[1],
-                                          "release_date": row[2],
-                                          "primary_artists": [row[3]]}
-          else:
-            // Add a primary artist to the primary_artists list
-            results_dict[row[0]]["primary_artists"].append(row[3])*/
-
-        /*
-          {24823820: {album_title: "Zappa '75 Zagreb / Ljubljana",
-                      release_date: '2022-10-14',
-                      primary_artists: ['Frank Zappa', 'captain beefheart']},
-          ...
-          }
-
-      album_id: 24823820,
-      album_title: "Zappa '75 Zagreb / Ljubljana",
-      release_date: '2022-10-14',
-      artist_name: 'Frank Zappa'
-    }
-        */
-
         api_results = []
 
         query_res[0].forEach(row => {
           if (!api_results[row["album_id"]]) {
             api_results[row["album_id"]] = {
+              [BACKEND_ALBUM_ID_KEY]: row["album_id"],
                 [BACKEND_ALBUM_NAME_KEY]: row["album_title"],
-                  release_date: row["release_date"],
-  
-                  primary_artists: row["artist_name"]
+                [BACKEND_YEAR_KEY]: row["release_date"],
+                [BACKEND_ARTIST_NAME_KEY]: row["artist_name"]
               };
           } else {
-            api_results[row["album_id"]].primary_artists += ", " + row["artist_name"];
+            api_results[row["album_id"]].BACKEND_ARTIST_NAME_KEY += ", " + row["artist_name"];
           }
         });
 
@@ -142,28 +102,14 @@ router.get('/', function(req, res, next) {
         console.log(query_res[0][0]["album_id"])
         console.log("api_results:")
         console.log(api_results)
-
-        const test_api_result = [
-          {[BACKEND_ARTIST_NAME_KEY]: 'Artist zero', [BACKEND_ALBUM_NAME_KEY]: 'Album Name', 
-              [BACKEND_YEAR_KEY]: 1970, [BACKEND_ALBUM_ID_KEY]: 5656156, [BACKEND_COVER_URL_KEY]: null,
-              // these last few are just for the /AlbumInfo page, I won't display them
-              [BACKEND_TRACKS_KEY]: ["Song1", "Song2"], [BACKEND_DESCRIPTION_KEY]:"Hey I'm an album"
-              },
-          {[BACKEND_ARTIST_NAME_KEY]: "Artist one", [BACKEND_ALBUM_NAME_KEY]:"Album Name",
-                [BACKEND_YEAR_KEY]: 2024,[BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/237/200/300"},
-          {[BACKEND_ARTIST_NAME_KEY]: "Artist two", [BACKEND_ALBUM_NAME_KEY]:"Album Name", 
-              [BACKEND_YEAR_KEY]: 2024, [BACKEND_COVER_URL_KEY]: "https://picsum.photos/id/238/200/300"}
-        ];
+        console.log(api_results[367910])
 
         console.log(`[GET /test_db_connection]\n\tSuccessfully ran query in /test_db_connection! Result: \n\t${JSON.stringify(query_res)}`);
         result_json["message"] = "Successfully ran /test_db_connection (connected and queried)";
-        res.status(200).json(result_json);
+        res.json(api_results)
       } 
     });
   });
-
-  //res.json(test_api_result)
-
 });
 
 module.exports = router;

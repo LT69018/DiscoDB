@@ -11,6 +11,7 @@ import  "./SearchResults.css";
 import {Link} from "react-router-dom";
 import {Form, Button} from "react-bootstrap";
 
+//const ResultRow = ({index, row, handleSaveClick}) => { // note, row should contain `album_id` to nav to search results page.
 const ResultRow = ({index, row, handleSaveClick}) => { // note, row should contain `album_id` to nav to search results page.
 
   const htmlRow = {} // initalize on separate row to Object.assign() in case that was the reason not all keys were present.

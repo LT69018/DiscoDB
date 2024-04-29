@@ -125,8 +125,6 @@ app.get("/test_db_connection", function(req, res, next){
 
 
 
-
-
 // Reference: https://expressjs.com/en/guide/error-handling.html
 app.use((err, req, res, next) => {
   console.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + 

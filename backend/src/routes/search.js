@@ -56,15 +56,17 @@ router.get('/', function(req, res, next) {
   const database = require("../database");
 
   searchString = req.query.searchString
+  searchBy = req.query.searchBy
+
   console.log(searchString)
-  seachBy = req.query.seachBy
+  console.log(searchBy)
 
   var query_string = ""
-  if (seachBy == "album") {
+  if (searchBy === "album") {
     //const query_string = "call search_by_album_title('?');"
     query_string = "call search_by_album_title('" + searchString +"');"
   }
-  else if (seachBy == "artist") {
+  else if (searchBy === "artist") {
     //const query_string = "call search_by_artist_name('?');"
     query_string = "call search_by_artist_name('" + searchString +"');"
   }

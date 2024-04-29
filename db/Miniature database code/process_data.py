@@ -5,12 +5,15 @@ from os.path import join as os_path_join
 from lxml import etree
 import time
 
-from config import *
-
 parser = etree.XMLParser(remove_blank_text=True)
 
 
 def get_artist_info():
+    """
+    This function parses through the artist XML file and turns each entry into an Artist object
+        :return: A list of Artist objects
+    """
+
     with open(os_path_join(DATASET_FOLDER_PATH, ARTISTS_DATASET_FILE_NAME), "rb") as my_file:
         start = time.time()
 
@@ -126,6 +129,12 @@ def get_artist_info():
 
 
 def get_release_info(artist_list):
+    """
+    This function parses through the releases XML file and turns each entry into a Release object
+        :param artist_list: A list of artist names to search for releases by them
+        :return: A list of Release objects
+    """
+
     with open(os_path_join(DATASET_FOLDER_PATH, ALL_RELEASES_DATASET_FILE_NAME), "rb") as my_file:
 
         start = time.time()
@@ -270,7 +279,7 @@ def get_release_info(artist_list):
                         videos.append(Video(video_dict["src"], video_dict["duration"], video_dict["title"]))
 
             if year == "0":
-                year = "Unknown"
+                year = "Unknown release date"
 
             if found_released:
                 released = found_released
@@ -283,6 +292,5 @@ def get_release_info(artist_list):
         print(end - start)
 
         print(len(total_releases_list), "\n")
-
 
         return total_releases_list
